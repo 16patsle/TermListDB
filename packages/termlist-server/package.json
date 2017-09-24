@@ -1,6 +1,6 @@
 {
   "name": "termlist-server",
-  "version": "0.1.0",
+  "version": "0.2.0-alpha.3edafeed",
   "description": "Some kind of dictionary, backend server for termlist-web",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,6 @@
   "dependencies": {
     "express": "^4.15.4",
     "pouchdb": "^6.3.4",
-    "termlist-web": "^0.1.0"
+    "termlist-web": "^0.2.0-alpha.3edafeed"
   }
 }
