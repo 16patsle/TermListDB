@@ -1,0 +1,4 @@
+!node_modules/
+node_modules/*
+!node_modules/termlist-web
+npm-debug.log
