@@ -1,0 +1,16 @@
+{
+  "name": "termlist-server",
+  "version": "0.2.0",
+  "description": "Some kind of dictionary, backend server for termlist-web",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Patrick Sletvold",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.15.4",
+    "pouchdb": "^6.3.4",
+    "termlist-web": "file:./termlist-web"
+  }
+}

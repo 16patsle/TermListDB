@@ -4,11 +4,12 @@ FROM node:boron
 WORKDIR /usr/src/termlist-server
 
 # Install app dependencies
-COPY package.json package-lock.json ./
+COPY package-lock.json ./
+COPY package-docker.json package.json
 
-COPY ../packages/termlist-web/ termlist-web/
+COPY termlist-web/ .
 
-RUN npm install termlist-web/ && npm install
+RUN npm install
 
 # Bundle app source
 COPY . .

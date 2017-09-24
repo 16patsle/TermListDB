@@ -4,6 +4,7 @@ dist/
 npm-debug.log
 yarn-error.log
 .couchdata/
+packages/termlist-server/termlist-web
 
 # Editor directories and files
 .idea
