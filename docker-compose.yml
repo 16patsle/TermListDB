@@ -9,7 +9,7 @@ services:
       - couchdata:/opt/couchdb/data
   webapp:
     container_name: termlist-server
-    build: ./packages/termlist-server
+    build: .
     image: dictionaryapp
     ports:
       - "8080:80"

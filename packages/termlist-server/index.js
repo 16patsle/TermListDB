@@ -1,11 +1,21 @@
 const express = require('express');
 const app = express();
 
-app.use(express.static('node_modules/termlist-web/dist'));
+/*
+const testFolder = './node_modules/termlist-web';
+const fs = require('fs');
+
+fs.readdirSync(testFolder)
+  .forEach(file => {
+    console.log(file);
+  })
+*/
+
+app.use(express.static('node_modules/termlist-web'));
 
 app.get('/', function(req, res) {
   res.sendFile('index.html', {
-    root: '/node_modules/termlist-web/dist/',
+    root: '/node_modules/termlist-web/',
     dotfiles: 'deny'
   }, function(err) {
     if (err) {

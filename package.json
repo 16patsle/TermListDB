@@ -3,7 +3,9 @@
   "version": "0.2.0",
   "description": "Some kind of dictionary",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docker-up": "cp -R packages/termlist-web packages/termlist-server/termlist-web && docker-compose up && rm -rf packages/termlist-server/termlist-web",
+    "docker-up-build": "cp -R packages/termlist-web packages/termlist-server/termlist-web && docker-compose up --build && rm -rf packages/termlist-server/termlist-web"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,6 @@
     "lerna": "^2.2.0"
   },
   "dependencies": {
-    "termlist-server": "^0.1.0"
+    "termlist-server": "file:packages/termlist-server"
   }
 }
