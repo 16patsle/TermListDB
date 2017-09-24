@@ -11,6 +11,6 @@
   "dependencies": {
     "express": "^4.15.4",
     "pouchdb": "^6.3.4",
-    "termlist-web": "file:./termlist-web"
+    "termlist-web": "file:../termlist-web"
   }
 }
