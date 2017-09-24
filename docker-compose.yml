@@ -1,0 +1,18 @@
+version: '3'
+services:
+  couchdb:
+    container_name: termlist-couchdb
+    image: klaemo/couchdb:latest
+    ports:
+      - "5984:5984"
+    volumes:
+      - couchdata:/opt/couchdb/data
+  webapp:
+    container_name: termlist-server
+    build: ./packages/termlist-server
+    image: dictionaryapp
+    ports:
+      - "8080:80"
+    links: [couchdb]
+volumes:
+  couchdata:
