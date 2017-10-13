@@ -15,7 +15,18 @@
       <td class="term">{{term.term}}</td>
       <td class="desc">{{term.desc}}</td>
       <td class="date">{{term.date}}</td>
-      <td class="buttons"><a href="#" class="edit" @click.prevent="edit"><span class="icon is-small"><i class="fa fa-pencil"></i></span></a><a href="#" class="remove" @click.prevent="remove"><span class="icon is-small"><i class="fa fa-trash"></i></span></a></td>
+      <td class="buttons">
+        <a href="#" class="edit" @click.prevent="edit">
+          <span class="icon is-small">
+            <i class="fa fa-pencil"></i>
+          </span>
+</a>
+<a href="#" class="remove" @click.prevent="remove">
+  <span class="icon is-small">
+    <i class="fa fa-trash"></i>
+  </span>
+</a>
+</td>
 </tr>
 </tbody>
 </table>
@@ -25,21 +36,9 @@
 import List from 'list.js'
 import SearchBar from './SearchBar.vue'
 
-/*
-var termList = new List(fields.table, {
-  valueNames: ["term", "desc", "date"],
-  item: '<tr><td class="term"></td><td class="desc"></td><td class="date"></td><td class="buttons"><a href="#" class="edit"><span class="icon is-small"><i class="fa fa-pencil"></i></span></a><a href="#" class="remove"><span class="icon is-small"><i class="fa fa-trash"></i></span></a></td></tr>'
-});
-*/
-
 export default {
   data() {
     return {
-      ui: {
-        term: 'Ord',
-        description: 'Forklaring',
-        date: 'Dato',
-      },
       terms: [{
         term: 'Ostepop',
         desc: '!',
@@ -51,6 +50,7 @@ export default {
       }]
     }
   },
+  props: ['ui'],
   components: {
     SearchBar
   },

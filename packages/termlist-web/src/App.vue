@@ -1,8 +1,8 @@
 <template>
 <section id="app" class="section">
-  <ModalAdd ref="addModal" :current="currentTerm" @save="saveTerm"></ModalAdd>
-  <ModalEdit ref="editModal" :current="currentTerm" @save="saveTerm"></ModalEdit>
-  <ModalRemove ref="removeModal" :current="currentTerm" @remove="removeTerm"></ModalRemove>
+  <ModalAdd ref="addModal" :current="currentTerm" :ui="ui" @save="saveTerm"></ModalAdd>
+  <ModalEdit ref="editModal" :current="currentTerm" :ui="ui" @save="saveTerm"></ModalEdit>
+  <ModalRemove ref="removeModal" :current="currentTerm" :ui="ui" @remove="removeTerm"></ModalRemove>
   <div class="container">
     <h1 class="title">{{ui.termlist}}</h1>
     <div class="field">
@@ -10,7 +10,7 @@
         <button class="button is-primary" @click="addTerm">{{ui.add}}</button>
       </div>
     </div>
-    <TermList ref="list" @edit="editTerm" @remove="confirmRemoveTerm"></TermList>
+    <TermList ref="list" :ui="ui" @edit="editTerm" @remove="confirmRemoveTerm"></TermList>
   </div>
 </section>
 </template>
@@ -27,7 +27,16 @@ export default {
     return {
       ui: {
         termlist: 'Ordliste',
-        add: 'Legg til'
+        term: 'Ord',
+        description: 'Forklaring',
+        date: 'Dato',
+        add: 'Legg til',
+        addterm: 'Legg til ord',
+        save: 'Lagre',
+        editterm: 'Rediger ord',
+        removeterm: 'Fjern ord',
+        wanttoremove: 'Vil du fjerne dette ordet?',
+        cancel: 'Avbryt'
       },
       currentTerm: null
     }
@@ -39,22 +48,21 @@ export default {
     TermList
   },
   methods: {
-    addTerm() {
-      this.$refs.addModal.toggleModal();
+    addTerm(e) {
+      this.$refs.addModal.addTerm(e);
     },
     editTerm(e) {
-      this.currentTerm = e
-      this.$refs.editModal.toggleModal();
+      console.log(e.target.parentNode.parentNode.parentNode.parentNode.querySelector('.date').textContent);
+      this.$refs.editModal.editTerm(e.target.parentNode.parentNode.parentNode.parentNode);
     },
     confirmRemoveTerm(e) {
-      this.currentTerm = e
-      this.$refs.removeModal.toggleModal();
+      this.$refs.removeModal.confirmRemoveTerm(e);
     },
     saveTerm(term, data) {
       this.$refs.list.save(term, data);
     },
     removeTerm(term) {
-      console.log(term);
+      console.log('Remove: ', term);
     }
   }
 }
