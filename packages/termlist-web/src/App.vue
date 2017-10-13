@@ -10,7 +10,7 @@
         <button class="button is-primary" @click="addTerm">{{ui.add}}</button>
       </div>
     </div>
-    <TermList ref="list" :ui="ui" @edit="editTerm" @remove="confirmRemoveTerm"></TermList>
+    <TermList ref="list" :ui="ui" :terms="terms" @edit="editTerm" @remove="confirmRemoveTerm"></TermList>
   </div>
 </section>
 </template>
@@ -38,7 +38,18 @@ export default {
         wanttoremove: 'Vil du fjerne dette ordet?',
         cancel: 'Avbryt'
       },
-      currentTerm: null
+      currentTerm: null,
+      terms: [{
+        _id: '123',
+        term: 'Ostepop',
+        desc: '!',
+        date: 123
+      }, {
+        _id: '456',
+        term: 'Eplekake',
+        desc: '!!',
+        date: 456
+      }]
     }
   },
   components: {
@@ -64,6 +75,36 @@ export default {
     removeTerm(term) {
       console.log('Remove: ', term);
     }
+  },
+  created() {
+    this.$bucket.allDocs().then(doc => {
+      console.log('All', doc);
+      this.terms = doc.rows.map(doc => doc.doc);
+      this.$refs.list.list.reIndex();
+    });
+
+    /*this.$bucket.add({
+      _id: '146',
+      term: 'test',
+      desc: 'test-desc',
+      date: 123
+    }).then(doc => {
+      console.log('Add', doc);
+    })*/
+    this.$bucket.save({
+      _id: '146',
+      term: 'test',
+      desc: 'test-desc edited 2',
+      date: 123
+    }).then(doc => {
+      console.log('Save', doc);
+    })
+    this.$bucket.get('146').then(doc => {
+      console.log('Get', doc);
+    })
+    /*this.$bucket.remove('146').then(doc => {
+      console.log('Remove', doc);
+    })*/
   }
 }
 </script>

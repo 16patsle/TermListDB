@@ -11,7 +11,7 @@
     </tr>
   </thead>
   <tbody class="list" ref="termlist">
-    <tr v-for="term in terms">
+    <tr v-for="term in terms" :key="term._id">
       <td class="term">{{term.term}}</td>
       <td class="desc">{{term.desc}}</td>
       <td class="date">{{term.date}}</td>
@@ -37,20 +37,7 @@ import List from 'list.js'
 import SearchBar from './SearchBar.vue'
 
 export default {
-  data() {
-    return {
-      terms: [{
-        term: 'Ostepop',
-        desc: '!',
-        date: 123
-      }, {
-        term: 'Eplekake',
-        desc: '!!',
-        date: 456
-      }]
-    }
-  },
-  props: ['ui'],
+  props: ['ui', 'terms'],
   components: {
     SearchBar
   },
