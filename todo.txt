@@ -1,0 +1,1 @@
+2017-10-13 Bytt ut List.js med noe Vue.js-basert
