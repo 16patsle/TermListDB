@@ -1,1 +1,2 @@
-2017-10-13 Bytt ut List.js med noe Vue.js-basert
+2017-10-13 Bytt ut List.js med noe Vue.js-basert (filtrer/sorter: https://vuejs.org/v2/guide/list.html#Displaying-Filtered-Sorted-Results)
+2017-10-14 Bytt ut vue-pouch-db med vanlig PouchDB på sikt, siden vi uansett ikke kommuniserer direkte med den i komponentene
