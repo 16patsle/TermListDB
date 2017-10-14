@@ -5,7 +5,7 @@
   </div>
   <div slot="modal-footer">
     <button class="button is-danger" @click="removeTerm">{{ui.removeterm}}!</button>
-    <button class="button" @click="toggleModal">{{ui.cancel}}</button>
+    <button class="button" @click="close">{{ui.cancel}}</button>
   </div>
 </Modal>
 </template>
@@ -27,6 +27,9 @@ export default {
     },
     removeTerm() {
       this.$emit('remove', this.current);
+      this.toggleModal(false);
+    },
+    close() {
       this.toggleModal(false);
     }
   }
