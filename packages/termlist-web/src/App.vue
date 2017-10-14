@@ -38,18 +38,12 @@ export default {
         wanttoremove: 'Vil du fjerne dette ordet?',
         cancel: 'Avbryt'
       },
-      currentTerm: null,
-      terms: [{
-        _id: '123',
-        term: 'Ostepop',
-        desc: '!',
-        date: 123
-      }, {
-        _id: '456',
-        term: 'Eplekake',
-        desc: '!!',
-        date: 456
-      }]
+      currentTerm: null
+    }
+  },
+  computed: {
+    terms() {
+      return this.$store.state.terms;
     }
   },
   components: {
@@ -60,51 +54,29 @@ export default {
   },
   methods: {
     addTerm(e) {
-      this.$refs.addModal.addTerm(e);
+      this.$refs.addModal.addTerm();
     },
-    editTerm(e) {
-      console.log(e.target.parentNode.parentNode.parentNode.parentNode.querySelector('.date').textContent);
-      this.$refs.editModal.editTerm(e.target.parentNode.parentNode.parentNode.parentNode);
+    editTerm(term) {
+      this.$refs.editModal.editTerm(term);
     },
-    confirmRemoveTerm(e) {
-      this.$refs.removeModal.confirmRemoveTerm(e);
+    confirmRemoveTerm(term) {
+      this.$refs.removeModal.confirmRemoveTerm(term);
     },
     saveTerm(term, data) {
-      this.$refs.list.save(term, data);
+      if (term.term) {
+        // Update existing term
+        this.$store.dispatch('save', Object.assign({}, term, data))
+      } else {
+        // Add new term
+        this.$store.dispatch('add', Object.assign({}, term, data))
+      }
     },
     removeTerm(term) {
-      console.log('Remove: ', term);
+      this.$store.dispatch('remove', term);
     }
   },
   created() {
-    this.$bucket.allDocs().then(doc => {
-      console.log('All', doc);
-      this.terms = doc.rows.map(doc => doc.doc);
-      this.$refs.list.list.reIndex();
-    });
-
-    /*this.$bucket.add({
-      _id: '146',
-      term: 'test',
-      desc: 'test-desc',
-      date: 123
-    }).then(doc => {
-      console.log('Add', doc);
-    })*/
-    this.$bucket.save({
-      _id: '146',
-      term: 'test',
-      desc: 'test-desc edited 2',
-      date: 123
-    }).then(doc => {
-      console.log('Save', doc);
-    })
-    this.$bucket.get('146').then(doc => {
-      console.log('Get', doc);
-    })
-    /*this.$bucket.remove('146').then(doc => {
-      console.log('Remove', doc);
-    })*/
+    this.$store.dispatch('allDocs');
   }
 }
 </script>

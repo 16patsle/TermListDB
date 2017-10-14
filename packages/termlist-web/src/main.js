@@ -1,17 +1,15 @@
+import 'babel-polyfill'
 import Vue from 'vue'
-//import PouchDB from 'pouchdb'
 import VuePouchDB from 'vue-pouch-db';
-//import List from 'list.js'
+import Vuex from 'vuex'
 import Bulma from 'bulma'
 import FontAwesome from 'font-awesome/css/font-awesome.css'
 import App from './App.vue'
 
 Vue.use(VuePouchDB);
+Vue.use(Vuex);
 
 const bucket = new VuePouchDB.Bucket({
-  // Main config Object. This is the top level
-  // config object. Where global config
-  // are shared with each database.
   config: {
     // Remote Server
     remote: "http://localhost:5984/",
@@ -46,23 +44,13 @@ const bucket = new VuePouchDB.Bucket({
     },
 
     // Global onChange events
-    // for each database.
-    // The functions here are passed to each DB
-    // db.changes().on(() => {})
     onChanges(change) {
       console.log("Change: ", change);
-    },
-    onPaused(error) {
-      console.log("Paused", error);
-    },
-    onActive() {
-      console.log("Active");
-    },
-    onDenied(error) {
-      console.log("Denied", error);
-    },
-    onComplete() {
-      console.log("Completed");
+      if (store.state.terms[change.doc._id]) {
+        store.commit('save', change.doc)
+      } else {
+        store.commit('add', change.doc)
+      }
     },
     onError(error) {
       console.log("Error", error);
@@ -74,15 +62,7 @@ const bucket = new VuePouchDB.Bucket({
     }
   },
 
-  // List of PouchDB plugins
-  plugins: [
-    //require('pouchdb-plugin')
-  ],
-
-  // Actions are shared across the
-  // bucket instance.
-  // Think of them as helper methods to bundle
-  // several sets of commands into a single method.
+  // Actions are shared across the bucket instance.
   // Can be accessed through this.$bucket.[method name]
   actions: {
     get(id) {
@@ -105,9 +85,6 @@ const bucket = new VuePouchDB.Bucket({
       return this.db('termlist')
         .get(termObject._id)
         .then(doc => {
-          /*doc.term = termObject.term;
-          doc.desc = termObject.desc;
-          doc.date = termObject.date;*/
           termObject._rev = doc._rev;
 
           return this.db('termlist')
@@ -119,21 +96,11 @@ const bucket = new VuePouchDB.Bucket({
         .allDocs({
           include_docs: true
         });
-    },
-    addDoc(arg) {
-      // this is $bucket instance
-      /*this.db('projects').({
-          _id: 'document_id'
-          data: {}
-        }, function() {});*/
     }
   },
 
   // Databases
-  // You can define / instanciate
-  // a per database config file.
-  // this will put the database into the internal
-  // state and also, you can define custom "options"
+  // You can also define custom "options"
   // for the database Instance (on: new PouchDB(options))
   termlist: {
     // Is remote only ?
@@ -141,8 +108,91 @@ const bucket = new VuePouchDB.Bucket({
   }
 });
 
+const store = new Vuex.Store({
+  state: {
+    terms: {
+      '0': {}
+    }
+  },
+  mutations: {
+    remove(state, term) {
+      Vue.delete(state.terms, term._id);
+    },
+    add(state, term) {
+      if (!state.terms[term._id]) {
+        Vue.set(state.terms, term._id, term);
+      } else {
+        console.error('Already exists!', term);
+      }
+    },
+    save(state, term) {
+      if (state.terms[term._id]) {
+        Vue.set(state.terms, term._id, term);
+      } else if (term._deleted && state.terms[term._id]) {
+        Vue.delete(state.terms, term._id);
+      } else {
+        console.error('Could not save! Term might not exist!', term);
+      }
+    },
+    allDocs(state, terms) {
+      let termsObject = {};
+      terms.rows.forEach(term => {
+        termsObject[term.doc._id] = term.doc
+      })
+      state.terms = termsObject;
+    }
+  },
+  actions: {
+    async remove({
+      commit
+    }, term) {
+      try {
+        await bucket.remove(term._id);
+        commit('remove', term);
+      } catch (e) {
+        console.error('Error:', e);
+      }
+    },
+    async add({
+      commit
+    }, term) {
+      try {
+        await bucket.add(term);
+        commit('add', term);
+      } catch (e) {
+        console.error('Error:', e);
+      }
+    },
+    async save({
+      commit,
+      state
+    }, term) {
+      try {
+        if (state.terms[term._id] !== term) {
+          await bucket.save(term);
+          commit('save', term);
+        } else {
+          throw 'Term not changed!'
+        }
+      } catch (e) {
+        console.error('Error:', e);
+      }
+    },
+    async allDocs({
+      commit
+    }) {
+      try {
+        commit('allDocs', await bucket.allDocs());
+      } catch (e) {
+        console.error('Error:', e);
+      }
+    }
+  }
+})
+
 new Vue({
   el: '#app',
   bucket,
+  store,
   render: h => h(App)
 })

@@ -35,8 +35,8 @@ export default {
     },
     editTerm(current) {
       this.current = current;
-      this.$refs.termfield.value = this.current.querySelector('.term').textContent;
-      this.$refs.descfield.value = this.current.querySelector('.desc').textContent;
+      this.$refs.termfield.value = this.current.term;
+      this.$refs.descfield.value = this.current.desc;
       this.toggleModal(true);
     },
     saveTerm() {

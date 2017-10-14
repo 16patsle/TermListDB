@@ -34,27 +34,11 @@ export default {
         //this.list.search(searchString, [columnSelect]);
       }
     },
-    edit(e) {
-      this.$emit('edit', e);
+    edit(term) {
+      this.$emit('edit', term);
     },
-    remove(e) {
-      this.$emit('remove', e);
-    },
-    save(term, data) {
-      const current = this.list.get('term', data.term)[0];
-
-      if (current) {
-        current.values({
-          term: data.term,
-          desc: data.desc
-        });
-      } else {
-        this.list.add({
-          term: data.term,
-          desc: data.desc,
-          date: Date.now()
-        });
-      }
+    remove(term) {
+      this.$emit('remove', term);
     }
   }
 }

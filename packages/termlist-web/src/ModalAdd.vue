@@ -20,11 +20,6 @@
 import Modal from './components/Modal.vue';
 
 export default {
-  data() {
-    return {
-      current: null
-    }
-  },
   components: {
     Modal
   },
@@ -33,19 +28,19 @@ export default {
     toggleModal(bool) {
       this.$refs.modal.toggleModal(bool);
     },
-    addTerm(current) {
-      this.current = current;
+    addTerm() {
       this.toggleModal(true);
     },
     saveTerm() {
-      this.$emit('save', this.current, {
+      this.$emit('save', {
+        _id: new Date().toJSON()
+      }, {
         term: this.$refs.termfield.value,
         desc: this.$refs.descfield.value
       });
       this.$refs.termfield.value = '';
       this.$refs.descfield.value = '';
       this.toggleModal(false);
-      this.current = null;
     }
   }
 }
