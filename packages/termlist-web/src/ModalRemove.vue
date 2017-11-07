@@ -1,40 +1,36 @@
 <template>
-<div class="modal" ref="modal">
-  <div class="modal-background" @click="toggleModal"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ui.removeterm}}</p>
-    </header>
-    <section class="modal-card-body">
-      {{ui.wanttoremove}}
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button is-danger" @click="removeTerm">{{ui.removeterm}}!</button>
-      <button class="button" @click="toggleModal">{{ui.cancel}}</button>
-    </footer>
+<Modal ref="modal" :title="ui.removeterm" :callback="removeTerm" :ok-text="ui.save" :cancel-text="ui.cancel">
+  <div slot="modal-body">
+    {{ui.wanttoremove}}
   </div>
-  <button class="modal-close is-large" aria-label="close" @click="toggleModal"></button>
-</div>
+  <div slot="modal-footer">
+    <button class="button is-danger" @click="removeTerm">{{ui.removeterm}}!</button>
+    <button class="button" @click="close">{{ui.cancel}}</button>
+  </div>
+</Modal>
 </template>
 <script>
+import Modal from './components/Modal.vue';
+
 export default {
-  data() {
-    return {
-      ui: {
-        removeterm: 'Fjern ord',
-        wanttoremove: 'Vil du fjerne dette ordet?',
-        cancel: 'Avbryt'
-      }
-    }
+  components: {
+    Modal
   },
-  props: ['current'],
+  props: ['ui'],
   methods: {
-    toggleModal() {
-      this.$refs.modal.classList.toggle("is-active");
+    toggleModal(bool) {
+      this.$refs.modal.toggleModal(bool);
+    },
+    confirmRemoveTerm(current) {
+      this.current = current;
+      this.toggleModal(true);
     },
     removeTerm() {
       this.$emit('remove', this.current);
-      this.toggleModal();
+      this.toggleModal(false);
+    },
+    close() {
+      this.toggleModal(false);
     }
   }
 }

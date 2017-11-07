@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import Vue from 'vue'
 import PouchDB from 'pouchdb'
 //import List from 'list.js'
@@ -260,5 +261,7 @@ bucket.db('termlist')
 */
 new Vue({
   el: '#app',
+  bucket,
+  store,
   render: h => h(App)
 })

@@ -11,86 +11,35 @@
     </tr>
   </thead>
   <tbody class="list" ref="termlist">
-    <tr v-for="term in terms">
-      <td class="term">{{term.term}}</td>
-      <td class="desc">{{term.desc}}</td>
-      <td class="date">{{term.date}}</td>
-      <td class="buttons"><a href="#" class="edit" @click.prevent="edit"><span class="icon is-small"><i class="fa fa-pencil"></i></span></a><a href="#" class="remove" @click.prevent="remove"><span class="icon is-small"><i class="fa fa-trash"></i></span></a></td>
-</tr>
+    <TermRow v-for="term in terms" :key="term._id" :term="term" @edit="edit" @remove="remove"></TermRow>
 </tbody>
 </table>
 </span>
 </template>
 <script>
-import SearchBar from './SearchBar.vue'
-
-/*
-var termList = new List(fields.table, {
-  valueNames: ["term", "desc", "date"],
-  item: '<tr><td class="term"></td><td class="desc"></td><td class="date"></td><td class="buttons"><a href="#" class="edit"><span class="icon is-small"><i class="fa fa-pencil"></i></span></a><a href="#" class="remove"><span class="icon is-small"><i class="fa fa-trash"></i></span></a></td></tr>'
-});
-*/
+import SearchBar from './components/SearchBar.vue'
+import TermRow from './components/TermRow.vue'
 
 export default {
-  data() {
-    return {
-      ui: {
-        term: 'Ord',
-        description: 'Forklaring',
-        date: 'Dato',
-      },
-      terms: [{
-        term: 'Ostepop',
-        desc: '!',
-        date: 123
-      }, {
-        term: 'Eplekake',
-        desc: '!!',
-        date: 456
-      }]
-    }
-  },
+  props: ['ui', 'terms'],
   components: {
-    SearchBar
-  },
-  mounted() {
-
-    // Due to some bug in List.js, we need to pass the parent of the element.
-    // The element needs the class "list" HACK
-    this.list = new List(this.$refs.termlist.parentNode, {
-      valueNames: ["term", "desc", "date"]
-    });
+    SearchBar,
+    TermRow
   },
   methods: {
     search(searchString, columnSelect) {
       if (columnSelect === "all") {
-        this.list.search(searchString);
+        //this.list.search(searchString);
       } else {
-        this.list.search(searchString, [columnSelect]);
+        //this.list.search(searchString, [columnSelect]);
       }
       this.$bucket.find(searchString);
     },
-    edit(e) {
-      this.$emit('edit', e);
+    edit(term) {
+      this.$emit('edit', term);
     },
-    remove(e) {
-      this.$emit('remove', e);
-    },
-    save(term, data) {
-      const current = this.list.get('term', data.term)[0];
-
-      if (current) {
-        current.values({
-          term: data.term,
-          desc: data.desc
-        });
-      } else {
-        this.list.add({
-          term: data.term,
-          desc: data.desc,
-          date: Date.now()
-        });
-      }
+    remove(term) {
+      this.$emit('remove', term);
     }
   }
 }
