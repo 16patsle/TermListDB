@@ -22,7 +22,6 @@
 </span>
 </template>
 <script>
-import List from 'list.js'
 import SearchBar from './SearchBar.vue'
 
 /*
@@ -69,6 +68,7 @@ export default {
       } else {
         this.list.search(searchString, [columnSelect]);
       }
+      this.$bucket.find(searchString);
     },
     edit(e) {
       this.$emit('edit', e);
