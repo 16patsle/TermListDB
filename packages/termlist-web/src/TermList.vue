@@ -33,7 +33,8 @@ export default {
       } else {
         //this.list.search(searchString, [columnSelect]);
       }
-      this.$bucket.find(searchString);
+      //this.$bucket.find(searchString);
+      this.$store.dispatch('find', searchString, columnSelect);
     },
     edit(term) {
       this.$emit('edit', term);

@@ -110,28 +110,46 @@ const bucket = new VuePouchDB.Bucket({
           include_docs: true
         });
     },
-    find(search) {
+    find(search, field) {
       search = new RegExp('.*' + RegExp.quote(search) + '.*', 'g');
 
-      this.db('termlist')
-        .find({
-          selector: {
-            term: {
-              $regex: search
+      if (field === "term") {
+        return [this.db('termlist')
+          .find({
+            selector: {
+              term: {
+                $regex: search
+              }
             }
-          }
-        })
-        .then(function(data) {
-          console.log(data)
-        });
-      return this.db('termlist')
-        .find({
-          selector: {
-            term: {
-              $regex: search
+          })];
+      } else if (field === "desc") {
+        return [this.db('termlist')
+          .find({
+            selector: {
+              desc: {
+                $regex: search
+              }
             }
-          }
-        });
+          })];
+      } else {
+        return [this.db('termlist')
+          .find({
+            selector: {
+              term: {
+                $regex: search
+              }
+            }
+          }), this.db('termlist')
+          .find({
+            selector: {
+              desc: {
+                $regex: search
+              }
+            }
+          })
+        ];
+      }
+
     }
   },
 
@@ -179,8 +197,8 @@ const store = new Vuex.Store({
     },
     find(state, terms) {
       let termsObject = {};
-      terms.rows.forEach(term => {
-        termsObject[term.doc._id] = term.doc
+      terms.docs.forEach(term => {
+        termsObject[term._id] = term
       })
       state.terms = termsObject;
     }
@@ -232,9 +250,15 @@ const store = new Vuex.Store({
     },
     async find({
       commit
-    }, search) {
+    }, search, field) {
       try {
-        commit('find', await bucket.find(search));
+        let searchResults = await bucket.find(search, field);
+        let resultObject = {};
+        for(let result of searchResults){
+          Object.assign(resultObject, await result);
+        }
+
+        commit('find', resultObject);
       } catch (e) {
         console.error('Error:', e);
       }
