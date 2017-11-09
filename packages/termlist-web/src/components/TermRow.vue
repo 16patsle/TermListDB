@@ -4,22 +4,19 @@
   <td class="desc">{{term.desc}}</td>
   <td class="date">{{term.date}}</td>
   <td class="buttons">
-    <a href="#" class="edit" @click.prevent="edit">
-          <span class="icon is-small">
-            <i class="fa fa-pencil"></i>
-          </span>
-</a>
-    <a href="#" class="remove" @click.prevent="remove">
-  <span class="icon is-small">
-    <i class="fa fa-trash"></i>
-  </span>
-</a>
+    <RowButton icon="pencil" @click="edit"></RowButton>
+    <RowButton icon="trash" @click="remove"></RowButton>
   </td>
 </tr>
 </template>
 <script>
+import RowButton from './RowButton.vue'
+
 export default {
   props: ['term'],
+  components: {
+    RowButton
+  },
   methods: {
     edit(e) {
       this.$emit('edit', this.term);
