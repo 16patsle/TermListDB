@@ -8,7 +8,7 @@
   </div>
   <div class="control">
     <div class="select">
-      <select ref="columnSelect">
+      <select ref="columnSelect" @change="search">
             <option value="all">Alle kolonner</option>
             <option value="term">Ord</option>
             <option value="desc">Forklaring</option>

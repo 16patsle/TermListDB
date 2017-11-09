@@ -1,58 +1,46 @@
 <template>
-<div class="modal" ref="modal">
-  <div class="modal-background" @click="toggleModal"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">{{ui.addterm}}</p>
-    </header>
-    <section class="modal-card-body">
-      <div class="field">
-        <label class="label">{{ui.term}}</label>
-        <div class="control">
-          <input class="input" type="text" ref="termfield">
-        </div>
+<Modal ref="modal" :title="ui.addterm" :callback="saveTerm" :ok-text="ui.add" :cancel-text="ui.cancel">
+  <div slot="modal-body">
+    <div class="field">
+      <label class="label">{{ui.term}}</label>
+      <div class="control">
+        <input class="input" type="text" ref="termfield">
       </div>
-      <div class="field">
-        <label class="label">{{ui.description}}</label>
-        <div class="control">
-          <textarea class="textarea" ref="descfield"></textarea>
-        </div>
+    </div>
+    <div class="field">
+      <label class="label">{{ui.description}}</label>
+      <div class="control">
+        <textarea class="textarea" ref="descfield"></textarea>
       </div>
-      <div class="field">
-        <div class="control">
-          <button class="button is-primary addbutton" @click="addTerm">{{ui.add}}</button>
-        </div>
-      </div>
-    </section>
+    </div>
   </div>
-  <button class="modal-close is-large" aria-label="close" @click="toggleModal"></button>
-</div>
+</Modal>
 </template>
 <script>
+import Modal from './components/Modal.vue';
+
 export default {
-  data() {
-    return {
-      ui: {
-        addterm: 'Legg til ord',
-        term: 'Ord',
-        description: 'Forklaring',
-        add: 'Legg til'
-      }
-    }
+  components: {
+    Modal
   },
-  props: ['current'],
+  props: ['ui'],
   methods: {
-    toggleModal() {
-      this.$refs.modal.classList.toggle("is-active");
+    toggleModal(bool) {
+      this.$refs.modal.toggleModal(bool);
     },
     addTerm() {
-      this.$emit('save', this.current, {
+      this.toggleModal(true);
+    },
+    saveTerm() {
+      this.$emit('save', {
+        _id: new Date().toJSON()
+      }, {
         term: this.$refs.termfield.value,
         desc: this.$refs.descfield.value
       });
       this.$refs.termfield.value = '';
       this.$refs.descfield.value = '';
-      this.toggleModal();
+      this.toggleModal(false);
     }
   }
 }
