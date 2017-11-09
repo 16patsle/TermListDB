@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import ModalAdd from './ModalAdd.vue'
-import ModalEdit from './ModalEdit.vue'
-import ModalRemove from './ModalRemove.vue'
-import TermList from './TermList.vue'
+import ModalAdd from './components/Modal/ModalAdd.vue'
+import ModalEdit from './components/Modal/ModalEdit.vue'
+import ModalRemove from './components/Modal/ModalRemove.vue'
+import TermList from './components/TermList.vue'
 
 export default {
   name: 'app',

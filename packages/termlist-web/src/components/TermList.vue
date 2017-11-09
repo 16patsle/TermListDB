@@ -17,8 +17,8 @@
 </span>
 </template>
 <script>
-import SearchBar from './components/SearchBar.vue'
-import TermRow from './components/TermRow.vue'
+import SearchBar from './TermList/SearchBar.vue'
+import TermRow from './TermList/TermRow.vue'
 
 export default {
   props: ['ui', 'terms'],
