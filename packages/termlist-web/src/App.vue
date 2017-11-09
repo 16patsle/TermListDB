@@ -1,25 +1,26 @@
 <template>
 <section id="app" class="section">
-  <ModalAdd ref="addModal" :current="currentTerm" :ui="ui" @save="saveTerm"></ModalAdd>
-  <ModalEdit ref="editModal" :current="currentTerm" :ui="ui" @save="saveTerm"></ModalEdit>
+  <ModalAdd ref="addModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"></ModalAdd>
+  <ModalEdit ref="editModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"></ModalEdit>
   <ModalRemove ref="removeModal" :current="currentTerm" :ui="ui" @remove="removeTerm"></ModalRemove>
   <div class="container">
     <h1 class="title">{{ui.termlist}}</h1>
     <div class="field">
       <div class="control">
-        <button class="button is-primary" @click="addTerm">{{ui.add}}</button>
+        <AppButton primary="true" @click="addTerm">{{ui.add}}</AppButton>
       </div>
     </div>
-    <TermList ref="list" :ui="ui" :terms="terms" @edit="editTerm" @remove="confirmRemoveTerm"></TermList>
+    <TermList ref="list" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm"></TermList>
   </div>
 </section>
 </template>
 
 <script>
-import ModalAdd from './ModalAdd.vue'
-import ModalEdit from './ModalEdit.vue'
-import ModalRemove from './ModalRemove.vue'
-import TermList from './TermList.vue'
+import ModalAdd from './components/Modal/ModalAdd.vue'
+import ModalEdit from './components/Modal/ModalEdit.vue'
+import ModalRemove from './components/Modal/ModalRemove.vue'
+import AppButton from './components/Generic/AppButton.vue'
+import TermList from './components/TermList.vue'
 
 export default {
   name: 'app',
@@ -28,7 +29,8 @@ export default {
       ui: {
         termlist: 'Ordliste',
         term: 'Ord',
-        description: 'Forklaring',
+        desc: 'Forklaring',
+        type: 'Ordklasse',
         date: 'Dato',
         add: 'Legg til',
         addterm: 'Legg til ord',
@@ -36,8 +38,27 @@ export default {
         editterm: 'Rediger ord',
         removeterm: 'Fjern ord',
         wanttoremove: 'Vil du fjerne dette ordet?',
-        cancel: 'Avbryt'
+        cancel: 'Avbryt',
+        search: 'Søk'
       },
+      fields: [{
+        name: 'term',
+        type: 'short'
+      }, {
+        name: 'desc',
+        type: 'long'
+      }, {
+        name: 'type',
+        type: 'short'
+      }, {
+        name: 'date',
+        type: 'date',
+        immutable: true
+      }, {
+        name: '',
+        type: 'filler',
+        immutable: true
+      }],
       currentTerm: null
     }
   },
@@ -50,6 +71,7 @@ export default {
     ModalAdd,
     ModalEdit,
     ModalRemove,
+    AppButton,
     TermList
   },
   methods: {

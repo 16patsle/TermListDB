@@ -16,8 +16,8 @@
     </section>
     <footer class="modal-card-foot">
       <slot name="modal-footer">
-        <button class="button is-primary" @click="callback">{{ okText }}</button>
-        <button class="button" @click="close">{{ cancelText }}</button>
+        <AppButton primary="true" @click="callback">{{ okText }}</AppButton>
+        <AppButton @click="close">{{ cancelText }}</AppButton>
       </slot>
     </footer>
   </div>
@@ -26,7 +26,12 @@
 </template>
 
 <script>
+import AppButton from '../Generic/AppButton.vue'
+
 export default {
+  components: {
+    AppButton
+  },
   props: {
     okText: {
       type: String,

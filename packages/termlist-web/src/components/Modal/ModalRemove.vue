@@ -4,17 +4,19 @@
     {{ui.wanttoremove}}
   </div>
   <div slot="modal-footer">
-    <button class="button is-danger" @click="removeTerm">{{ui.removeterm}}!</button>
-    <button class="button" @click="close">{{ui.cancel}}</button>
+    <AppButton danger="true" @click="removeTerm">{{ui.removeterm}}!</AppButton>
+    <AppButton @click="close">{{ui.cancel}}</AppButton>
   </div>
 </Modal>
 </template>
 <script>
-import Modal from './components/Modal.vue';
+import Modal from './Modal.vue';
+import AppButton from '../Generic/AppButton.vue';
 
 export default {
   components: {
-    Modal
+    Modal,
+    AppButton
   },
   props: ['ui'],
   methods: {
