@@ -1,7 +1,7 @@
 <template>
 <section id="app" class="section">
-  <ModalAdd ref="addModal" :current="currentTerm" :ui="ui" @save="saveTerm"></ModalAdd>
-  <ModalEdit ref="editModal" :current="currentTerm" :ui="ui" @save="saveTerm"></ModalEdit>
+  <ModalAdd ref="addModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"></ModalAdd>
+  <ModalEdit ref="editModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"></ModalEdit>
   <ModalRemove ref="removeModal" :current="currentTerm" :ui="ui" @remove="removeTerm"></ModalRemove>
   <div class="container">
     <h1 class="title">{{ui.termlist}}</h1>
@@ -10,7 +10,7 @@
         <AppButton primary="true" @click="addTerm">{{ui.add}}</AppButton>
       </div>
     </div>
-    <TermList ref="list" :ui="ui" :terms="terms" @edit="editTerm" @remove="confirmRemoveTerm"></TermList>
+    <TermList ref="list" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm"></TermList>
   </div>
 </section>
 </template>
@@ -29,7 +29,8 @@ export default {
       ui: {
         termlist: 'Ordliste',
         term: 'Ord',
-        description: 'Forklaring',
+        desc: 'Forklaring',
+        type: 'Ordklasse',
         date: 'Dato',
         add: 'Legg til',
         addterm: 'Legg til ord',
@@ -37,8 +38,27 @@ export default {
         editterm: 'Rediger ord',
         removeterm: 'Fjern ord',
         wanttoremove: 'Vil du fjerne dette ordet?',
-        cancel: 'Avbryt'
+        cancel: 'Avbryt',
+        search: 'Søk'
       },
+      fields: [{
+        name: 'term',
+        type: 'short'
+      }, {
+        name: 'desc',
+        type: 'long'
+      }, {
+        name: 'type',
+        type: 'short'
+      }, {
+        name: 'date',
+        type: 'date',
+        immutable: true
+      }, {
+        name: '',
+        type: 'filler',
+        immutable: true
+      }],
       currentTerm: null
     }
   },

@@ -1,8 +1,6 @@
 <template>
 <tr>
-  <td class="term">{{term.term}}</td>
-  <td class="desc">{{term.desc}}</td>
-  <td class="date">{{term.date}}</td>
+  <td v-for="field in fields">{{term[field.name]}}</td>
   <td class="buttons">
     <RowButton icon="pencil" @click="edit"></RowButton>
     <RowButton icon="trash" @click="remove"></RowButton>
@@ -13,7 +11,7 @@
 import RowButton from './RowButton.vue'
 
 export default {
-  props: ['term'],
+  props: ['term', 'fields'],
   components: {
     RowButton
   },

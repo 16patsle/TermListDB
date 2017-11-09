@@ -1,16 +1,11 @@
 <template>
 <Modal ref="modal" :title="ui.editterm" :callback="saveTerm" :ok-text="ui.save" :cancel-text="ui.cancel">
   <div slot="modal-body">
-    <div class="field">
-      <label class="label">{{ui.term}}</label>
+    <div class="field" v-for="field in fields" v-if="!field.immutable">
+      <label class="label">{{ui[field.name]}}</label>
       <div class="control">
-        <input class="input" type="text" ref="termfield">
-      </div>
-    </div>
-    <div class="field">
-      <label class="label">{{ui.description}}</label>
-      <div class="control">
-        <textarea class="textarea" ref="descfield"></textarea>
+        <input v-if="field.type === 'short'" class="input" type="text" :ref="field.name+'field'">
+        <textarea v-else-if="field.type === 'long'" class="textarea" :ref="field.name+'field'"></textarea>
       </div>
     </div>
   </div>
@@ -28,25 +23,35 @@ export default {
   components: {
     Modal
   },
-  props: ['ui'],
+  props: ['ui', 'fields'],
   methods: {
     toggleModal(bool) {
       this.$refs.modal.toggleModal(bool);
     },
     editTerm(current) {
       this.current = current;
-      this.$refs.termfield.value = this.current.term;
-      this.$refs.descfield.value = this.current.desc;
+
+      for (const field of this.fields) {
+        if (!field.immutable && this.$refs[field.name + 'field']) {
+          this.$refs[field.name + 'field'][0].value = this.current[field.name] || '';
+        }
+      }
       this.toggleModal(true);
     },
     saveTerm() {
-      this.$emit('save', this.current, {
-        term: this.$refs.termfield.value,
-        desc: this.$refs.descfield.value
-      });
-      this.$refs.termfield.value = '';
-      this.$refs.descfield.value = '';
+      let termObject = {}
+
+      for (const field of this.fields) {
+        if (!field.immutable && this.$refs[field.name + 'field']) {
+          termObject[field.name] = this.$refs[field.name + 'field'][0].value;
+          this.$refs[field.name + 'field'][0].value = '';
+        }
+      }
+
+      this.$emit('save', this.current, termObject);
+
       this.toggleModal(false);
+
       this.current = null;
     }
   }
