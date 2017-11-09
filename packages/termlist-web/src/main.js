@@ -1,13 +1,14 @@
-import 'babel-polyfill'
-import Vue from 'vue'
-import PouchDB from 'pouchdb'
+import 'babel-polyfill';
+import deepmerge from 'deepmerge';
+import Vue from 'vue';
+import PouchDB from 'pouchdb';
 //import List from 'list.js'
 import VuePouchDB from 'vue-pouch-db';
 import PouchDBFind from 'pouchdb-find';
-import Vuex from 'vuex'
-import Bulma from 'bulma'
-import FontAwesome from 'font-awesome/css/font-awesome.css'
-import App from './App.vue'
+import Vuex from 'vuex';
+import Bulma from 'bulma';
+import FontAwesome from 'font-awesome/css/font-awesome.css';
+import App from './App.vue';
 
 Vue.use(VuePouchDB);
 Vue.use(Vuex);
@@ -110,44 +111,35 @@ const bucket = new VuePouchDB.Bucket({
           include_docs: true
         });
     },
-    find(search, field) {
-      search = new RegExp('.*' + RegExp.quote(search) + '.*', 'g');
+    find(search) {
+      search.search = new RegExp('.*' + RegExp.quote(search.search) + '.*', 'g');
 
-      if (field === "term") {
+      if (search.selected && search.selected !== "all") {
         return [this.db('termlist')
           .find({
             selector: {
-              term: {
-                $regex: search
-              }
-            }
-          })];
-      } else if (field === "desc") {
-        return [this.db('termlist')
-          .find({
-            selector: {
-              desc: {
-                $regex: search
+              [search.selected]: {
+                $regex: search.search
               }
             }
           })];
       } else {
-        return [this.db('termlist')
-          .find({
-            selector: {
-              term: {
-                $regex: search
-              }
-            }
-          }), this.db('termlist')
-          .find({
-            selector: {
-              desc: {
-                $regex: search
-              }
-            }
-          })
-        ];
+        let returnArray = [];
+
+        for (const field of search.fields) {
+          if (!field.immutable) {
+            returnArray.push(this.db('termlist')
+              .find({
+                selector: {
+                  [field.name]: {
+                    $regex: search.search
+                  }
+                }
+              }))
+          }
+        }
+
+        return returnArray;
       }
 
     }
@@ -250,13 +242,14 @@ const store = new Vuex.Store({
     },
     async find({
       commit
-    }, search, field) {
+    }, search) {
       try {
-        let searchResults = await bucket.find(search, field);
-        let resultObject = {};
-        for(let result of searchResults){
-          Object.assign(resultObject, await result);
+        let searchResults = []
+        for(let result of bucket.find(search)){
+          searchResults.push(await result)
         }
+
+        let resultObject = deepmerge.all(searchResults)
 
         commit('find', resultObject);
       } catch (e) {

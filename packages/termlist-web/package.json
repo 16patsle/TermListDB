@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "bulma": "^0.5.3",
+    "deepmerge": "^2.0.1",
     "font-awesome": "^4.7.0",
     "pouchdb": "^6.3.4",
+    "pouchdb-find": "^6.3.4",
     "vue": "^2.3.3",
     "vue-pouch-db": "^2.0.1",
     "vuex": "^3.0.0"

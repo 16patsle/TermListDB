@@ -24,14 +24,8 @@ export default {
     TermRow
   },
   methods: {
-    search(searchString, columnSelect) {
-      if (columnSelect === "all") {
-        //this.list.search(searchString);
-      } else {
-        //this.list.search(searchString, [columnSelect]);
-      }
-      //this.$bucket.find(searchString);
-      this.$store.dispatch('find', searchString, columnSelect);
+    search(search) {
+      this.$store.dispatch('find', search);
     },
     edit(term) {
       this.$emit('edit', term);
