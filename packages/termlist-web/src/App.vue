@@ -7,7 +7,7 @@
     <h1 class="title">{{ui.termlist}}</h1>
     <div class="field">
       <div class="control">
-        <button class="button is-primary" @click="addTerm">{{ui.add}}</button>
+        <AppButton primary="true" @click="addTerm">{{ui.add}}</AppButton>
       </div>
     </div>
     <TermList ref="list" :ui="ui" :terms="terms" @edit="editTerm" @remove="confirmRemoveTerm"></TermList>
@@ -19,6 +19,7 @@
 import ModalAdd from './components/Modal/ModalAdd.vue'
 import ModalEdit from './components/Modal/ModalEdit.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
+import AppButton from './components/Generic/AppButton.vue'
 import TermList from './components/TermList.vue'
 
 export default {
@@ -50,6 +51,7 @@ export default {
     ModalAdd,
     ModalEdit,
     ModalRemove,
+    AppButton,
     TermList
   },
   methods: {
