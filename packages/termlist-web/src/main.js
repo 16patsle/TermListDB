@@ -282,7 +282,8 @@ new Vue({
   store,
   render: h => h(App)
 })
-
+/*
 window.onload = function(){
   bucket.db('termlist').bulkDocs(Trello).then((response)=>console.log(response))
 };
+*/
