@@ -108,7 +108,8 @@ const bucket = new VuePouchDB.Bucket({
     allDocs() {
       return this.db('termlist')
         .allDocs({
-          include_docs: true
+          include_docs: true,
+          limit:20
         });
     },
     find(search) {
@@ -142,7 +143,16 @@ const bucket = new VuePouchDB.Bucket({
         return returnArray;
       }
 
-    }
+    },
+    gotoPage(data) {
+      return this.db('termlist')
+        .allDocs({
+          include_docs: true,
+          startkey:data.lastTerm,
+          limit:20,
+          skip:20*data.pageNumberOffset+Number(!data.isBefore)
+        });
+    },
   },
 
   // Databases
@@ -186,6 +196,7 @@ const store = new Vuex.Store({
         termsObject[term.doc._id] = term.doc
       })
       state.terms = termsObject;
+      state.totalRows = terms.total_rows;
     },
     find(state, terms) {
       let termsObject = {};
@@ -252,6 +263,15 @@ const store = new Vuex.Store({
         let resultObject = deepmerge.all(searchResults)
 
         commit('find', resultObject);
+      } catch (e) {
+        console.error('Error:', e);
+      }
+    },
+    async gotoPage({
+      commit
+    }, data) {
+      try {
+        commit('allDocs', await bucket.gotoPage(data));
       } catch (e) {
         console.error('Error:', e);
       }

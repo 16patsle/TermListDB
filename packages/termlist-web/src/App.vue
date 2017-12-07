@@ -10,7 +10,7 @@
         <AppButton primary="true" @click="addTerm">{{ui.add}}</AppButton>
       </div>
     </div>
-    <TermList ref="list" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm"></TermList>
+    <TermList ref="list" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm" @gotopage="gotoPage"></TermList>
   </div>
 </section>
 </template>
@@ -39,7 +39,11 @@ export default {
         removeterm: 'Fjern ord',
         wanttoremove: 'Vil du fjerne dette ordet?',
         cancel: 'Avbryt',
-        search: 'Søk'
+        search: 'Søk',
+        pagenumber: 'Side',
+        gotopage: 'Gå til side',
+        previous: 'Forrige',
+        next: 'Neste'
       },
       fields: [{
         name: 'term',
@@ -95,6 +99,22 @@ export default {
     },
     removeTerm(term) {
       this.$store.dispatch('remove', term);
+    },
+    gotoPage(pageNumberOffset, isBefore) {
+      if (isBefore) {
+        this.$store.dispatch('allDocs').then(() => {
+          this.$store.dispatch('gotoPage', {
+            lastTerm: this.$store.state.terms[Object.keys(this.$store.state.terms)[0]]['_id'],
+            pageNumberOffset: Number(pageNumberOffset),
+            isBefore: true
+          });
+        });
+      } else {
+        this.$store.dispatch('gotoPage', {
+          lastTerm: this.$store.state.terms[Object.keys(this.$store.state.terms)[Object.keys(this.$store.state.terms).length - 1]]['_id'],
+          pageNumberOffset: 0
+        });
+      }
     }
   },
   created() {
