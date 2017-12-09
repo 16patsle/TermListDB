@@ -1,10 +1,12 @@
 <template>
 <span>
 <SearchBar :ui="ui" :fields="fields" @search="search"></SearchBar>
+<AppPagination :ui="ui" :firstpage="1" :currentpage="currentPage" :lastpage="Math.ceil($store.state.totalRows/20)" @gotopage="gotoPage"></AppPagination>
 <table class="table is-fullwidth">
   <thead>
     <tr>
       <th v-for="field in fields">{{ui[field.name]}}</th>
+      <th></th>
     </tr>
   </thead>
   <tbody class="list" ref="termlist">
