@@ -2,7 +2,6 @@ import 'babel-polyfill';
 import deepmerge from 'deepmerge';
 import Vue from 'vue';
 import PouchDB from 'pouchdb';
-//import List from 'list.js'
 import VuePouchDB from 'vue-pouch-db';
 import PouchDBFind from 'pouchdb-find';
 import Vuex from 'vuex';
