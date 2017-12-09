@@ -10,7 +10,7 @@
     </tr>
   </thead>
   <tbody class="list" ref="termlist">
-    <TermRow v-for="term in terms" :key="term._id" :term="term" :fields="fields" @edit="edit" @remove="remove"></TermRow>
+    <TermRow v-for="term in terms" :key="term._id" :ui="ui" :term="term" :fields="fields" @edit="edit" @remove="remove"></TermRow>
 </tbody>
 </table>
 <AppPagination :ui="ui" :firstpage="1" :currentpage="currentPage" :lastpage="Math.ceil($store.state.totalRows/20)" @gotopage="gotoPage"></AppPagination>

@@ -43,7 +43,15 @@ export default {
         pagenumber: 'Side',
         gotopage: 'Gå til side',
         previous: 'Forrige',
-        next: 'Neste'
+        next: 'Neste',
+        wordClasses: {
+          verb: 'Verb',
+          noun: 'Substantiv',
+          adjective: 'Adjektiv',
+          adverb: 'Adverb',
+          preposition: 'Preposisjon',
+          conjunction: 'Konjunksjon'
+        }
       },
       fields: [{
         name: 'term',
@@ -53,7 +61,8 @@ export default {
         type: 'long'
       }, {
         name: 'type',
-        type: 'short'
+        type: 'select',
+        options: ['verb', 'noun', 'adjective', 'adverb', 'preposition', 'conjunction']
       }, {
         name: 'date',
         type: 'date',
