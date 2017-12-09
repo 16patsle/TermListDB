@@ -112,7 +112,7 @@ export default {
       } else {
         this.$store.dispatch('gotoPage', {
           lastTerm: this.$store.state.terms[Object.keys(this.$store.state.terms)[Object.keys(this.$store.state.terms).length - 1]]['_id'],
-          pageNumberOffset: 0
+          pageNumberOffset: pageNumberOffset - 1
         });
       }
     }
