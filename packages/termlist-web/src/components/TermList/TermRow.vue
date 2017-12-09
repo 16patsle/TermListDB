@@ -1,5 +1,5 @@
 <template>
-<tr>
+<tr class="term-row">
   <td v-for="field in fields">{{term[field.name]}}</td>
   <td class="buttons">
     <RowButton icon="pencil" @click="edit"></RowButton>
@@ -25,3 +25,9 @@ export default {
   }
 }
 </script>
+
+<style>
+tr.term-row td {
+  white-space: pre-line;
+}
+</style>
