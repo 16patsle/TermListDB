@@ -13,6 +13,7 @@
     "bulma": "^0.5.3",
     "deepmerge": "^2.0.1",
     "font-awesome": "^4.7.0",
+    "markdown-it": "^8.4.0",
     "pouchdb": "^6.3.4",
     "pouchdb-find": "^6.3.4",
     "vue": "^2.5.3",
