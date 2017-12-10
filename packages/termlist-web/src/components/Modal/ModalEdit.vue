@@ -5,7 +5,7 @@
       <label class="label">{{ui[field.name]}}</label>
       <div class="control">
         <input v-if="field.type === 'short'" class="input" type="text" :ref="field.name+'field'">
-        <textarea v-else-if="field.type === 'long'" class="textarea" :ref="field.name+'field'"></textarea>
+        <textarea v-else-if="field.type === 'long'" class="textarea" rows="8" :ref="field.name+'field'"></textarea>
         <div v-else-if="field.type === 'select' && field.options instanceof Array" class="select">
           <select :ref="field.name+'field'">
             <option v-for="option in field.options" :value="option">{{ui.wordClasses[option]}}</option>

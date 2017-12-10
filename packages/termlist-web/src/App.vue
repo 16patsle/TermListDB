@@ -10,7 +10,7 @@
         <AppButton primary="true" @click="addTerm">{{ui.add}}</AppButton>
       </div>
     </div>
-    <TermList ref="list" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm" @gotopage="gotoPage"></TermList>
+    <TermList ref="list" :utils="utils" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm" @gotopage="gotoPage"></TermList>
   </div>
 </section>
 </template>
@@ -21,6 +21,8 @@ import ModalEdit from './components/Modal/ModalEdit.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
 import AppButton from './components/Generic/AppButton.vue'
 import TermList from './components/TermList.vue'
+
+import MarkdownIt from 'markdown-it';
 
 export default {
   name: 'app',
@@ -72,7 +74,10 @@ export default {
         type: 'filler',
         immutable: true
       }],
-      currentTerm: null
+      currentTerm: null,
+      utils: {
+        md: null
+      }
     }
   },
   computed: {
@@ -127,6 +132,9 @@ export default {
     }
   },
   created() {
+    this.utils.md = MarkdownIt('zero');
+    this.utils.md.enable(['emphasis', 'entity', 'escape', 'link', 'strikethrough', 'text_collapse', 'balance_pairs']);
+
     this.$store.dispatch('allDocs');
   }
 }
