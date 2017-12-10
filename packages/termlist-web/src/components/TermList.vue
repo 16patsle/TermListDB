@@ -24,7 +24,24 @@ import TermRow from './TermList/TermRow.vue'
 import AppPagination from './Generic/AppPagination.vue'
 
 export default {
-  props: ['utils', 'ui', 'terms', 'fields'],
+  props: {
+    utils: {
+      type: Object,
+      required: true
+    },
+    ui: {
+      type: Object,
+      required: true
+    },
+    terms: {
+      type: Object,
+      required: true
+    },
+    fields: {
+      type: Array,
+      required: true
+    }
+  },
   components: {
     TermSearchBar,
     TermSortSelect,

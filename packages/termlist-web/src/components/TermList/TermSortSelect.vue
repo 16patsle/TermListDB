@@ -1,7 +1,7 @@
 <template>
 <div class="field is-expanded">
   <div class="control">
-    <AppSelect :options="options" fullwidth="true" @change="sort"></AppSelect>
+    <AppSelect :options="options" :fullwidth="true" @change="sort"></AppSelect>
   </div>
 </div>
 </template>
@@ -9,7 +9,16 @@
 import AppSelect from '../Generic/AppSelect.vue'
 
 export default {
-  props: ['ui', 'fields'],
+  props: {
+    ui: {
+      type: Object,
+      required: true
+    },
+    fields: {
+      type: Array,
+      required: true
+    }
+  },
   components: {
     AppSelect
   },

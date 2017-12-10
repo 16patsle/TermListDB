@@ -18,7 +18,16 @@
 </template>
 <script>
 export default {
-  props: ['ui', 'fields'],
+  props: {
+    ui: {
+      type: Object,
+      required: true
+    },
+    fields: {
+      type: Array,
+      required: true
+    }
+  },
   methods: {
     search(e) {
       // Search

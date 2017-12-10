@@ -28,7 +28,16 @@ export default {
   components: {
     Modal
   },
-  props: ['ui', 'fields'],
+  props: {
+    ui: {
+      type: Object,
+      required: true
+    },
+    fields: {
+      type: Array,
+      required: true
+    }
+  },
   methods: {
     toggleModal(bool) {
       this.$refs.modal.toggleModal(bool);

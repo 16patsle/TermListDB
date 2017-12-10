@@ -4,7 +4,7 @@
     {{ui.wanttoremove}}
   </div>
   <div slot="modal-footer">
-    <AppButton danger="true" @click="removeTerm">{{ui.removeterm}}!</AppButton>
+    <AppButton :danger="true" @click="removeTerm">{{ui.removeterm}}!</AppButton>
     <AppButton @click="close">{{ui.cancel}}</AppButton>
   </div>
 </Modal>
@@ -18,7 +18,12 @@ export default {
     Modal,
     AppButton
   },
-  props: ['ui'],
+  props: {
+    ui: {
+      type: Object,
+      required: true
+    }
+  },
   methods: {
     toggleModal(bool) {
       this.$refs.modal.toggleModal(bool);

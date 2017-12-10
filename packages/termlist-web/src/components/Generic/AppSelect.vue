@@ -8,7 +8,14 @@
 </template>
 <script>
 export default {
-  props: ['defaultoption', 'options', 'fullwidth'],
+  props: {
+    defaultoption: Object,
+    options: {
+      type: Array,
+      required: true
+    },
+    fullwidth: Boolean
+  },
   methods: {
     change(e) {
       this.$emit('change', e.target.value);

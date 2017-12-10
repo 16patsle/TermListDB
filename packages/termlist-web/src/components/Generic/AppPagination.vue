@@ -9,13 +9,39 @@
     <li><a class="pagination-link is-current" :aria-label="ui.pagenumber + ' ' + currentpage" aria-current="page">{{currentpage}}</a></li>
     <li v-if="!(currentpage > lastpage - 2)"><a class="pagination-link" @click="clickPage" :aria-label="ui.gotopage + ' ' + (currentpage + 1)">{{currentpage + 1}}</a></li>
     <li v-if="!(currentpage + 2 >= lastpage)"><span class="pagination-ellipsis">&hellip;</span></li>
-    <li v-if="!(currentpage > lastpage - 1)"><a class="pagination-link" @click="clickPage" :aria-label="ui.gotopage + ' ' + lastpage">{{lastpage}}</a></li>
+    <li v-if="!(currentpage > lastpage - 1)"><a class="pagination-link" @click="clickPage" :aria-label="ui.gotopage + ' ' + lastpage">{{lastpageNumber}}</a></li>
   </ul>
 </nav>
 </template>
 <script>
 export default {
-  props: ['ui', 'currentpage', 'firstpage', 'lastpage'],
+  props: {
+    ui: {
+      type: Object,
+      required: true
+    },
+    currentpage: {
+      type: Number,
+      required: true
+    },
+    firstpage: {
+      type: Number,
+      default: 1
+    },
+    lastpage: {
+      type: Number,
+      required: true
+    }
+  },
+  computed: {
+    lastpageNumber() {
+      if (isNaN(this.lastpage)) {
+        return ' ';
+      } else {
+        return this.lastpage
+      }
+    }
+  },
   methods: {
     previous(e) {
       this.$emit('goto', e);
