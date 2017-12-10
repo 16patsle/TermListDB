@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     sort(value) {
-      // Search
+      // Sort
       this.$emit('sort', value);
     }
   }

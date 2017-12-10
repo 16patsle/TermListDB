@@ -2,18 +2,18 @@
 <tr class="term-row">
   <td v-for="field in fields" v-html="getFieldValue(field)"></td>
   <td class="buttons">
-    <RowButton icon="pencil" @click="edit"></RowButton>
-    <RowButton icon="trash" @click="remove"></RowButton>
+    <TermRowButton icon="pencil" @click="edit"></TermRowButton>
+    <TermRowButton icon="trash" @click="remove"></TermRowButton>
   </td>
 </tr>
 </template>
 <script>
-import RowButton from './RowButton.vue'
+import TermRowButton from './TermRowButton.vue'
 
 export default {
   props: ['md', 'ui', 'term', 'fields'],
   components: {
-    RowButton
+    TermRowButton
   },
   methods: {
     edit(e) {
