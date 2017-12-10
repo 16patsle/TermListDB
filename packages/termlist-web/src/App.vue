@@ -116,16 +116,20 @@ export default {
     },
     gotoPage(pageNumberOffset, isBefore) {
       if (isBefore) {
-        this.$store.dispatch('allDocs').then(() => {
-          this.$store.dispatch('gotoPage', {
-            lastTerm: this.$store.state.terms[Object.keys(this.$store.state.terms)[0]]['_id'],
+        this.$store.dispatch('getTerms', {
+          field: 'term'
+        }).then(() => {
+          this.$store.dispatch('getTerms', {
+            field: 'term',
+            lastTerm: this.$store.state.terms[Object.keys(this.$store.state.terms)[0]],
             pageNumberOffset: Number(pageNumberOffset),
             isBefore: true
           });
         });
       } else {
-        this.$store.dispatch('gotoPage', {
-          lastTerm: this.$store.state.terms[Object.keys(this.$store.state.terms)[Object.keys(this.$store.state.terms).length - 1]]['_id'],
+        this.$store.dispatch('getTerms', {
+          field: 'term',
+          lastTerm: this.$store.state.terms[Object.keys(this.$store.state.terms)[Object.keys(this.$store.state.terms).length - 1]],
           pageNumberOffset: pageNumberOffset - 1
         });
       }
@@ -135,7 +139,10 @@ export default {
     this.utils.md = MarkdownIt('zero');
     this.utils.md.enable(['emphasis', 'entity', 'escape', 'link', 'strikethrough', 'text_collapse', 'balance_pairs']);
 
-    this.$store.dispatch('allDocs');
+    this.$store.dispatch('getTotal');
+    this.$store.dispatch('getTerms', {
+      field: 'term'
+    });
   }
 }
 </script>
