@@ -104,11 +104,24 @@ const bucket = new VuePouchDB.Bucket({
             .put(termObject);
         });
     },
-    allDocs() {
+    getTerms(data) {
+      data = data || {};
+      data.index = data.field || null;
+      data.field = data.field || '_id';
+      data.lastTerm = data.lastTerm || {};
+      data.lastTerm[data.field] = data.lastTerm[data.field] || null;
+
       return this.db('termlist')
-        .allDocs({
-          include_docs: true,
-          limit:20
+        .find({
+          selector: {
+            [data.field]: {
+              $gte: data.lastTerm[data.field]
+            }
+          },
+          sort: [data.field],
+          limit: 20,
+          skip: 20 * data.pageNumberOffset + Number(!data.isBefore),
+          use_index: data.index
         });
     },
     find(search) {
@@ -122,7 +135,8 @@ const bucket = new VuePouchDB.Bucket({
                 $regex: search.search
               }
             }
-          })];
+          })
+        ];
       } else {
         let returnArray = [];
 
@@ -141,17 +155,24 @@ const bucket = new VuePouchDB.Bucket({
 
         return returnArray;
       }
-
     },
-    gotoPage(data) {
-      return this.db('termlist')
-        .allDocs({
-          include_docs: true,
-          startkey:data.lastTerm,
-          limit:20,
-          skip:20*data.pageNumberOffset+Number(!data.isBefore)
-        });
+    createIndex(indexes, data) {
+      if (data && data.field) {
+        if (indexes.indexes.indexOf(data.field) === -1) {
+          return this.db('termlist')
+            .createIndex({
+              index: {
+                fields: [data.field],
+                name: data.field,
+                ddoc: data.field
+              }
+            });
+        }
+      }
     },
+    getTotal() {
+      return this.db('termlist').allDocs({limit:1});
+    }
   },
 
   // Databases
@@ -189,21 +210,31 @@ const store = new Vuex.Store({
         console.error('Could not save! Term might not exist!', term);
       }
     },
-    allDocs(state, terms) {
+    getTerms(state, terms) {
       let termsObject = {};
-      terms.rows.forEach(term => {
-        termsObject[term.doc._id] = term.doc
+      let designRegex = /^_design\//;
+
+      terms.docs.forEach(term => {
+        if (!designRegex.test(term._id)) {
+          termsObject[term._id] = term
+        }
       })
+
       state.terms = termsObject;
-      state.totalRows = terms.total_rows;
     },
     find(state, terms) {
       let termsObject = {};
+      let designRegex = /^_design\//;
       terms.docs.forEach(term => {
-        termsObject[term._id] = term
+        if (!designRegex.test(term._id)) {
+          termsObject[term._id] = term
+        }
       })
       state.terms = termsObject;
-    }
+    },
+    getTotal(state, total) {
+      state.totalRows = total.total_rows;
+    },
   },
   actions: {
     async remove({
@@ -213,7 +244,7 @@ const store = new Vuex.Store({
         await bucket.remove(term._id);
         commit('remove', term);
       } catch (e) {
-        console.error('Error:', e);
+        console.error('Error:', e, term);
       }
     },
     async add({
@@ -223,7 +254,7 @@ const store = new Vuex.Store({
         await bucket.add(term);
         commit('add', term);
       } catch (e) {
-        console.error('Error:', e);
+        console.error('Error:', e, term);
       }
     },
     async save({
@@ -238,16 +269,18 @@ const store = new Vuex.Store({
           throw 'Term not changed!'
         }
       } catch (e) {
-        console.error('Error:', e);
+        console.error('Error:', e, term);
       }
     },
-    async allDocs({
+    async getTerms({
       commit
-    }) {
+    }, data) {
       try {
-        commit('allDocs', await bucket.allDocs());
+        await bucket.createIndex(await bucket.db('termlist')
+          .getIndexes(), data);
+        commit('getTerms', await bucket.getTerms(data));
       } catch (e) {
-        console.error('Error:', e);
+        console.error('Error:', e, data);
       }
     },
     async find({
@@ -255,7 +288,7 @@ const store = new Vuex.Store({
     }, search) {
       try {
         let searchResults = []
-        for(let result of bucket.find(search)){
+        for (let result of bucket.find(search)) {
           searchResults.push(await result)
         }
 
@@ -263,18 +296,18 @@ const store = new Vuex.Store({
 
         commit('find', resultObject);
       } catch (e) {
-        console.error('Error:', e);
+        console.error('Error:', e, search);
       }
     },
-    async gotoPage({
+    async getTotal({
       commit
-    }, data) {
+    }) {
       try {
-        commit('allDocs', await bucket.gotoPage(data));
+        commit('getTotal', await bucket.getTotal());
       } catch (e) {
         console.error('Error:', e);
       }
-    }
+    },
   }
 })
 /*

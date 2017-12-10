@@ -10,7 +10,7 @@
         <AppButton primary="true" @click="addTerm">{{ui.add}}</AppButton>
       </div>
     </div>
-    <TermList ref="list" :utils="utils" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm" @gotopage="gotoPage"></TermList>
+    <TermList ref="list" :utils="utils" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm" @gotopage="gotoPage" @sort="sort"></TermList>
   </div>
 </section>
 </template>
@@ -46,6 +46,8 @@ export default {
         gotopage: 'Gå til side',
         previous: 'Forrige',
         next: 'Neste',
+        sortBy: 'Sorter etter ',
+        defaultSort: 'Standard sortering (etter dato)',
         wordClasses: {
           verb: 'Verb',
           noun: 'Substantiv',
@@ -77,7 +79,8 @@ export default {
       currentTerm: null,
       utils: {
         md: null
-      }
+      },
+      sortedBy: 'term'
     }
   },
   computed: {
@@ -117,10 +120,10 @@ export default {
     gotoPage(pageNumberOffset, isBefore) {
       if (isBefore) {
         this.$store.dispatch('getTerms', {
-          field: 'term'
+          field: this.sortedBy
         }).then(() => {
           this.$store.dispatch('getTerms', {
-            field: 'term',
+            field: this.sortedBy,
             lastTerm: this.$store.state.terms[Object.keys(this.$store.state.terms)[0]],
             pageNumberOffset: Number(pageNumberOffset),
             isBefore: true
@@ -128,11 +131,18 @@ export default {
         });
       } else {
         this.$store.dispatch('getTerms', {
-          field: 'term',
+          field: this.sortedBy,
           lastTerm: this.$store.state.terms[Object.keys(this.$store.state.terms)[Object.keys(this.$store.state.terms).length - 1]],
           pageNumberOffset: pageNumberOffset - 1
         });
       }
+    },
+    sort(field) {
+      this.$store.dispatch('getTerms', {
+        field: field
+      })
+
+      this.sortedBy = field;
     }
   },
   created() {
@@ -141,7 +151,7 @@ export default {
 
     this.$store.dispatch('getTotal');
     this.$store.dispatch('getTerms', {
-      field: 'term'
+      field: this.sortedBy
     });
   }
 }
