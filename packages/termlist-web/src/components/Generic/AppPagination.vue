@@ -1,7 +1,7 @@
 <template>
 <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-  <a class="pagination-previous" @click="previous">{{ ui.previous }}</a>
-  <a class="pagination-next" @click="next">{{ ui.next }}</a>
+  <a class="pagination-previous" :disabled="firstpage == currentpage" @click="previous">{{ ui.previous }}</a>
+  <a class="pagination-next" :disabled="lastpage == currentpage" @click="next">{{ ui.next }}</a>
   <ul class="pagination-list">
     <li v-if="!(currentpage < firstpage + 1)"><a class="pagination-link" @click="clickPage" :aria-label="ui.gotopage + ' ' + firstpage">{{firstpage}}</a></li>
     <li v-if="!(currentpage - 2 <= firstpage)"><span class="pagination-ellipsis">&hellip;</span></li>

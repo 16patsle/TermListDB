@@ -1,8 +1,9 @@
 <template>
 <span>
 <SearchBar :ui="ui" :fields="fields" @search="search"></SearchBar>
+<SortSelect :ui="ui" :fields="fields" @sort="sort"></SortSelect>
 <AppPagination :ui="ui" :firstpage="1" :currentpage="currentPage" :lastpage="Math.ceil($store.state.totalRows/20)" @gotopage="gotoPage"></AppPagination>
-<table class="table is-fullwidth">
+<table class="table is-fullwidth is-hoverable">
   <thead>
     <tr>
       <th v-for="field in fields">{{ui[field.name]}}</th>
@@ -18,6 +19,7 @@
 </template>
 <script>
 import SearchBar from './TermList/SearchBar.vue'
+import SortSelect from './TermList/SortSelect.vue'
 import TermRow from './TermList/TermRow.vue'
 import AppPagination from './Generic/AppPagination.vue'
 
@@ -25,6 +27,7 @@ export default {
   props: ['utils', 'ui', 'terms', 'fields'],
   components: {
     SearchBar,
+    SortSelect,
     TermRow,
     AppPagination
   },
@@ -50,6 +53,10 @@ export default {
         this.$emit('gotopage', pageNumber - this.currentPage);
       }
       this.currentPage = pageNumber;
+    },
+    sort(field) {
+      this.$emit('sort', field);
+      this.currentPage = 0;
     }
   }
 }

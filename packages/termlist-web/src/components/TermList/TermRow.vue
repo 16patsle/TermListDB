@@ -25,8 +25,18 @@ export default {
     getFieldValue(field) {
       if (field.name === 'desc') {
         return this.md.render(String(this.term[field.name]))
-      } else if (field.type === 'select') {
-        return this.ui.wordClasses[this.term['type']]
+      } else if (field.name === 'type') {
+        return this.ui.wordClasses[this.term.type]
+      } else if (field.name === 'date') {
+        let date = new Date(this.term._id)
+
+        return new Intl.DateTimeFormat(undefined, {
+          year: 'numeric',
+          month: 'numeric',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        }).format(date);
       } else {
         return this.term[field.name]
       }
