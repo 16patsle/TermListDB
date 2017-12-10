@@ -2,18 +2,34 @@
 <tr class="term-row">
   <td v-for="field in fields" v-html="getFieldValue(field)"></td>
   <td class="buttons">
-    <RowButton icon="pencil" @click="edit"></RowButton>
-    <RowButton icon="trash" @click="remove"></RowButton>
+    <TermRowButton icon="pencil" @click="edit"></TermRowButton>
+    <TermRowButton icon="trash" @click="remove"></TermRowButton>
   </td>
 </tr>
 </template>
 <script>
-import RowButton from './RowButton.vue'
+import TermRowButton from './TermRowButton.vue'
 
 export default {
-  props: ['md', 'ui', 'term', 'fields'],
+  props: {
+    md: {
+      required: true
+    },
+    ui: {
+      type: Object,
+      required: true
+    },
+    term: {
+      type: Object,
+      required: true
+    },
+    fields: {
+      type: Array,
+      required: true
+    }
+  },
   components: {
-    RowButton
+    TermRowButton
   },
   methods: {
     edit(e) {
@@ -23,13 +39,14 @@ export default {
       this.$emit('remove', this.term);
     },
     getFieldValue(field) {
-      if (field.name === 'desc') {
+      if (!this.term[field.name]) {
+        return ''
+      } else if (field.name === 'desc') {
         return this.md.render(String(this.term[field.name]))
       } else if (field.name === 'type') {
         return this.ui.wordClasses[this.term.type]
       } else if (field.name === 'date') {
         let date = new Date(this.term._id)
-
         return new Intl.DateTimeFormat(undefined, {
           year: 'numeric',
           month: 'numeric',

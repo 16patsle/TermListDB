@@ -3,7 +3,10 @@
 </template>
 <script>
 export default {
-  props: ['primary', 'danger'],
+  props: {
+    primary: Boolean,
+    danger: Boolean
+  },
   methods: {
     click(e) {
       this.$emit('click', e);

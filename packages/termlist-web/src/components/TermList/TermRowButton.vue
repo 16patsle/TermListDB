@@ -7,7 +7,12 @@
 </template>
 <script>
 export default {
-  props: ['icon'],
+  props: {
+    icon: {
+      type: String,
+      required: true
+    }
+  },
   methods: {
     click(e) {
       this.$emit('click', e);

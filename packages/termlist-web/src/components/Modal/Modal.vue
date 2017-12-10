@@ -16,7 +16,7 @@
     </section>
     <footer class="modal-card-foot">
       <slot name="modal-footer">
-        <AppButton primary="true" @click="callback">{{ okText }}</AppButton>
+        <AppButton :primary="true" @click="callback">{{ okText }}</AppButton>
         <AppButton @click="close">{{ cancelText }}</AppButton>
       </slot>
     </footer>
@@ -35,11 +35,11 @@ export default {
   props: {
     okText: {
       type: String,
-      default: ''
+      default: 'OK'
     },
     cancelText: {
       type: String,
-      default: ''
+      default: 'Cancel'
     },
     title: {
       type: String,

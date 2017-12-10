@@ -7,7 +7,7 @@
     <h1 class="title">{{ui.termlist}}</h1>
     <div class="field">
       <div class="control">
-        <AppButton primary="true" @click="addTerm">{{ui.add}}</AppButton>
+        <AppButton :primary="true" @click="addTerm">{{ui.add}}</AppButton>
       </div>
     </div>
     <TermList ref="list" :utils="utils" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm" @gotopage="gotoPage" @sort="sort"></TermList>
