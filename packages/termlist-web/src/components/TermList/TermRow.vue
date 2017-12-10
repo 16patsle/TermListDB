@@ -46,7 +46,7 @@ export default {
       } else if (field.name === 'type') {
         return this.ui.wordClasses[this.term.type]
       } else if (field.name === 'date') {
-        let date = new Date(this.term._id)
+        let date = new Date(this.term.date)
         return new Intl.DateTimeFormat(undefined, {
           year: 'numeric',
           month: 'numeric',

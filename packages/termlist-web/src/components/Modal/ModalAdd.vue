@@ -50,8 +50,10 @@ export default {
         }
       }
 
+      termObject.date = new Date().toJSON();
+
       this.$emit('save', {
-        _id: new Date().toJSON()
+        _id: termObject.date
       }, termObject);
 
       this.toggleModal(false);

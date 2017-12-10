@@ -62,6 +62,10 @@ export default {
         }
       }
 
+      if (!termObject.date) {
+        termObject.date = this.current._id;
+      }
+
       this.$emit('save', this.current, termObject);
 
       this.toggleModal(false);
