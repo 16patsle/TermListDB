@@ -14,10 +14,9 @@
     "deepmerge": "^2.0.1",
     "font-awesome": "^4.7.0",
     "markdown-it": "^8.4.0",
-    "pouchdb": "^6.3.4",
+    "pouchdb-browser": "^6.3.4",
     "pouchdb-find": "^6.3.4",
     "vue": "^2.5.9",
-    "vue-pouch-db": "^2.0.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

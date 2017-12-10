@@ -1,16 +1,13 @@
 import 'babel-polyfill';
 import deepmerge from 'deepmerge';
 import Vue from 'vue';
-import PouchDB from 'pouchdb';
-import VuePouchDB from 'vue-pouch-db';
 import Vuex from 'vuex';
 import Bulma from 'bulma';
 import FontAwesome from 'font-awesome/css/font-awesome.css';
 import App from './App.vue';
 
-import bucket from './bucket';
+import TermDatabase from './bucket';
 
-Vue.use(VuePouchDB);
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -105,7 +102,7 @@ const store = new Vuex.Store({
       commit
     }, data) {
       try {
-        await bucket.createIndex(await bucket.db('termlist')
+        await bucket.createIndex(await bucket.db
           .getIndexes(), data);
         commit('getTerms', await bucket.getTerms(data));
       } catch (e) {
@@ -140,6 +137,8 @@ const store = new Vuex.Store({
   }
 })
 
+const bucket = new TermDatabase(store);
+
 new Vue({
   el: '#app',
   bucket,
@@ -148,6 +147,6 @@ new Vue({
 })
 /*
 window.onload = function(){
-  bucket.db('termlist').bulkDocs(Trello).then((response)=>console.log(response))
+  bucket.db.bulkDocs(Trello).then((response)=>console.log(response))
 };
 */
