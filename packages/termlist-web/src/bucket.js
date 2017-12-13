@@ -11,7 +11,7 @@ class TermDatabase {
     PouchDB.plugin(PouchDBFind);
 
     this.db = new PouchDB('termlist', {});
-    this.remoteDB = new PouchDB('http://localhost:5984/termlist', {
+    this.remoteDB = new PouchDB('http://localhost:5984/termlist-test', {
       ajax: {
         cache: false
       }
