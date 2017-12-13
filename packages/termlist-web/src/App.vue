@@ -56,6 +56,9 @@ export default {
         sortBy: 'Sorter etter ',
         defaultSort: 'Standard sortering (etter dato)',
         importTerms: 'Importer',
+        trelloImportInstructions: 'For å importere ord, velg en eksportfil fra Trello.',
+        browseForFile: 'Velg en fil…',
+        processingImport: 'Importerer…',
         wordClasses: {
           verb: 'Verb',
           noun: 'Substantiv',

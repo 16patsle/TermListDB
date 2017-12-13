@@ -1,7 +1,7 @@
 <template>
 <Modal ref="modal" :class="{'is-active':!$store.state.imports.finished}" :title="ui.importTerms" :closeCallback="close" :ok-text="null" :cancel-text="ui.cancel">
   <div slot="modal-body">
-    <p class="subtitle">Importerer...</p>
+    <p class="subtitle">{{ui.processingImport}}</p>
     <div class="field">
       <div class="control">
         <progress class="progress is-primary" :value="$store.state.imports.imported" :max="$store.state.imports.total">{{ Math.round($store.state.imports.imported / $store.state.imports.total * 100) }}%</progress>

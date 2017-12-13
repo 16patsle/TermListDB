@@ -1,7 +1,7 @@
 <template>
 <Modal ref="modal" :title="ui.importTerms" :callback="importTerm" :ok-text="ui.save" :cancel-text="ui.cancel">
   <div slot="modal-body">
-    <p class="subtitle">For å importere ord, velg en eksportfil fra Trello.</p>
+    <p class="subtitle">{{ui.trelloImportInstructions}}</p>
     <div class="field">
       <div class="control">
         <div class="file is-centered has-name is-boxed">
@@ -12,7 +12,7 @@
                 <i class="fa fa-upload"></i>
               </span>
               <span class="file-label">
-                Velg en fil…
+                {{ui.browseForFile}}
               </span>
             </span>
             <span class="file-name" v-if="fileInfo">
