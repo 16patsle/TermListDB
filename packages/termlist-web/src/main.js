@@ -14,6 +14,12 @@ const store = new Vuex.Store({
   state: {
     terms: {
       '0': {}
+    },
+    imports: {
+      imported:0,
+      total:0,
+      finished: true,
+      cancel: false
     }
   },
   mutations: {
@@ -35,6 +41,27 @@ const store = new Vuex.Store({
       } else {
         console.error('Could not save! Term might not exist!', term);
       }
+    },
+    prepareImport(state, imports) {
+      state.imports.total = imports;
+      state.imports.imported = 0;
+      state.imports.finished = false;
+      state.imports.cancel = false;
+    },
+    importTerms(state, term) {
+      if (!state.terms[term._id]) {
+        Vue.set(state.terms, term._id, term);
+        state.imports.imported += 1;
+        if(state.imports.imported === state.imports.total){
+          state.imports.finished = true;
+        }
+      } else {
+        console.error('Already exists!', term);
+      }
+    },
+    cancelImport(state){
+      state.imports.finished = true;
+      state.imports.cancel = true;
     },
     getTerms(state, terms) {
       let termsObject = {};
@@ -93,6 +120,19 @@ const store = new Vuex.Store({
           commit('save', term);
         } else {
           throw 'Term not changed!'
+        }
+      } catch (e) {
+        console.error('Error:', e, term);
+      }
+    },
+    async importTerms({
+      commit,
+      state
+    }, term) {
+      try {
+        if(state.imports.cancel === false){
+          await bucket.add(term);
+          commit('importTerms', term);
         }
       } catch (e) {
         console.error('Error:', e, term);
