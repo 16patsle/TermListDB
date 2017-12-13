@@ -1,7 +1,8 @@
 <template>
 <Modal ref="modal" :title="ui.removeterm" :callback="removeTerm" :ok-text="ui.save" :cancel-text="ui.cancel">
   <div slot="modal-body">
-    {{ui.wanttoremove}}
+    <p class="subtitle">{{ui.wanttoremove}}</p>
+    <p>{{current.term}}</p>
   </div>
   <div slot="modal-footer">
     <AppButton :danger="true" @click="removeTerm">{{ui.removeterm}}!</AppButton>
@@ -22,6 +23,13 @@ export default {
     ui: {
       type: Object,
       required: true
+    }
+  },
+  data() {
+    return {
+      current: {
+        term: ''
+      }
     }
   },
   methods: {
