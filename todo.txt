@@ -3,3 +3,4 @@
 2017-11-09 Opppdater props på komponentene til å inkludere info om type og om det er påkrevd
 2017-11-09 Pass på at slettede ord forsvinner når du sletter dem
 2017-11-10 Bruk paging-teknikker for å begrense antallet
+2017-12-12 Importering fra Trello. Bruk async-importering for at ikke siden fryser, ikke skjul boksen før ferdig, progress bar.
