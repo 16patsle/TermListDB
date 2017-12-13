@@ -1,6 +1,2 @@
-2017-10-13 Bytt ut List.js med noe Vue.js-basert (filtrer/sorter: https://vuejs.org/v2/guide/list.html#Displaying-Filtered-Sorted-Results)
-2017-10-14 Bytt ut vue-pouch-db med vanlig PouchDB på sikt, siden vi uansett ikke kommuniserer direkte med den i komponentene
-2017-11-09 Opppdater props på komponentene til å inkludere info om type og om det er påkrevd
 2017-11-09 Pass på at slettede ord forsvinner når du sletter dem
-2017-11-10 Bruk paging-teknikker for å begrense antallet
-2017-12-12 Importering fra Trello. Bruk async-importering for at ikke siden fryser, ikke skjul boksen før ferdig, progress bar.
+2017-12-13 Gjør det mulig å velge hvilke Trello-lister som blir hvilke typer ord
