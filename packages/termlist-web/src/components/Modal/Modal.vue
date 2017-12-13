@@ -16,8 +16,8 @@
     </section>
     <footer class="modal-card-foot">
       <slot name="modal-footer">
-        <AppButton :primary="true" @click="callback">{{ okText }}</AppButton>
-        <AppButton @click="close">{{ cancelText }}</AppButton>
+        <AppButton v-if="okText !== null" :primary="true" @click="callback">{{ okText }}</AppButton>
+        <AppButton v-if="cancelText !== null" @click="close">{{ cancelText }}</AppButton>
       </slot>
     </footer>
   </div>
@@ -48,6 +48,9 @@ export default {
     callback: {
       type: Function,
       default () {}
+    },
+    closeCallback: {
+      type: Function
     }
   },
   data() {
@@ -57,7 +60,11 @@ export default {
   },
   methods: {
     close() {
-      this.toggleModal(false);
+      if (this.closeCallback) {
+        this.closeCallback()
+      } else {
+        this.toggleModal(false);
+      }
     },
     toggleModal(bool) {
       this.show = bool;
