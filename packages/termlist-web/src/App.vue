@@ -3,11 +3,16 @@
   <ModalAdd ref="addModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"></ModalAdd>
   <ModalEdit ref="editModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"></ModalEdit>
   <ModalRemove ref="removeModal" :current="currentTerm" :ui="ui" @remove="removeTerm"></ModalRemove>
+  <ModalImport ref="importModal" :ui="ui" @import="importTerms"></ModalImport>
+  <ModalImporting ref="importingModal" :ui="ui"></ModalImporting>
   <div class="container">
     <h1 class="title">{{ui.termlist}}</h1>
-    <div class="field">
+    <div class="field is-grouped">
       <div class="control">
         <AppButton :primary="true" @click="addTerm">{{ui.add}}</AppButton>
+      </div>
+      <div class="control">
+        <AppButton @click="confirmImportTerms">{{ui.importTerms}}</AppButton>
       </div>
     </div>
     <TermList ref="list" :utils="utils" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm" @gotopage="gotoPage" @sort="sort"></TermList>
@@ -19,6 +24,8 @@
 import ModalAdd from './components/Modal/ModalAdd.vue'
 import ModalEdit from './components/Modal/ModalEdit.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
+import ModalImport from './components/Modal/ModalImport.vue'
+import ModalImporting from './components/Modal/ModalImporting.vue'
 import AppButton from './components/Generic/AppButton.vue'
 import TermList from './components/TermList.vue'
 
@@ -48,13 +55,18 @@ export default {
         next: 'Neste',
         sortBy: 'Sorter etter ',
         defaultSort: 'Standard sortering (etter dato)',
+        importTerms: 'Importer',
+        trelloImportInstructions: 'For å importere ord, velg en eksportfil fra Trello.',
+        browseForFile: 'Velg en fil…',
+        processingImport: 'Importerer…',
         wordClasses: {
           verb: 'Verb',
           noun: 'Substantiv',
           adjective: 'Adjektiv',
           adverb: 'Adverb',
           preposition: 'Preposisjon',
-          conjunction: 'Konjunksjon'
+          conjunction: 'Konjunksjon',
+          pronounciation: 'Uttale'
         }
       },
       fields: [{
@@ -66,7 +78,7 @@ export default {
       }, {
         name: 'type',
         type: 'select',
-        options: ['verb', 'noun', 'adjective', 'adverb', 'preposition', 'conjunction']
+        options: ['verb', 'noun', 'adjective', 'adverb', 'preposition', 'conjunction', 'pronounciation']
       }, {
         name: 'date',
         type: 'date',
@@ -92,6 +104,8 @@ export default {
     ModalAdd,
     ModalEdit,
     ModalRemove,
+    ModalImport,
+    ModalImporting,
     AppButton,
     TermList
   },
@@ -143,6 +157,25 @@ export default {
       })
 
       this.sortedBy = field;
+    },
+    confirmImportTerms() {
+      this.$refs.importModal.confirmImportTerm();
+    },
+    async importTerms(terms) {
+      this.$store.commit('prepareImport', terms.length)
+
+      for (let term of terms) {
+        if (this.$store.state.imports.cancel === false) {
+          await this.$store.dispatch('importTerms', Object.assign({
+            _id: term.date
+          }, term))
+        }
+      }
+
+      await this.$store.dispatch('getTotal');
+      await this.$store.dispatch('getTerms', {
+        field: this.sortedBy
+      });
     }
   },
   created() {
