@@ -87,7 +87,7 @@ const store = new Vuex.Store({
     },
     getTotal(state, total) {
       state.totalRows = total.total_rows;
-    },
+    }
   },
   actions: {
     async remove({
@@ -136,6 +136,15 @@ const store = new Vuex.Store({
         }
       } catch (e) {
         console.error('Error:', e, term);
+      }
+    },
+    async exportTerms({
+      commit
+    }) {
+      try {
+        return await bucket.getTerms({limit:null});
+      } catch (e) {
+        console.error('Error:', e);
       }
     },
     async getTerms({

@@ -1,5 +1,5 @@
 <template>
-<Modal ref="modal" :title="ui.importTerms" :callback="importTerm" :ok-text="ui.save" :cancel-text="ui.cancel">
+<Modal ref="modal" :title="ui.importTerms" :callback="importTerm" :closeCallback="close" :ok-text="ui.save" :cancel-text="ui.cancel">
   <div slot="modal-body">
     <p class="subtitle">{{ui.trelloImportInstructions}}</p>
     <div class="field">
@@ -63,10 +63,6 @@ export default {
   methods: {
     toggleModal(bool) {
       this.$refs.modal.toggleModal(bool);
-
-      this.$refs.importFile.value = '';
-      this.selectedFile = null;
-      //this.importedFile = {};
     },
     confirmImportTerm() {
       this.toggleModal(true);
@@ -77,27 +73,45 @@ export default {
         this.fileReader.onload = (e) => {
           let file = JSON.parse(e.target.result)
 
-          this.importedFile.lists = file.lists;
-          this.importedFile.cards = file.cards;
-          this.prepareFileImport()
+          this.prepareFileImport(file)
         }
         this.fileReader.readAsText(this.selectedFile)
       }
     },
-    prepareFileImport() {
-      this.importedFile.listObject = {}
+    prepareFileImport(file) {
+      // Look for Trello import
+      if ('idOrganization' in file && 'name' in file && 'invited' in file) {
+        this.importedFile = {
+          lists: file.lists,
+          cards: file.cards
+        };
 
-      for (let list of this.importedFile.lists) {
-        this.$set(this.importedFile.listObject, list.id, list.name);
+        this.importedTerms = this.prepareTrelloImport(this.importedFile)
+      } else {
+        this.importedFile = file
+
+        this.importedTerms = this.prepareStandardImport(this.importedFile)
       }
 
-      for (let card of this.importedFile.cards) {
+      this.$emit('import', this.importedTerms);
+
+      this.close();
+    },
+    prepareTrelloImport(file) {
+      let importedTerms = []
+      let listObject = {}
+
+      for (let list of file.lists) {
+        this.$set(listObject, list.id, list.name);
+      }
+
+      for (let card of file.cards) {
         let term = {};
         term.term = card.name;
         term.desc = card.desc;
         term.date = new Date(card.dateLastActivity).toJSON();
 
-        switch (this.importedFile.listObject[card.idList]) {
+        switch (listObject[card.idList]) {
           case 'Verb':
             term.type = 'verb';
             break;
@@ -114,15 +128,25 @@ export default {
             break;
         }
 
-        this.importedTerms.push(term);
+        importedTerms.push(term);
       }
 
-      this.$emit('import', this.importedTerms);
+      return importedTerms
+    },
+    prepareStandardImport(file) {
+      let importedTerms = []
 
-      this.toggleModal(false);
+      for (let term of file) {
+        importedTerms.push(term);
+      }
+
+      return importedTerms
     },
     close() {
       this.toggleModal(false);
+
+      this.$refs.importFile.value = '';
+      this.selectedFile = null;
     },
     handleFiles(e) {
       this.selectedFile = e.target.files[0];
