@@ -84,6 +84,9 @@ class TermDatabase {
     data.field = data.field || '_id';
     data.lastTerm = data.lastTerm || {};
     data.lastTerm[data.field] = data.lastTerm[data.field] || null;
+    if(data.limit === undefined) {
+      data.limit = 20
+    }
 
     return this.db
       .find({
@@ -93,7 +96,7 @@ class TermDatabase {
           }
         },
         sort: [data.field],
-        limit: 20,
+        limit: data.limit,
         skip: 20 * data.pageNumberOffset + Number(!data.isBefore),
         use_index: data.index
       });

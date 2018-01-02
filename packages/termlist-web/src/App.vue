@@ -5,6 +5,7 @@
   <ModalRemove ref="removeModal" :current="currentTerm" :ui="ui" @remove="removeTerm"></ModalRemove>
   <ModalImport ref="importModal" :ui="ui" @import="importTerms"></ModalImport>
   <ModalImporting ref="importingModal" :ui="ui"></ModalImporting>
+  <ModalExport ref="exportModal" :ui="ui"></ModalExport>
   <div class="container">
     <h1 class="title">{{ui.termlist}}</h1>
     <div class="field is-grouped">
@@ -13,6 +14,9 @@
       </div>
       <div class="control">
         <AppButton @click="confirmImportTerms">{{ui.importTerms}}</AppButton>
+      </div>
+      <div class="control">
+        <AppButton @click="confirmExportTerms">{{ui.exportTerms}}</AppButton>
       </div>
     </div>
     <TermList ref="list" :utils="utils" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm" @gotopage="gotoPage" @sort="sort"></TermList>
@@ -26,6 +30,7 @@ import ModalEdit from './components/Modal/ModalEdit.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
 import ModalImport from './components/Modal/ModalImport.vue'
 import ModalImporting from './components/Modal/ModalImporting.vue'
+import ModalExport from './components/Modal/ModalExport.vue'
 import AppButton from './components/Generic/AppButton.vue'
 import TermList from './components/TermList.vue'
 
@@ -56,9 +61,13 @@ export default {
         sortBy: 'Sorter etter ',
         defaultSort: 'Standard sortering (etter dato)',
         importTerms: 'Importer',
+        exportTerms: 'Eksporter',
         trelloImportInstructions: 'For å importere ord, velg en eksportfil fra Trello.',
+        downloadExportInstructions: 'Trykk på \'Last ned\' for å laste ned eksporterte ord',
         browseForFile: 'Velg en fil…',
         processingImport: 'Importerer…',
+        processingExport: 'Eksporterer…',
+        download: 'Last ned',
         wordClasses: {
           verb: 'Verb',
           noun: 'Substantiv',
@@ -106,6 +115,7 @@ export default {
     ModalRemove,
     ModalImport,
     ModalImporting,
+    ModalExport,
     AppButton,
     TermList
   },
@@ -176,6 +186,9 @@ export default {
       await this.$store.dispatch('getTerms', {
         field: this.sortedBy
       });
+    },
+    confirmExportTerms() {
+      this.$refs.exportModal.confirmExportTerm();
     }
   },
   created() {
