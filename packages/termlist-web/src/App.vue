@@ -5,7 +5,7 @@
   <ModalRemove ref="removeModal" :current="currentTerm" :ui="ui" @remove="removeTerm"></ModalRemove>
   <ModalImport ref="importModal" :ui="ui" @import="importTerms"></ModalImport>
   <ModalImporting ref="importingModal" :ui="ui"></ModalImporting>
-  <ModalExport ref="exportModal" :ui="ui"></ModalExport>
+  <ModalExport ref="exportModal" :ui="ui" :exportURI="exportURI" @export="exportTerms" @close="exportURI = null"></ModalExport>
   <div class="container">
     <h1 class="title">{{ui.termlist}}</h1>
     <div class="field is-grouped">
@@ -98,6 +98,7 @@ export default {
         immutable: true
       }],
       currentTerm: null,
+      exportURI: '',
       utils: {
         md: null
       },
@@ -189,6 +190,23 @@ export default {
     },
     confirmExportTerms() {
       this.$refs.exportModal.confirmExportTerm();
+    },
+    async exportTerms() {
+      const terms = await this.$store.dispatch('exportTerms')
+
+      let exported = []
+
+      for (let term of terms.docs) {
+        exported.push({
+          _id: term._id,
+          term: term.term,
+          desc: term.desc,
+          date: term.date,
+          type: term.type
+        })
+      }
+
+      this.exportURI = 'data:application/json;charset=utf-8, ' + encodeURIComponent(JSON.stringify(exported))
     }
   },
   created() {

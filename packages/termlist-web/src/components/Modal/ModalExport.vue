@@ -19,12 +19,14 @@ export default {
     ui: {
       type: Object,
       required: true
+    },
+    exportURI: {
+      type: String,
+      required: true
     }
   },
   data() {
-    return {
-      exportURI: null
-    }
+    return {}
   },
   computed: {
     exportInstructions() {
@@ -50,30 +52,14 @@ export default {
     close() {
       this.toggleModal(false);
 
-      this.exportURI = null;
+      this.$emit('close');
     },
-    async exportTerms() {
-      const terms = await this.$store.dispatch('exportTerms')
-
-      let exported = []
-
-      for (let term of terms.docs) {
-        exported.push({
-          _id: term._id,
-          term: term.term,
-          desc: term.desc,
-          date: term.date,
-          type: term.type
-        })
-      }
-
-      this.exportURI = 'data:application/json;charset=utf-8, ' + encodeURIComponent(JSON.stringify(exported))
+    exportTerms() {
+      this.$emit('export');
     },
     downloadExport(e) {
       if (!this.exported) {
         e.preventDefault();
-      } else {
-        //this.exportURI = 'data:application/octet-stream,field1%2Cfield2%0Afoo%2Cbar%0Agoo%2Cgai%0A'
       }
     }
   }
