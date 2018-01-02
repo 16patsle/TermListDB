@@ -34,15 +34,6 @@ export default {
       importedTerms: []
     }
   },
-  computed: {
-    importing() {
-      if (!this.$state.imports.finished) {
-        this.toggleModal(true)
-      } else {
-        this.toggleModal(false)
-      }
-    }
-  },
   methods: {
     toggleModal(bool) {
       this.$refs.modal.toggleModal(bool);
@@ -52,6 +43,17 @@ export default {
 
       this.$store.commit('cancelImport');
     }
+  },
+  mounted() {
+    this.$watch(() => this.$store.state.imports.finished, value => {
+      if (!value) {
+        this.toggleModal(true)
+      } else {
+        this.toggleModal(false)
+      }
+    }, {
+      immediate: true
+    })
   }
 }
 </script>

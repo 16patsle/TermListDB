@@ -80,7 +80,7 @@ export default {
     },
     prepareFileImport(file) {
       // Look for Trello import
-      if (file.idOrganization && file.name && file.invited) {
+      if ('idOrganization' in file && 'name' in file && 'invited' in file) {
         this.importedFile = {
           lists: file.lists,
           cards: file.cards
