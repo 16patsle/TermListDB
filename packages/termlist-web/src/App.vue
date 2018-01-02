@@ -184,9 +184,8 @@ export default {
           }, term)))
         }
       }
-      console.log(imports);
+
       await Promise.all(imports);
-      console.log('all finished')
 
       await this.$store.dispatch('getTotal');
       await this.$store.dispatch('getTerms', {
