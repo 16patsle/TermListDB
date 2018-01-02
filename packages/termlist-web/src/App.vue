@@ -5,7 +5,7 @@
   <ModalRemove ref="removeModal" :current="currentTerm" :ui="ui" @remove="removeTerm"></ModalRemove>
   <ModalImport ref="importModal" :ui="ui" @import="importTerms"></ModalImport>
   <ModalImporting ref="importingModal" :ui="ui"></ModalImporting>
-  <ModalExport ref="exportModal" :ui="ui" :exportURI="exportURI" @export="exportTerms" @close="exportURI = null"></ModalExport>
+  <ModalExport ref="exportModal" :ui="ui" :exportURI="exportURI" @export="exportTerms" @close="exportURI = ''"></ModalExport>
   <div class="container">
     <h1 class="title">{{ui.termlist}}</h1>
     <div class="field is-grouped">
@@ -62,7 +62,7 @@ export default {
         defaultSort: 'Standard sortering (etter dato)',
         importTerms: 'Importer',
         exportTerms: 'Eksporter',
-        trelloImportInstructions: 'For å importere ord, velg en eksportfil fra Trello.',
+        trelloImportInstructions: 'For å importere ord, velg en eksportfil. Støtter både eksport fra denne appen og fra Trello',
         downloadExportInstructions: 'Trykk på \'Last ned\' for å laste ned eksporterte ord',
         browseForFile: 'Velg en fil…',
         processingImport: 'Importerer…',

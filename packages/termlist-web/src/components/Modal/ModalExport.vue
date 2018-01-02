@@ -1,5 +1,5 @@
 <template>
-<Modal ref="modal" :class="{'is-active':!$store.state.imports.finished}" :title="ui.exportTerms" :closeCallback="close" :ok-text="null" :cancel-text="null">
+<Modal ref="modal" :title="ui.exportTerms" :closeCallback="close" :ok-text="null" :cancel-text="null">
   <div slot="modal-body">
     <p class="subtitle">{{exportInstructions}}</p>
     <a :href="exportURI" class="button is-primary" :disabled="!exported" download="terms.json" @click="downloadExport">{{ui.download}}</a>
