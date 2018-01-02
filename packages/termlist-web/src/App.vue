@@ -175,13 +175,18 @@ export default {
     async importTerms(terms) {
       this.$store.commit('prepareImport', terms.length)
 
+      let imports = [];
+
       for (let term of terms) {
         if (this.$store.state.imports.cancel === false) {
-          await this.$store.dispatch('importTerms', Object.assign({
+          imports.push(this.$store.dispatch('importTerms', Object.assign({
             _id: term.date
-          }, term))
+          }, term)))
         }
       }
+      console.log(imports);
+      await Promise.all(imports);
+      console.log('all finished')
 
       await this.$store.dispatch('getTotal');
       await this.$store.dispatch('getTerms', {

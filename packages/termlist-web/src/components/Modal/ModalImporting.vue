@@ -1,5 +1,5 @@
 <template>
-<Modal ref="modal" :class="{'is-active':!$store.state.imports.finished}" :title="ui.importTerms" :closeCallback="close" :ok-text="null" :cancel-text="ui.cancel">
+<Modal ref="modal" :title="ui.importTerms" :closeCallback="close" :ok-text="null" :cancel-text="ui.cancel">
   <div slot="modal-body">
     <p class="subtitle">{{ui.processingImport}}</p>
     <div class="field">
@@ -35,7 +35,13 @@ export default {
     }
   },
   computed: {
-
+    importing() {
+      if (!this.$state.imports.finished) {
+        this.toggleModal(true)
+      } else {
+        this.toggleModal(false)
+      }
+    }
   },
   methods: {
     toggleModal(bool) {
