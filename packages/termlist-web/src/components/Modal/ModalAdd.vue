@@ -1,5 +1,6 @@
 <template>
-<Modal ref="modal" :title="ui.addterm" :callback="saveTerm" :ok-text="ui.add" :cancel-text="ui.cancel">
+<form @submit.prevent>
+<Modal ref="modal" :title="ui.addterm">
   <div slot="modal-body">
     <div class="field" v-for="field in fields" v-if="!field.immutable">
       <label class="label">{{ui[field.name]}}</label>
@@ -14,14 +15,22 @@
       </div>
     </div>
   </div>
+  <div slot="modal-footer">
+    <!--<AppButton :primary="true" @click="saveTerm">{{ ui.add }}</AppButton>-->
+    <input type="submit" class="button is-primary" @click="saveTerm" :value="ui.add" accesskey="s">
+    <AppButton @click="close">{{ ui.cancel }}</AppButton>
+  </div>
 </Modal>
+</form>
 </template>
 <script>
 import Modal from './Modal.vue';
+import AppButton from '../Generic/AppButton.vue';
 
 export default {
   components: {
-    Modal
+    Modal,
+    AppButton
   },
   props: {
     ui: {
@@ -39,6 +48,7 @@ export default {
     },
     addTerm() {
       this.toggleModal(true);
+      this.$refs.modal.$el.querySelector('.field input, .field textarea, .field select').focus()
     },
     saveTerm() {
       let termObject = {}
@@ -56,6 +66,9 @@ export default {
         _id: termObject.date
       }, termObject);
 
+      this.toggleModal(false);
+    },
+    close() {
       this.toggleModal(false);
     }
   }
