@@ -169,6 +169,11 @@ export default {
 
       this.sortedBy = field;
     },
+    shortcutUp(e) {
+      if(['input', 'textarea'].indexOf(e.target.tagName.toLowerCase()) === -1 && e.key.toLowerCase() === 'n'){
+        this.addTerm()
+      }
+    },
     confirmImportTerms() {
       this.$refs.importModal.confirmImportTerm();
     },
@@ -221,6 +226,8 @@ export default {
     this.$store.dispatch('getTerms', {
       field: this.sortedBy
     });
+
+    document.addEventListener('keyup', this.shortcutUp, false);
   }
 }
 </script>
