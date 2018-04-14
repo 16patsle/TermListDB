@@ -1,14 +1,14 @@
-import 'babel-polyfill';
-import deepmerge from 'deepmerge';
-import Vue from 'vue';
-import Vuex from 'vuex';
-import Bulma from 'bulma';
-import FontAwesome from 'font-awesome/css/font-awesome.css';
-import App from './App.vue';
+import 'babel-polyfill'
+import deepmerge from 'deepmerge'
+import Vue from 'vue'
+import Vuex from 'vuex'
+import Bulma from 'bulma'
+import FontAwesome from 'font-awesome/css/font-awesome.css'
+import App from './App.vue'
 
-import TermDatabase from './bucket';
+import TermDatabase from './bucket'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
@@ -16,56 +16,56 @@ const store = new Vuex.Store({
       '0': {}
     },
     imports: {
-      imported:0,
-      total:0,
+      imported: 0,
+      total: 0,
       finished: true,
       cancel: false
     }
   },
   mutations: {
     remove(state, term) {
-      Vue.delete(state.terms, term._id);
+      Vue.delete(state.terms, term._id)
     },
     add(state, term) {
       if (!state.terms[term._id]) {
-        Vue.set(state.terms, term._id, term);
+        Vue.set(state.terms, term._id, term)
       } else {
-        console.error('Already exists!', term);
+        console.error('Already exists!', term)
       }
     },
     save(state, term) {
       if (state.terms[term._id]) {
-        Vue.set(state.terms, term._id, term);
+        Vue.set(state.terms, term._id, term)
       } else if (term._deleted && state.terms[term._id]) {
-        Vue.delete(state.terms, term._id);
+        Vue.delete(state.terms, term._id)
       } else {
-        console.error('Could not save! Term might not exist!', term);
+        console.error('Could not save! Term might not exist!', term)
       }
     },
     prepareImport(state, imports) {
-      state.imports.total = imports;
-      state.imports.imported = 0;
-      state.imports.finished = false;
-      state.imports.cancel = false;
+      state.imports.total = imports
+      state.imports.imported = 0
+      state.imports.finished = false
+      state.imports.cancel = false
     },
     importTerms(state, term) {
       if (!state.terms[term._id]) {
-        Vue.set(state.terms, term._id, term);
-        state.imports.imported += 1;
-        if(state.imports.imported === state.imports.total){
-          state.imports.finished = true;
+        Vue.set(state.terms, term._id, term)
+        state.imports.imported += 1
+        if (state.imports.imported === state.imports.total) {
+          state.imports.finished = true
         }
       } else {
-        console.error('Already exists!', term);
+        console.error('Already exists!', term)
       }
     },
-    cancelImport(state){
-      state.imports.finished = true;
-      state.imports.cancel = true;
+    cancelImport(state) {
+      state.imports.finished = true
+      state.imports.cancel = true
     },
     getTerms(state, terms) {
-      let termsObject = {};
-      let designRegex = /^_design\//;
+      let termsObject = {}
+      let designRegex = /^_design\//
 
       terms.docs.forEach(term => {
         if (!designRegex.test(term._id)) {
@@ -73,94 +73,77 @@ const store = new Vuex.Store({
         }
       })
 
-      state.terms = termsObject;
+      state.terms = termsObject
     },
     find(state, terms) {
-      let termsObject = {};
-      let designRegex = /^_design\//;
+      let termsObject = {}
+      let designRegex = /^_design\//
       terms.docs.forEach(term => {
         if (!designRegex.test(term._id)) {
           termsObject[term._id] = term
         }
       })
-      state.terms = termsObject;
+      state.terms = termsObject
     },
     getTotal(state, total) {
-      state.totalRows = total.total_rows;
+      state.totalRows = total.total_rows
     }
   },
   actions: {
-    async remove({
-      commit
-    }, term) {
+    async remove({ commit }, term) {
       try {
-        await bucket.remove(term._id);
-        commit('remove', term);
+        await bucket.remove(term._id)
+        commit('remove', term)
       } catch (e) {
-        console.error('Error:', e, term);
+        console.error('Error:', e, term)
       }
     },
-    async add({
-      commit
-    }, term) {
+    async add({ commit }, term) {
       try {
-        await bucket.add(term);
-        commit('add', term);
+        await bucket.add(term)
+        commit('add', term)
       } catch (e) {
-        console.error('Error:', e, term);
+        console.error('Error:', e, term)
       }
     },
-    async save({
-      commit,
-      state
-    }, term) {
+    async save({ commit, state }, term) {
       try {
         if (state.terms[term._id] !== term) {
-          await bucket.save(term);
-          commit('save', term);
+          await bucket.save(term)
+          commit('save', term)
         } else {
           throw 'Term not changed!'
         }
       } catch (e) {
-        console.error('Error:', e, term);
+        console.error('Error:', e, term)
       }
     },
-    async importTerms({
-      commit,
-      state
-    }, term) {
+    async importTerms({ commit, state }, term) {
       try {
-        if(state.imports.cancel === false){
-          await bucket.add(term);
-          commit('importTerms', term);
+        if (state.imports.cancel === false) {
+          await bucket.add(term)
+          commit('importTerms', term)
         }
       } catch (e) {
-        console.error('Error:', e, term);
+        console.error('Error:', e, term)
       }
     },
-    async exportTerms({
-      commit
-    }) {
+    async exportTerms({ commit }) {
       try {
-        return await bucket.getTerms({limit:null});
+        return await bucket.getTerms({ limit: null })
       } catch (e) {
-        console.error('Error:', e);
+        console.error('Error:', e)
       }
     },
-    async getTerms({
-      commit
-    }, data) {
+    async getTerms({ commit }, data) {
       try {
-        await bucket.createIndex(await bucket.db
-          .getIndexes(), data);
-        commit('getTerms', await bucket.getTerms(data));
+        await bucket.createIndex(await bucket.db.getIndexes(), data)
+        commit('getTerms', await bucket.getTerms(data))
       } catch (e) {
-        console.error('Error:', e, data);
+        console.error('Error:', e, data)
       }
     },
-    async find({
-      commit
-    }, search) {
+    async find({ commit }, search) {
       try {
         let searchResults = []
         for (let result of bucket.find(search)) {
@@ -169,24 +152,22 @@ const store = new Vuex.Store({
 
         let resultObject = deepmerge.all(searchResults)
 
-        commit('find', resultObject);
+        commit('find', resultObject)
       } catch (e) {
-        console.error('Error:', e, search);
+        console.error('Error:', e, search)
       }
     },
-    async getTotal({
-      commit
-    }) {
+    async getTotal({ commit }) {
       try {
-        commit('getTotal', await bucket.getTotal());
+        commit('getTotal', await bucket.getTotal())
       } catch (e) {
-        console.error('Error:', e);
+        console.error('Error:', e)
       }
-    },
+    }
   }
 })
 
-const bucket = new TermDatabase(store);
+const bucket = new TermDatabase(store)
 
 new Vue({
   el: '#app',

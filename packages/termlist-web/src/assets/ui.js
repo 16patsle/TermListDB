@@ -20,8 +20,10 @@ export default {
   defaultSort: 'Standard sortering (etter dato)',
   importTerms: 'Importer',
   exportTerms: 'Eksporter',
-  trelloImportInstructions: 'For å importere ord, velg en eksportfil. Støtter både eksport fra denne appen og fra Trello',
-  downloadExportInstructions: 'Trykk på \'Last ned\' for å laste ned eksporterte ord',
+  trelloImportInstructions:
+    'For å importere ord, velg en eksportfil. Støtter både eksport fra denne appen og fra Trello',
+  downloadExportInstructions:
+    "Trykk på 'Last ned' for å laste ned eksporterte ord",
   browseForFile: 'Velg en fil…',
   processingImport: 'Importerer…',
   processingExport: 'Eksporterer…',
