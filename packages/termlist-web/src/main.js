@@ -2,8 +2,8 @@ import 'babel-polyfill'
 import deepmerge from 'deepmerge'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import Bulma from 'bulma'
-import FontAwesome from 'font-awesome/css/font-awesome.css'
+import 'bulma'
+import 'font-awesome/css/font-awesome.css'
 import App from './App.vue'
 
 import TermDatabase from './bucket'
@@ -128,7 +128,7 @@ const store = new Vuex.Store({
         console.error('Error:', e, term)
       }
     },
-    async exportTerms({ commit }) {
+    async exportTerms() {
       try {
         return await bucket.getTerms({ limit: null })
       } catch (e) {

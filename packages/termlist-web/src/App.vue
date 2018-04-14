@@ -1,43 +1,43 @@
 <template>
-  <section 
-    id="app" 
+  <section
+    id="app"
     class="section">
-    <ModalAdd 
-      ref="addModal" 
-      :current="currentTerm" 
-      :ui="ui" 
-      :fields="fields" 
+    <ModalAdd
+      ref="addModal"
+      :current="currentTerm"
+      :ui="ui"
+      :fields="fields"
       @save="saveTerm"/>
-    <ModalEdit 
-      ref="editModal" 
-      :current="currentTerm" 
-      :ui="ui" 
-      :fields="fields" 
+    <ModalEdit
+      ref="editModal"
+      :current="currentTerm"
+      :ui="ui"
+      :fields="fields"
       @save="saveTerm"/>
-    <ModalRemove 
-      ref="removeModal" 
-      :current="currentTerm" 
-      :ui="ui" 
+    <ModalRemove
+      ref="removeModal"
+      :current="currentTerm"
+      :ui="ui"
       @remove="removeTerm"/>
-    <ModalImport 
-      ref="importModal" 
-      :ui="ui" 
+    <ModalImport
+      ref="importModal"
+      :ui="ui"
       @import="importTerms"/>
-    <ModalImporting 
-      ref="importingModal" 
+    <ModalImporting
+      ref="importingModal"
       :ui="ui"/>
-    <ModalExport 
-      ref="exportModal" 
-      :ui="ui" 
-      :export-uri="exportURI" 
-      @export="exportTerms" 
+    <ModalExport
+      ref="exportModal"
+      :ui="ui"
+      :export-uri="exportURI"
+      @export="exportTerms"
       @close="exportURI = ''"/>
     <div class="container">
       <h1 class="title">{{ ui.termlist }}</h1>
       <div class="field is-grouped">
         <div class="control">
-          <AppButton 
-            :primary="true" 
+          <AppButton
+            :primary="true"
             @click="addTerm">{{ ui.add }}</AppButton>
         </div>
         <div class="control">
@@ -47,15 +47,15 @@
           <AppButton @click="confirmExportTerms">{{ ui.exportTerms }}</AppButton>
         </div>
       </div>
-      <TermList 
-        ref="list" 
-        :utils="utils" 
-        :ui="ui" 
-        :terms="terms" 
-        :fields="fields" 
-        @edit="editTerm" 
-        @remove="confirmRemoveTerm" 
-        @gotopage="gotoPage" 
+      <TermList
+        ref="list"
+        :utils="utils"
+        :ui="ui"
+        :terms="terms"
+        :fields="fields"
+        @edit="editTerm"
+        @remove="confirmRemoveTerm"
+        @gotopage="gotoPage"
         @sort="sort"/>
     </div>
   </section>
@@ -125,7 +125,7 @@ export default {
     document.addEventListener('keyup', this.shortcutUp, false)
   },
   methods: {
-    addTerm(e) {
+    addTerm() {
       this.$refs.addModal.addTerm()
     },
     editTerm(term) {

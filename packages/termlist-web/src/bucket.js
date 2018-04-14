@@ -45,7 +45,7 @@ class TermDatabase {
         since: 'now',
         include_docs: true
       })
-      .on('error', error => console.log('Error', error))
+      .on('error', error => console.error('Error', error))
   }
 
   get(id) {
