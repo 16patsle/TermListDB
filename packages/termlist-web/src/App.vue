@@ -1,27 +1,64 @@
 <template>
-<section id="app" class="section">
-  <ModalAdd ref="addModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"></ModalAdd>
-  <ModalEdit ref="editModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"></ModalEdit>
-  <ModalRemove ref="removeModal" :current="currentTerm" :ui="ui" @remove="removeTerm"></ModalRemove>
-  <ModalImport ref="importModal" :ui="ui" @import="importTerms"></ModalImport>
-  <ModalImporting ref="importingModal" :ui="ui"></ModalImporting>
-  <ModalExport ref="exportModal" :ui="ui" :exportURI="exportURI" @export="exportTerms" @close="exportURI = ''"></ModalExport>
-  <div class="container">
-    <h1 class="title">{{ui.termlist}}</h1>
-    <div class="field is-grouped">
-      <div class="control">
-        <AppButton :primary="true" @click="addTerm">{{ui.add}}</AppButton>
+  <section
+    id="app"
+    class="section">
+    <ModalAdd
+      ref="addModal"
+      :current="currentTerm"
+      :ui="ui"
+      :fields="fields"
+      @save="saveTerm"/>
+    <ModalEdit
+      ref="editModal"
+      :current="currentTerm"
+      :ui="ui"
+      :fields="fields"
+      @save="saveTerm"/>
+    <ModalRemove
+      ref="removeModal"
+      :current="currentTerm"
+      :ui="ui"
+      @remove="removeTerm"/>
+    <ModalImport
+      ref="importModal"
+      :ui="ui"
+      @import="importTerms"/>
+    <ModalImporting
+      ref="importingModal"
+      :ui="ui"/>
+    <ModalExport
+      ref="exportModal"
+      :ui="ui"
+      :export-uri="exportURI"
+      @export="exportTerms"
+      @close="exportURI = ''"/>
+    <div class="container">
+      <h1 class="title">{{ ui.termlist }}</h1>
+      <div class="field is-grouped">
+        <div class="control">
+          <AppButton
+            :primary="true"
+            @click="addTerm">{{ ui.add }}</AppButton>
+        </div>
+        <div class="control">
+          <AppButton @click="confirmImportTerms">{{ ui.importTerms }}</AppButton>
+        </div>
+        <div class="control">
+          <AppButton @click="confirmExportTerms">{{ ui.exportTerms }}</AppButton>
+        </div>
       </div>
-      <div class="control">
-        <AppButton @click="confirmImportTerms">{{ui.importTerms}}</AppButton>
-      </div>
-      <div class="control">
-        <AppButton @click="confirmExportTerms">{{ui.exportTerms}}</AppButton>
-      </div>
+      <TermList
+        ref="list"
+        :utils="utils"
+        :ui="ui"
+        :terms="terms"
+        :fields="fields"
+        @edit="editTerm"
+        @remove="confirmRemoveTerm"
+        @gotopage="gotoPage"
+        @sort="sort"/>
     </div>
-    <TermList ref="list" :utils="utils" :ui="ui" :terms="terms" :fields="fields" @edit="editTerm" @remove="confirmRemoveTerm" @gotopage="gotoPage" @sort="sort"></TermList>
-  </div>
-</section>
+  </section>
 </template>
 
 <script>
@@ -34,13 +71,23 @@ import ModalExport from './components/Modal/ModalExport.vue'
 import AppButton from './components/Generic/AppButton.vue'
 import TermList from './components/TermList.vue'
 
-import MarkdownIt from 'markdown-it';
+import MarkdownIt from 'markdown-it'
 
 import ui from './assets/ui.js'
 import fields from './assets/fields.js'
 
 export default {
-  name: 'app',
+  name: 'App',
+  components: {
+    ModalAdd,
+    ModalEdit,
+    ModalRemove,
+    ModalImport,
+    ModalImporting,
+    ModalExport,
+    AppButton,
+    TermList
+  },
   data() {
     return {
       ui: ui,
@@ -55,28 +102,37 @@ export default {
   },
   computed: {
     terms() {
-      return this.$store.state.terms;
+      return this.$store.state.terms
     }
   },
-  components: {
-    ModalAdd,
-    ModalEdit,
-    ModalRemove,
-    ModalImport,
-    ModalImporting,
-    ModalExport,
-    AppButton,
-    TermList
+  created() {
+    this.utils.md = MarkdownIt('zero')
+    this.utils.md.enable([
+      'emphasis',
+      'entity',
+      'escape',
+      'link',
+      'strikethrough',
+      'text_collapse',
+      'balance_pairs'
+    ])
+
+    this.$store.dispatch('getTotal')
+    this.$store.dispatch('getTerms', {
+      field: this.sortedBy
+    })
+
+    document.addEventListener('keyup', this.shortcutUp, false)
   },
   methods: {
-    addTerm(e) {
-      this.$refs.addModal.addTerm();
+    addTerm() {
+      this.$refs.addModal.addTerm()
     },
     editTerm(term) {
-      this.$refs.editModal.editTerm(term);
+      this.$refs.editModal.editTerm(term)
     },
     confirmRemoveTerm(term) {
-      this.$refs.removeModal.confirmRemoveTerm(term);
+      this.$refs.removeModal.confirmRemoveTerm(term)
     },
     saveTerm(term, data) {
       if (term.term) {
@@ -88,26 +144,34 @@ export default {
       }
     },
     removeTerm(term) {
-      this.$store.dispatch('remove', term);
+      this.$store.dispatch('remove', term)
     },
     gotoPage(pageNumberOffset, isBefore) {
       if (isBefore) {
-        this.$store.dispatch('getTerms', {
-          field: this.sortedBy
-        }).then(() => {
-          this.$store.dispatch('getTerms', {
-            field: this.sortedBy,
-            lastTerm: this.$store.state.terms[Object.keys(this.$store.state.terms)[0]],
-            pageNumberOffset: Number(pageNumberOffset),
-            isBefore: true
-          });
-        });
+        this.$store
+          .dispatch('getTerms', {
+            field: this.sortedBy
+          })
+          .then(() => {
+            this.$store.dispatch('getTerms', {
+              field: this.sortedBy,
+              lastTerm: this.$store.state.terms[
+                Object.keys(this.$store.state.terms)[0]
+              ],
+              pageNumberOffset: Number(pageNumberOffset),
+              isBefore: true
+            })
+          })
       } else {
         this.$store.dispatch('getTerms', {
           field: this.sortedBy,
-          lastTerm: this.$store.state.terms[Object.keys(this.$store.state.terms)[Object.keys(this.$store.state.terms).length - 1]],
+          lastTerm: this.$store.state.terms[
+            Object.keys(this.$store.state.terms)[
+              Object.keys(this.$store.state.terms).length - 1
+            ]
+          ],
           pageNumberOffset: pageNumberOffset - 1
-        });
+        })
       }
     },
     sort(field) {
@@ -115,38 +179,49 @@ export default {
         field: field
       })
 
-      this.sortedBy = field;
+      this.sortedBy = field
     },
     shortcutUp(e) {
-      if(['input', 'textarea'].indexOf(e.target.tagName.toLowerCase()) === -1 && e.key.toLowerCase() === 'n'){
+      if (
+        ['input', 'textarea'].indexOf(e.target.tagName.toLowerCase()) === -1 &&
+        e.key.toLowerCase() === 'n'
+      ) {
         this.addTerm()
       }
     },
     confirmImportTerms() {
-      this.$refs.importModal.confirmImportTerm();
+      this.$refs.importModal.confirmImportTerm()
     },
     async importTerms(terms) {
       this.$store.commit('prepareImport', terms.length)
 
-      let imports = [];
+      let imports = []
 
       for (let term of terms) {
         if (this.$store.state.imports.cancel === false) {
-          imports.push(this.$store.dispatch('importTerms', Object.assign({
-            _id: term.date
-          }, term)))
+          imports.push(
+            this.$store.dispatch(
+              'importTerms',
+              Object.assign(
+                {
+                  _id: term.date
+                },
+                term
+              )
+            )
+          )
         }
       }
 
-      await Promise.all(imports);
+      await Promise.all(imports)
 
-      await this.$store.dispatch('getTotal');
+      await this.$store.dispatch('getTotal')
       await this.$store.dispatch('getTerms', {
         field: this.sortedBy
-      });
+      })
     },
     confirmExportTerms() {
-      this.$refs.exportModal.confirmExportTerm();
+      this.$refs.exportModal.confirmExportTerm()
     },
     async exportTerms() {
       const terms = await this.$store.dispatch('exportTerms')
@@ -163,19 +238,10 @@ export default {
         })
       }
 
-      this.exportURI = 'data:application/json;charset=utf-8, ' + encodeURIComponent(JSON.stringify(exported))
+      this.exportURI =
+        'data:application/json;charset=utf-8, ' +
+        encodeURIComponent(JSON.stringify(exported))
     }
-  },
-  created() {
-    this.utils.md = MarkdownIt('zero');
-    this.utils.md.enable(['emphasis', 'entity', 'escape', 'link', 'strikethrough', 'text_collapse', 'balance_pairs']);
-
-    this.$store.dispatch('getTotal');
-    this.$store.dispatch('getTerms', {
-      field: this.sortedBy
-    });
-
-    document.addEventListener('keyup', this.shortcutUp, false);
   }
 }
 </script>

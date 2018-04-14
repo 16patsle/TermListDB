@@ -2,13 +2,13 @@
 <Modal ref="modal" :title="ui.exportTerms" :closeCallback="close" :ok-text="null" :cancel-text="null">
   <div slot="modal-body">
     <p class="subtitle">{{exportInstructions}}</p>
-    <a :href="exportURI" class="button is-primary" :disabled="!exported" download="terms.json" @click="downloadExport">{{ui.download}}</a>
+    <a :href="exportUri" class="button is-primary" :disabled="!exported" download="terms.json" @click="downloadExport">{{ui.download}}</a>
   </div>
 </Modal>
 </template>
 <script>
-import Modal from './Modal.vue';
-import AppButton from '../Generic/AppButton.vue';
+import Modal from './Modal.vue'
+import AppButton from '../Generic/AppButton.vue'
 
 export default {
   components: {
@@ -20,7 +20,7 @@ export default {
       type: Object,
       required: true
     },
-    exportURI: {
+    exportUri: {
       type: String,
       required: true
     }
@@ -37,34 +37,33 @@ export default {
       }
     },
     exported() {
-      return Boolean(this.exportURI)
+      return Boolean(this.exportUri)
     }
   },
   methods: {
     toggleModal(bool) {
-      this.$refs.modal.toggleModal(bool);
+      this.$refs.modal.toggleModal(bool)
     },
     confirmExportTerm() {
-      this.toggleModal(true);
+      this.toggleModal(true)
 
       this.exportTerms()
     },
     close() {
-      this.toggleModal(false);
+      this.toggleModal(false)
 
-      this.$emit('close');
+      this.$emit('close')
     },
     exportTerms() {
-      this.$emit('export');
+      this.$emit('export')
     },
     downloadExport(e) {
       if (!this.exported) {
-        e.preventDefault();
+        e.preventDefault()
       }
     }
   }
 }
 </script>
 <style>
-
 </style>
