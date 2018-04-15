@@ -33,20 +33,31 @@
       @export="exportTerms"
       @close="exportURI = ''"/>
     <div class="container">
-      <h1 class="title">{{ ui.termlist }}</h1>
-      <div class="field is-grouped">
-        <div class="control">
-          <AppButton
-            :primary="true"
-            @click="addTerm">{{ ui.add }}</AppButton>
-        </div>
-        <div class="control">
-          <AppButton @click="confirmImportTerms">{{ ui.importTerms }}</AppButton>
-        </div>
-        <div class="control">
-          <AppButton @click="confirmExportTerms">{{ ui.exportTerms }}</AppButton>
-        </div>
-      </div>
+      <AppNavbar>
+        <template slot="brand">
+          <AppNavbarItem><h1 class="title">{{ ui.termlist }}</h1></AppNavbarItem>
+        </template>
+        <template slot="start">
+          <AppNavbarItem>
+            <div class="field is-grouped">
+              <div class="control">
+                <AppButton
+                  :primary="true"
+                  @click="addTerm">{{ ui.add }}</AppButton>
+              </div>
+              <div class="control">
+                <AppButton @click="confirmImportTerms">{{ ui.importTerms }}</AppButton>
+              </div>
+              <div class="control">
+                <AppButton @click="confirmExportTerms">{{ ui.exportTerms }}</AppButton>
+              </div>
+            </div>
+          </AppNavbarItem>
+        </template>
+        <template slot="end">
+
+        </template>
+      </AppNavbar>
       <TermList
         ref="list"
         :utils="utils"
@@ -69,6 +80,8 @@ import ModalImport from './components/Modal/ModalImport.vue'
 import ModalImporting from './components/Modal/ModalImporting.vue'
 import ModalExport from './components/Modal/ModalExport.vue'
 import AppButton from './components/Generic/AppButton.vue'
+import AppNavbar from './components/Generic/AppNavbar.vue'
+import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
 import TermList from './components/TermList.vue'
 
 import MarkdownIt from 'markdown-it'
@@ -86,6 +99,8 @@ export default {
     ModalImporting,
     ModalExport,
     AppButton,
+    AppNavbar,
+    AppNavbarItem,
     TermList
   },
   data() {
