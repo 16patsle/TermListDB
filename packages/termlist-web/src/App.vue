@@ -37,6 +37,12 @@
       :ui="ui"
       :fields="fields"
       @save="saveTerm"/>
+    <ModalShow
+      ref="showModal"
+      :current="currentTerm"
+      :ui="ui"
+      :md="utils.md"
+      :fields="fields"/>
     <ModalRemove
       ref="removeModal"
       :current="currentTerm"
@@ -62,6 +68,7 @@
         :ui="ui"
         :terms="terms"
         :fields="fields"
+        @show="showTerm"
         @edit="editTerm"
         @remove="confirmRemoveTerm"
         @gotopage="gotoPage"
@@ -73,6 +80,7 @@
 <script>
 import ModalAdd from './components/Modal/ModalAdd.vue'
 import ModalEdit from './components/Modal/ModalEdit.vue'
+import ModalShow from './components/Modal/ModalShow.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
 import ModalImport from './components/Modal/ModalImport.vue'
 import ModalImporting from './components/Modal/ModalImporting.vue'
@@ -92,6 +100,7 @@ export default {
   components: {
     ModalAdd,
     ModalEdit,
+    ModalShow,
     ModalRemove,
     ModalImport,
     ModalImporting,
@@ -143,6 +152,9 @@ export default {
     },
     editTerm(term) {
       this.$refs.editModal.editTerm(term)
+    },
+    showTerm(term) {
+      this.$refs.showModal.showTerm(term)
     },
     confirmRemoveTerm(term) {
       this.$refs.removeModal.confirmRemoveTerm(term)

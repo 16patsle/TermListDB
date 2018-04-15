@@ -1,47 +1,48 @@
 <template>
-  <span>
-    <TermSearchBar 
-      :ui="ui" 
-      :fields="fields" 
+  <div>
+    <TermSearchBar
+      :ui="ui"
+      :fields="fields"
       @search="search"/>
-    <TermSortSelect 
-      :ui="ui" 
-      :fields="fields" 
+    <TermSortSelect
+      :ui="ui"
+      :fields="fields"
       @sort="sort"/>
-    <AppPagination 
-      :ui="ui" 
-      :firstpage="1" 
-      :currentpage="currentPage" 
-      :lastpage="Math.ceil($store.state.totalRows/20)" 
+    <AppPagination
+      :ui="ui"
+      :firstpage="1"
+      :currentpage="currentPage"
+      :lastpage="Math.ceil($store.state.totalRows/20)"
       @gotopage="gotoPage"/>
     <table class="table is-fullwidth is-hoverable">
       <thead>
         <tr>
-          <th v-for="field in fields">{{ ui[field.name] }}</th>
-          <th/>
+          <th v-for="field in fields" :data-field="field.name || field.type">{{ ui[field.name] }}</th>
+          <th data-field="buttons"/>
         </tr>
       </thead>
-      <tbody 
-        class="list" 
+      <tbody
+        class="list"
         ref="termlist">
-        <TermRow 
-          v-for="term in terms" 
-          :md="utils.md" 
-          :key="term._id" 
-          :ui="ui" 
-          :term="term" 
-          :fields="fields" 
-          @edit="edit" 
+        <TermRow
+          v-for="term in terms"
+          :md="utils.md"
+          :key="term._id"
+          :ui="ui"
+          :term="term"
+          :fields="fields"
+          @show="show"
+          @edit="edit"
           @remove="remove"/>
       </tbody>
     </table>
-    <AppPagination 
-      :ui="ui" 
-      :firstpage="1" 
-      :currentpage="currentPage" 
-      :lastpage="Math.ceil($store.state.totalRows/20)" 
+    <AppPagination
+      :ui="ui"
+      :firstpage="1"
+      :currentpage="currentPage"
+      :lastpage="Math.ceil($store.state.totalRows/20)"
       @gotopage="gotoPage"/>
-  </span>
+  </div>
 </template>
 <script>
 import TermSearchBar from './TermList/TermSearchBar.vue'
@@ -83,6 +84,9 @@ export default {
     search(search) {
       this.$store.dispatch('find', search)
     },
+    show(term) {
+      this.$emit('show', term)
+    },
     edit(term) {
       this.$emit('edit', term)
     },
@@ -104,3 +108,24 @@ export default {
   }
 }
 </script>
+<style scoped>
+table {
+  table-layout: fixed;
+}
+
+thead th[data-field='term'] {
+  width: 20%;
+}
+thead th[data-field='type'] {
+  width: 15%;
+}
+thead th[data-field='date'] {
+  width: 160px;
+}
+thead th[data-field='filler'] {
+  width: 10px;
+}
+thead th[data-field='buttons'] {
+  width: 60px;
+}
+</style>

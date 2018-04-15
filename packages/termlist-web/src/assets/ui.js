@@ -12,6 +12,7 @@ export default {
   removeterm: 'Fjern ord',
   wanttoremove: 'Vil du fjerne dette ordet?',
   cancel: 'Avbryt',
+  close: 'Lukk',
   search: 'Søk',
   pagenumber: 'Side',
   gotopage: 'Gå til side',

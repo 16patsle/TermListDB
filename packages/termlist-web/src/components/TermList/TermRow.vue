@@ -3,7 +3,10 @@
     <td
       v-for="field in fields"
       :key="field.name"
-      v-html="getFieldValue(field)"/>
+      :data-field="field.name || field.type"
+      @click="show">
+      <div v-html="getFieldValue(field)"/>
+    </td>
     <td class="buttons">
       <TermRowButton
         icon="pencil"
@@ -40,6 +43,9 @@ export default {
     }
   },
   methods: {
+    show() {
+      this.$emit('show', this.term)
+    },
     edit() {
       this.$emit('edit', this.term)
     },
@@ -70,8 +76,35 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 tr.term-row td {
   white-space: pre-line;
+}
+tr.term-row td div {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  height: 1.5em !important;
+  mask: gradient(red, blue);
+  mask-image: linear-gradient(
+    -45deg,
+    rgba(0, 0, 0, 1) 20%,
+    rgba(0, 0, 0, 0) 50%
+  );
+}
+td[data-field='term'] {
+  max-width: 20%;
+}
+td[data-field='type'] {
+  max-width: 15%;
+}
+td[data-field='date'] {
+  max-width: 160px;
+}
+td[data-field='filler'] {
+  max-width: 10px;
+}
+td[data-field='buttons'] {
+  max-width: 60px;
 }
 </style>
