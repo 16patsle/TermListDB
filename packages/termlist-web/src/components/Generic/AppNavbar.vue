@@ -1,7 +1,7 @@
 <template>
   <nav
-    class="navbar"
     :class="{'is-fixed-top':fixed==='top','is-fixed-bottom':fixed==='bottom'}"
+    class="navbar"
     role="navigation"
     aria-label="main navigation">
     <div class="navbar-brand">
@@ -22,6 +22,7 @@ export default {
   props: {
     fixed: {
       type: String,
+      default: null,
       validator: function(value) {
         // The value must match one of these strings
         return ['top', 'bottom'].indexOf(value) !== -1
@@ -36,7 +37,6 @@ export default {
     if (this.bodyPadding && this.fixed) {
       document.body.classList.add(`has-navbar-fixed-${this.fixed}`)
     }
-    console.log(this.bodyPadding, document.body.classList)
   },
   methods: {}
 }
