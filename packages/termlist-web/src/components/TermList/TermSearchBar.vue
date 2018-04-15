@@ -2,6 +2,7 @@
   <div class="field has-addons">
     <div class="control is-expanded has-icons-left">
       <input
+        ref="searchBar"
         :placeholder="ui.search"
         class="input searchfield"
         type="text"
@@ -11,23 +12,19 @@
       </span>
     </div>
     <div class="control">
-      <div class="select">
-        <select
-          ref="columnSelect"
-          @change="search">
-          <option value="all">Alle kolonner</option>
-          <option
-            v-for="field in fields"
-            v-if="!field.immutable&&field.type!=='filler'"
-            :key="field.name"
-            :value="field.name">{{ ui[field.name] }}</option>
-        </select>
-      </div>
+      <AppSelect
+        ref="columnSelect"
+        :defaultoption="{name:'all',ui:ui.allColumns}"
+        :options="reduce()"
+        @change="search"/>
     </div>
   </div>
 </template>
 <script>
+import AppSelect from '../Generic/AppSelect.vue'
+
 export default {
+  components: { AppSelect },
   props: {
     ui: {
       type: Object,
@@ -39,13 +36,24 @@ export default {
     }
   },
   methods: {
-    search(e) {
+    search() {
       // Search
       this.$emit('search', {
-        search: e.target.value,
+        search: this.$refs.searchBar.value,
         selected: this.$refs.columnSelect.value,
         fields: this.fields
       })
+    },
+    reduce() {
+      return this.fields.reduce((allFields, field) => {
+        if (!field.immutable && field.type !== 'filler') {
+          allFields.push({
+            name: field.name,
+            ui: this.ui[field.name]
+          })
+        }
+        return allFields
+      }, [])
     }
   }
 }

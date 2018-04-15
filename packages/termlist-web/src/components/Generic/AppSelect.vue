@@ -23,8 +23,14 @@ export default {
     },
     fullwidth: { type: Boolean, default: false }
   },
+  data() {
+    return {
+      value: this.defaultoption ? this.defaultoption.name : this.options[0].name
+    }
+  },
   methods: {
     change(e) {
+      this.value = e.target.value
       this.$emit('change', e.target.value)
     }
   }

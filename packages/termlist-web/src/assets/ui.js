@@ -1,5 +1,6 @@
 export default {
   termlist: 'Ordliste',
+  allColumns: 'Alle kolonner',
   term: 'Ord',
   desc: 'Forklaring',
   type: 'Ordklasse',
