@@ -21,16 +21,11 @@
               :ref="field.name+'field'"
               class="textarea"
               rows="8"/>
-            <div
+            <AppSelect
               v-else-if="field.type === 'select' && field.options instanceof Array"
-              class="select is-fullwidth">
-              <select :ref="field.name+'field'">
-                <option
-                  v-for="option in field.options"
-                  :key="option"
-                  :value="option">{{ ui.wordClasses[option] }}</option>
-              </select>
-            </div>
+              :ref="field.name+'field'"
+              :options="reduce(field.options)"
+              fullwidth/>
           </div>
         </div>
       </div>
@@ -50,11 +45,13 @@
 <script>
 import Modal from './Modal.vue'
 import AppButton from '../Generic/AppButton.vue'
+import AppSelect from '../Generic/AppSelect.vue'
 
 export default {
   components: {
     Modal,
-    AppButton
+    AppButton,
+    AppSelect
   },
   props: {
     ui: {
@@ -85,7 +82,6 @@ export default {
           this.$refs[field.name + 'field'][0].value = ''
         }
       }
-
       termObject.date = new Date().toJSON()
 
       this.$emit(
@@ -100,6 +96,15 @@ export default {
     },
     close() {
       this.toggleModal(false)
+    },
+    reduce(fields) {
+      return fields.reduce((allFields, field) => {
+        allFields.push({
+          name: field,
+          ui: this.ui.wordClasses[field]
+        })
+        return allFields
+      }, [])
     }
   }
 }
