@@ -33,9 +33,9 @@ export default {
       default: true
     }
   },
-  created() {
+  mounted() {
     if (this.bodyPadding && this.fixed) {
-      document.body.classList.add(`has-navbar-fixed-${this.fixed}`)
+      this.$root.$el.classList.add(`has-navbar-fixed-${this.fixed}`)
     }
   },
   methods: {}

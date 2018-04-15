@@ -2,7 +2,7 @@ import 'babel-polyfill'
 import deepmerge from 'deepmerge'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import 'bulma'
+import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
 import App from './App.vue'
 
