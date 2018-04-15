@@ -1,6 +1,7 @@
 <template>
   <nav
     class="navbar"
+    :class="{'is-fixed-top':fixed==='top','is-fixed-bottom':fixed==='bottom'}"
     role="navigation"
     aria-label="main navigation">
     <div class="navbar-brand">
@@ -19,8 +20,23 @@
 <script>
 export default {
   props: {
-    /*primary: Boolean,
-    danger: Boolean*/
+    fixed: {
+      type: String,
+      validator: function(value) {
+        // The value must match one of these strings
+        return ['top', 'bottom'].indexOf(value) !== -1
+      }
+    },
+    bodyPadding: {
+      type: Boolean,
+      default: true
+    }
+  },
+  created() {
+    if (this.bodyPadding && this.fixed) {
+      document.body.classList.add(`has-navbar-fixed-${this.fixed}`)
+    }
+    console.log(this.bodyPadding, document.body.classList)
   },
   methods: {}
 }

@@ -1,7 +1,30 @@
 <template>
-  <section
-    id="app"
-    class="section">
+  <div id="app">
+    <AppNavbar fixed="top">
+    <template slot="brand">
+      <AppNavbarItem><h1 class="title">{{ ui.termlist }}</h1></AppNavbarItem>
+    </template>
+    <template slot="start">
+      <AppNavbarItem>
+        <div class="field is-grouped">
+          <div class="control">
+            <AppButton
+              :primary="true"
+              @click="addTerm">{{ ui.add }}</AppButton>
+          </div>
+          <div class="control">
+            <AppButton @click="confirmImportTerms">{{ ui.importTerms }}</AppButton>
+          </div>
+          <div class="control">
+            <AppButton @click="confirmExportTerms">{{ ui.exportTerms }}</AppButton>
+          </div>
+        </div>
+      </AppNavbarItem>
+    </template>
+    <template slot="end">
+
+    </template>
+  </AppNavbar>
     <ModalAdd
       ref="addModal"
       :current="currentTerm"
@@ -33,31 +56,6 @@
       @export="exportTerms"
       @close="exportURI = ''"/>
     <div class="container">
-      <AppNavbar>
-        <template slot="brand">
-          <AppNavbarItem><h1 class="title">{{ ui.termlist }}</h1></AppNavbarItem>
-        </template>
-        <template slot="start">
-          <AppNavbarItem>
-            <div class="field is-grouped">
-              <div class="control">
-                <AppButton
-                  :primary="true"
-                  @click="addTerm">{{ ui.add }}</AppButton>
-              </div>
-              <div class="control">
-                <AppButton @click="confirmImportTerms">{{ ui.importTerms }}</AppButton>
-              </div>
-              <div class="control">
-                <AppButton @click="confirmExportTerms">{{ ui.exportTerms }}</AppButton>
-              </div>
-            </div>
-          </AppNavbarItem>
-        </template>
-        <template slot="end">
-
-        </template>
-      </AppNavbar>
       <TermList
         ref="list"
         :utils="utils"
@@ -69,7 +67,7 @@
         @gotopage="gotoPage"
         @sort="sort"/>
     </div>
-  </section>
+</div>
 </template>
 
 <script>
