@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent>
-    <Modal
+    <AppModal
       ref="modal"
       :title="ui.editterm">
       <div slot="modal-body">
@@ -38,17 +38,17 @@
           @click="saveTerm">
         <AppButton @click="close">{{ ui.cancel }}</AppButton>
       </div>
-    </Modal>
+    </AppModal>
   </form>
 </template>
 <script>
-import Modal from './Modal.vue'
+import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
 
 export default {
   components: {
-    Modal,
+    AppModal,
     AppButton,
     AppSelect
   },

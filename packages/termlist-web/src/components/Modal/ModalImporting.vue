@@ -1,5 +1,5 @@
 <template>
-  <Modal
+  <AppModal
     ref="modal"
     :title="ui.importTerms"
     :close-callback="close"
@@ -9,7 +9,7 @@
       <p class="subtitle">{{ ui.processingImport }}</p>
       <div class="field">
         <div class="control">
-          <progress 
+          <progress
             :value="$store.state.imports.imported"
             :max="$store.state.imports.total"
             class="progress is-primary" >{{ Math.round($store.state.imports.imported / $store.state.imports.total * 100) }}%</progress>
@@ -18,15 +18,15 @@
         </div>
       </div>
     </div>
-  </Modal>
+  </AppModal>
 </template>
 <script>
-import Modal from './Modal.vue'
+import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 
 export default {
   components: {
-    Modal,
+    AppModal,
     AppButton
   },
   props: {

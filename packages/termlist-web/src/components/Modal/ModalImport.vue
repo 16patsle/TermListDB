@@ -1,5 +1,5 @@
 <template>
-  <Modal
+  <AppModal
     ref="modal"
     :title="ui.importTerms"
     :callback="importTerm"
@@ -42,15 +42,15 @@
         @click="importTerm">{{ ui.importTerms }}!</AppButton>
       <AppButton @click="close">{{ ui.cancel }}</AppButton>
     </div>
-  </Modal>
+  </AppModal>
 </template>
 <script>
-import Modal from './Modal.vue'
+import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 
 export default {
   components: {
-    Modal,
+    AppModal,
     AppButton
   },
   props: {
