@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import AppButton from '../Generic/AppButton.vue'
+import AppButton from './AppButton.vue'
 
 export default {
   components: {

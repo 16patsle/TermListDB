@@ -1,5 +1,5 @@
 <template>
-  <Modal
+  <AppModal
     ref="modal"
     :title="ui.exportTerms"
     :close-callback="close"
@@ -14,15 +14,15 @@
         download="terms.json"
         @click="downloadExport">{{ ui.download }}</a>
     </div>
-  </Modal>
+  </AppModal>
 </template>
 <script>
-import Modal from './Modal.vue'
+import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 
 export default {
   components: {
-    Modal,
+    AppModal,
     AppButton
   },
   props: {
