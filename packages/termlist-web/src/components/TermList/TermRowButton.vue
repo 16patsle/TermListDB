@@ -1,9 +1,11 @@
 <template>
-<a href="#" @click.prevent="click">
-  <span class="icon is-small">
-    <i :class="'fa fa-'+icon+''"></i>
-  </span>
-</a>
+  <a 
+    href="#" 
+    @click.prevent="click">
+    <span class="icon is-small">
+      <i :class="'fa fa-'+icon+''"/>
+    </span>
+  </a>
 </template>
 <script>
 export default {
@@ -15,7 +17,7 @@ export default {
   },
   methods: {
     click(e) {
-      this.$emit('click', e);
+      this.$emit('click', e)
     }
   }
 }

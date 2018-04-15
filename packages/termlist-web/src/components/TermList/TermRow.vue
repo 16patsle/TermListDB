@@ -1,18 +1,29 @@
 <template>
-<tr class="term-row">
-  <td v-for="field in fields" v-html="getFieldValue(field)"></td>
-  <td class="buttons">
-    <TermRowButton icon="pencil" @click="edit"></TermRowButton>
-    <TermRowButton icon="trash" @click="remove"></TermRowButton>
-  </td>
-</tr>
+  <tr class="term-row">
+    <td
+      v-for="field in fields"
+      :key="field.name"
+      v-html="getFieldValue(field)"/>
+    <td class="buttons">
+      <TermRowButton
+        icon="pencil"
+        @click="edit"/>
+      <TermRowButton
+        icon="trash"
+        @click="remove"/>
+    </td>
+  </tr>
 </template>
 <script>
 import TermRowButton from './TermRowButton.vue'
 
 export default {
+  components: {
+    TermRowButton
+  },
   props: {
     md: {
+      type: Object,
       required: true
     },
     ui: {
@@ -28,15 +39,12 @@ export default {
       required: true
     }
   },
-  components: {
-    TermRowButton
-  },
   methods: {
-    edit(e) {
-      this.$emit('edit', this.term);
+    edit() {
+      this.$emit('edit', this.term)
     },
-    remove(e) {
-      this.$emit('remove', this.term);
+    remove() {
+      this.$emit('remove', this.term)
     },
     getFieldValue(field) {
       if (!this.term[field.name]) {
@@ -53,7 +61,7 @@ export default {
           day: 'numeric',
           hour: '2-digit',
           minute: '2-digit'
-        }).format(date);
+        }).format(date)
       } else {
         return this.term[field.name]
       }

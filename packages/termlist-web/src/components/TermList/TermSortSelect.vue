@@ -1,14 +1,20 @@
 <template>
-<div class="field is-expanded">
-  <div class="control">
-    <AppSelect :options="options" :fullwidth="true" @change="sort"></AppSelect>
+  <div class="field is-expanded">
+    <div class="control">
+      <AppSelect 
+        :options="options" 
+        :fullwidth="true" 
+        @change="sort"/>
+    </div>
   </div>
-</div>
 </template>
 <script>
 import AppSelect from '../Generic/AppSelect.vue'
 
 export default {
+  components: {
+    AppSelect
+  },
   props: {
     ui: {
       type: Object,
@@ -19,14 +25,11 @@ export default {
       required: true
     }
   },
-  components: {
-    AppSelect
-  },
   computed: {
     options() {
       let optionsArray = []
 
-      this.fields.forEach((field) => {
+      this.fields.forEach(field => {
         if (field.type !== 'filler') {
           optionsArray.push({
             name: field.name,
@@ -35,13 +38,13 @@ export default {
         }
       })
 
-      return optionsArray;
+      return optionsArray
     }
   },
   methods: {
     sort(value) {
       // Sort
-      this.$emit('sort', value);
+      this.$emit('sort', value)
     }
   }
 }

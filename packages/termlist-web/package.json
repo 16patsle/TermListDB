@@ -6,13 +6,13 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "npm run dev",
-    "test": "eslint src/* --fix",
+    "test": "eslint src/**/**/* --fix",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "prepublish": "npm run build"
   },
   "dependencies": {
-    "bulma": "^0.5.3",
+    "bulma": "^0.6.1",
     "deepmerge": "^2.0.1",
     "font-awesome": "^4.7.0",
     "markdown-it": "^8.4.0",
