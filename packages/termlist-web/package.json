@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "npm run dev",
-    "test": "eslint src/* --fix",
+    "test": "eslint src/**/**/* --fix",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "prepublish": "npm run build"
