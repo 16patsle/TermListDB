@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/16patsle/TermListDB#readme",
   "devDependencies": {
-    "lerna": "^2.2.0"
+    "lerna": "^2.11.0"
   },
   "dependencies": {
     "termlist-server": "file:packages/termlist-server"
