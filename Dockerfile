@@ -16,7 +16,7 @@ RUN npm install
 
 WORKDIR /usr/src/termlist/termlist-web
 RUN npm rebuild node-sass --force
-RUN npm run prepublish
+RUN npm run prepare
 
 WORKDIR /usr/src/termlist/termlist-server
 

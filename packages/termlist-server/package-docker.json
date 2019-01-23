@@ -9,8 +9,8 @@
   "author": "Patrick Sletvold",
   "license": "Apache-2.0",
   "dependencies": {
-    "express": "^4.15.4",
-    "pouchdb": "^6.3.4",
+    "express": "^4.16.4",
+    "pouchdb": "^7.0.0",
     "termlist-web": "file:../termlist-web"
   }
 }

@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import '@babel/polyfill'
 import deepmerge from 'deepmerge'
 import Vue from 'vue'
 import Vuex from 'vuex'
