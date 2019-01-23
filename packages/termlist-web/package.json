@@ -7,7 +7,7 @@
   "scripts": {
     "start": "npm run dev",
     "test": "eslint src/**/**/* --fix",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --hot",
+    "dev": "webpack-dev-server --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "prepare": "npm run build"
   },
