@@ -1,15 +1,11 @@
 <template>
-  <div
-    :class="{'is-fullwidth':fullwidth}"
-    class="select">
+  <div :class="{'is-fullwidth':fullwidth}" class="select">
     <select @change="change">
       <option
         v-if="defaultoption && defaultoption.name && defaultoption.ui"
-        :value="defaultoption.name">{{ defaultoption.ui }}</option>
-      <option
-        v-for="option in options"
-        :key="option.name"
-        :value="option.name">{{ option.ui }}</option>
+        :value="defaultoption.name"
+      >{{ defaultoption.ui }}</option>
+      <option v-for="option in options" :key="option.name" :value="option.name">{{ option.ui }}</option>
     </select>
   </div>
 </template>

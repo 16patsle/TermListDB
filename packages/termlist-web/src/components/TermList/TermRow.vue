@@ -1,16 +1,9 @@
 <template>
   <tr class="term-row">
-    <td
-      v-for="field in fields"
-      :key="field.name"
-      v-html="getFieldValue(field)"/>
+    <td v-for="field in fields" :key="field.name" v-html="getFieldValue(field)"/>
     <td class="buttons">
-      <TermRowButton
-        icon="pencil"
-        @click="edit"/>
-      <TermRowButton
-        icon="trash"
-        @click="remove"/>
+      <TermRowButton icon="pencil" @click="edit"/>
+      <TermRowButton icon="trash" @click="remove"/>
     </td>
   </tr>
 </template>

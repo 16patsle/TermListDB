@@ -1,7 +1,7 @@
 export default {
-    firebase: {
-        apiKey: '',
-        authDomain: '',
-        projectId: ''
-    }
+  firebase: {
+    apiKey: '',
+    authDomain: '',
+    projectId: ''
+  }
 }

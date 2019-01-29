@@ -3,7 +3,8 @@
     :class="{'is-fixed-top':fixed==='top','is-fixed-bottom':fixed==='bottom'}"
     class="navbar"
     role="navigation"
-    aria-label="main navigation">
+    aria-label="main navigation"
+  >
     <div class="navbar-brand">
       <slot name="brand"/>
     </div>

@@ -4,7 +4,8 @@
     :title="ui.exportTerms"
     :close-callback="close"
     :ok-text="null"
-    :cancel-text="null">
+    :cancel-text="null"
+  >
     <div slot="modal-body">
       <p class="subtitle">{{ exportInstructions }}</p>
       <a
@@ -12,7 +13,8 @@
         :disabled="!exported"
         class="button is-primary"
         download="terms.json"
-        @click="downloadExport">{{ ui.download }}</a>
+        @click="downloadExport"
+      >{{ ui.download }}</a>
     </div>
   </AppModal>
 </template>

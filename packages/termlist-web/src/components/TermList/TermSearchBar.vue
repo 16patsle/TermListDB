@@ -6,7 +6,8 @@
         :placeholder="ui.search"
         class="input searchfield"
         type="text"
-        @keyup="search">
+        @keyup="search"
+      >
       <span class="icon is-small is-left">
         <i class="fa fa-search"/>
       </span>
@@ -16,7 +17,8 @@
         ref="columnSelect"
         :defaultoption="{name:'all',ui:ui.allColumns}"
         :options="reduce()"
-        @change="search"/>
+        @change="search"
+      />
     </div>
   </div>
 </template>

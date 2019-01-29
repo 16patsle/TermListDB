@@ -1,60 +1,40 @@
 <template>
   <div id="app">
     <AppNavbar fixed="top">
-    <template slot="brand">
-      <AppNavbarItem><h1 class="title">{{ ui.termlist }}</h1></AppNavbarItem>
-    </template>
-    <template slot="start">
-      <AppNavbarItem>
-        <div class="field is-grouped">
-          <div class="control">
-            <AppButton
-              :primary="true"
-              @click="addTerm">{{ ui.add }}</AppButton>
+      <template slot="brand">
+        <AppNavbarItem>
+          <h1 class="title">{{ ui.termlist }}</h1>
+        </AppNavbarItem>
+      </template>
+      <template slot="start">
+        <AppNavbarItem>
+          <div class="field is-grouped">
+            <div class="control">
+              <AppButton :primary="true" @click="addTerm">{{ ui.add }}</AppButton>
+            </div>
+            <div class="control">
+              <AppButton @click="confirmImportTerms">{{ ui.importTerms }}</AppButton>
+            </div>
+            <div class="control">
+              <AppButton @click="confirmExportTerms">{{ ui.exportTerms }}</AppButton>
+            </div>
           </div>
-          <div class="control">
-            <AppButton @click="confirmImportTerms">{{ ui.importTerms }}</AppButton>
-          </div>
-          <div class="control">
-            <AppButton @click="confirmExportTerms">{{ ui.exportTerms }}</AppButton>
-          </div>
-        </div>
-      </AppNavbarItem>
-    </template>
-    <template slot="end">
-
-    </template>
-  </AppNavbar>
-    <ModalAdd
-      ref="addModal"
-      :current="currentTerm"
-      :ui="ui"
-      :fields="fields"
-      @save="saveTerm"/>
-    <ModalEdit
-      ref="editModal"
-      :current="currentTerm"
-      :ui="ui"
-      :fields="fields"
-      @save="saveTerm"/>
-    <ModalRemove
-      ref="removeModal"
-      :current="currentTerm"
-      :ui="ui"
-      @remove="removeTerm"/>
-    <ModalImport
-      ref="importModal"
-      :ui="ui"
-      @import="importTerms"/>
-    <ModalImporting
-      ref="importingModal"
-      :ui="ui"/>
+        </AppNavbarItem>
+      </template>
+      <template slot="end"></template>
+    </AppNavbar>
+    <ModalAdd ref="addModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"/>
+    <ModalEdit ref="editModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"/>
+    <ModalRemove ref="removeModal" :current="currentTerm" :ui="ui" @remove="removeTerm"/>
+    <ModalImport ref="importModal" :ui="ui" @import="importTerms"/>
+    <ModalImporting ref="importingModal" :ui="ui"/>
     <ModalExport
       ref="exportModal"
       :ui="ui"
       :export-uri="exportURI"
       @export="exportTerms"
-      @close="exportURI = ''"/>
+      @close="exportURI = ''"
+    />
     <div class="container">
       <TermList
         ref="list"
@@ -66,9 +46,10 @@
         @remove="confirmRemoveTerm"
         @gotopage="gotoPage"
         @search="search"
-        @sort="sort"/>
+        @sort="sort"
+      />
     </div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -181,7 +162,7 @@ export default {
       }
     },
     search(search) {
-      this.$store.dispatch('find', {field: this.sortedBy, ...search})
+      this.$store.dispatch('find', { field: this.sortedBy, ...search })
     },
     sort(field) {
       this.$store.dispatch('getTerms', {
