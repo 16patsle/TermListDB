@@ -65,28 +65,24 @@ const store = new Vuex.Store({
     },
     getTerms(state, terms) {
       let termsObject = {}
-      let designRegex = /^_design\//
 
-      terms.docs.forEach(term => {
-        if (!designRegex.test(term._id)) {
-          termsObject[term._id] = term
-        }
+      terms.docs.forEach(_term => {
+        const term = _term.data()
+        termsObject[term._id] = term
       })
 
       state.terms = termsObject
     },
     find(state, terms) {
       let termsObject = {}
-      let designRegex = /^_design\//
-      terms.docs.forEach(term => {
-        if (!designRegex.test(term._id)) {
-          termsObject[term._id] = term
-        }
+
+      terms.forEach(term => {
+        termsObject[term._id] = term
       })
       state.terms = termsObject
     },
-    getTotal(state, total) {
-      state.totalRows = total.total_rows
+    getTotal(state, terms) {
+      state.totalRows = terms.docs.length
     }
   },
   actions: {
@@ -137,7 +133,6 @@ const store = new Vuex.Store({
     },
     async getTerms({ commit }, data) {
       try {
-        await bucket.createIndex(await bucket.db.getIndexes(), data)
         commit('getTerms', await bucket.getTerms(data))
       } catch (e) {
         console.error('Error:', e, data)
@@ -145,10 +140,7 @@ const store = new Vuex.Store({
     },
     async find({ commit }, search) {
       try {
-        let searchResults = []
-        for (let result of bucket.find(search)) {
-          searchResults.push(await result)
-        }
+        let searchResults = await bucket.find(search)
 
         let resultObject = deepmerge.all(searchResults)
 
@@ -159,7 +151,7 @@ const store = new Vuex.Store({
     },
     async getTotal({ commit }) {
       try {
-        commit('getTotal', await bucket.getTotal())
+        commit('getTotal', await bucket.getTerms({ limit: null }))
       } catch (e) {
         console.error('Error:', e)
       }
@@ -167,7 +159,7 @@ const store = new Vuex.Store({
   }
 })
 
-const bucket = new TermDatabase(store)
+const bucket = new TermDatabase()
 
 new Vue({
   el: '#app',
@@ -175,8 +167,3 @@ new Vue({
   store,
   render: h => h(App)
 })
-/*
-window.onload = function(){
-  bucket.db.bulkDocs(Trello).then((response)=>console.log(response))
-};
-*/

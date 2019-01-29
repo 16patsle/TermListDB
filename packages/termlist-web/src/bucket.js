@@ -1,110 +1,73 @@
-import PouchDB from 'pouchdb-browser'
-import PouchDBFind from 'pouchdb-find'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+import secrets from '../secrets'
 
 RegExp.quote = function(str) {
   return (str + '').replace(/[.?*+^$[\]\\(){}|-]/g, '\\$&')
 }
 
 class TermDatabase {
-  constructor(store) {
-    PouchDB.plugin(PouchDBFind)
+  constructor() {
+    firebase.initializeApp(secrets.firebase)
 
-    this.db = new PouchDB('termlist', {})
-    this.remoteDB = new PouchDB('http://localhost:5984/termlist', {
-      ajax: {
-        cache: false
-      }
-    })
-
-    this.db.sync(this.remoteDB, {
-      since: 0,
-      live: true,
-      retry: true
-    })
-
+    this.db = firebase.firestore()
     this.db
-      .changes({
-        live: true,
-        since: 'now',
-        include_docs: true
-      })
-      .on('change', change => {
-        console.log('Change: ', change)
-        if (change.deleted) {
-          store.commit('remove', change.doc)
-        } else if (store.state.terms[change.doc._id]) {
-          store.commit('save', change.doc)
-        } else {
-          store.commit('add', change.doc)
-        }
-      })
-
-    this.db
-      .changes({
-        live: true,
-        since: 'now',
-        include_docs: true
-      })
-      .on('error', error => console.error('Error', error))
+      .collection('users')
+      .doc('test')
+      .set({ name: 'Test' })
+    this.termsDB = this.db
+      .collection('users')
+      .doc('test')
+      .collection('termlists')
   }
 
   get(id) {
-    return this.db.get(id)
+    return this.termsDB.doc(id).get()
   }
 
   remove(id) {
-    return this.db.get(id).then(doc => {
-      return this.db.remove(doc)
-    })
+    return this.termsDB.doc(id).delete()
   }
 
   add(termObject) {
-    return this.db.put(termObject)
+    return this.termsDB.doc(termObject._id).set(termObject)
   }
 
   save(termObject) {
-    return this.db.get(termObject._id).then(doc => {
-      termObject._rev = doc._rev
-
-      return this.db.put(termObject)
-    })
+    return this.termsDB.doc(termObject._id).set(termObject)
   }
 
-  getTerms(data) {
-    data = data || {}
-    data.index = data.field || null
-    data.field = data.field || '_id'
-    data.lastTerm = data.lastTerm || {}
-    data.lastTerm[data.field] = data.lastTerm[data.field] || null
-    if (data.limit === undefined) {
-      data.limit = 20
+  getTerms(data = {}) {
+    let result = this.termsDB.orderBy(data.field || '_id')
+
+    if (data.limit || data.limit === undefined) {
+      result = result.limit(data.limit || 20)
+    }
+    if (data.startAfter) {
+      result = result.startAfter(data.startAfter)
+    }
+    if (data.endBefore) {
+      result = result.endBefore(data.endBefore)
     }
 
-    return this.db.find({
-      selector: {
-        [data.field]: {
-          $gte: data.lastTerm[data.field]
-        }
-      },
-      sort: [data.field],
-      limit: data.limit,
-      skip: 20 * data.pageNumberOffset + Number(!data.isBefore),
-      use_index: data.index
-    })
+    return result.get()
   }
 
-  find(search) {
+  async find(search) {
+    /* TODO: Figure out why some stuff doesn't appear, and add search button so we don't search on each key press */
     search.search = new RegExp('.*' + RegExp.quote(search.search) + '.*', 'g')
+    search.field = search.field || '_id'
 
+    const allTerms = await this.termsDB.orderBy(search.field).get()
     if (search.selected && search.selected !== 'all') {
       return [
-        this.db.find({
-          selector: {
-            [search.selected]: {
-              $regex: search.search
-            }
-          }
-        })
+        allTerms.docs
+          .map(val => {
+            return val.data()
+          })
+          .filter(val => {
+            return search.search.test(val[search.selected])
+          })
       ]
     } else {
       let returnArray = []
@@ -112,39 +75,19 @@ class TermDatabase {
       for (const field of search.fields) {
         if (!field.immutable) {
           returnArray.push(
-            this.db.find({
-              selector: {
-                [field.name]: {
-                  $regex: search.search
-                }
-              }
-            })
+            allTerms.docs
+              .map(val => {
+                return val.data()
+              })
+              .filter(val => {
+                return search.search.test(val[field])
+              })
           )
         }
       }
 
       return returnArray
     }
-  }
-
-  createIndex(indexes, data) {
-    if (data && data.field) {
-      if (indexes.indexes.indexOf(data.field) === -1) {
-        return this.db.createIndex({
-          index: {
-            fields: [data.field],
-            name: data.field,
-            ddoc: data.field
-          }
-        })
-      }
-    }
-  }
-
-  getTotal() {
-    return this.db.allDocs({
-      limit: 1
-    })
   }
 }
 

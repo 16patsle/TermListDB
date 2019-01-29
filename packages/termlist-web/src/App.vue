@@ -65,6 +65,7 @@
         @edit="editTerm"
         @remove="confirmRemoveTerm"
         @gotopage="gotoPage"
+        @search="search"
         @sort="sort"/>
     </div>
 </div>
@@ -159,33 +160,28 @@ export default {
     removeTerm(term) {
       this.$store.dispatch('remove', term)
     },
-    gotoPage(pageNumberOffset, isBefore) {
+    async gotoPage(pageNumberOffset, isBefore) {
+      // TODO: Implement navigating to arbitrary pages, or just disable that
+      const terms = this.$store.state.terms
+
       if (isBefore) {
-        this.$store
-          .dispatch('getTerms', {
-            field: this.sortedBy
-          })
-          .then(() => {
-            this.$store.dispatch('getTerms', {
-              field: this.sortedBy,
-              lastTerm: this.$store.state.terms[
-                Object.keys(this.$store.state.terms)[0]
-              ],
-              pageNumberOffset: Number(pageNumberOffset),
-              isBefore: true
-            })
-          })
-      } else {
-        this.$store.dispatch('getTerms', {
+        await this.$store.dispatch('getTerms', {
           field: this.sortedBy,
-          lastTerm: this.$store.state.terms[
-            Object.keys(this.$store.state.terms)[
-              Object.keys(this.$store.state.terms).length - 1
-            ]
+          endBefore: Object.entries(terms)[0][1][this.sortedBy],
+          pageNumberOffset: Number(pageNumberOffset)
+        })
+      } else {
+        await this.$store.dispatch('getTerms', {
+          field: this.sortedBy,
+          startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
+            this.sortedBy
           ],
           pageNumberOffset: pageNumberOffset - 1
         })
       }
+    },
+    search(search) {
+      this.$store.dispatch('find', {field: this.sortedBy, ...search})
     },
     sort(field) {
       this.$store.dispatch('getTerms', {

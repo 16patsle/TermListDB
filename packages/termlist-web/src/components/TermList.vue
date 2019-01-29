@@ -81,7 +81,7 @@ export default {
   },
   methods: {
     search(search) {
-      this.$store.dispatch('find', search)
+      this.$emit('search', search)
     },
     edit(term) {
       this.$emit('edit', term)
