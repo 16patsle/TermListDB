@@ -1,6 +1,6 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2017,
+    "ecmaVersion": 2018,
     "sourceType": "module"
   },
   "extends": [
@@ -12,10 +12,15 @@
     "no-console": [
       "warn",
       {
-        "allow": ["warn", "error"]
+        "allow": [
+          "warn",
+          "error"
+        ]
       }
     ],
-    "vue/max-attributes-per-line": ["off"],
+    "vue/max-attributes-per-line": [
+      "off"
+    ],
     "vue/html-self-closing": [
       "error",
       {
