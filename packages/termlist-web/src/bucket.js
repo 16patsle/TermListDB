@@ -10,7 +10,22 @@ class TermDatabase {
   constructor() {
     firebase.initializeApp(secrets.firebase)
 
-    this.db = firebase.firestore()
+    this.db = firebase
+      .firestore()
+      .enablePersistence()
+      .catch(err => {
+        if (err.code == 'failed-precondition') {
+          // Multiple tabs open, only works in one.
+          // Silently fail
+          console.warn(
+            'DB persistence not enabled because multiple tabs are open.'
+          )
+        } else if (err.code == 'unimplemented') {
+          // The current browser does not support persistence.
+          // Silently fail
+          console.warn('DB persistence not supported in this browser.')
+        }
+      })
     this.db
       .collection('users')
       .doc('test')
