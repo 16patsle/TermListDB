@@ -1,5 +1,9 @@
 <template>
-  <button :class="{'is-primary':primary,'is-danger':danger}" class="button" @click="click">
+  <button
+    :class="{ 'is-primary': primary, 'is-danger': danger }"
+    class="button"
+    @click="click"
+  >
     <slot>OK</slot>
   </button>
 </template>

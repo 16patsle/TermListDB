@@ -1,10 +1,12 @@
 <template>
   <div ref="modal" class="modal">
-    <div class="modal-background" @click="close"/>
+    <div class="modal-background" @click="close" />
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">
-          <slot name="title">{{ title }}</slot>
+          <slot name="title">
+            {{ title }}
+          </slot>
         </p>
       </header>
       <section class="modal-card-body">
@@ -14,12 +16,16 @@
       </section>
       <footer class="modal-card-foot">
         <slot name="modal-footer">
-          <AppButton v-if="okText !== null" :primary="true" @click="callback">{{ okText }}</AppButton>
-          <AppButton v-if="cancelText !== null" @click="close">{{ cancelText }}</AppButton>
+          <AppButton v-if="okText !== null" :primary="true" @click="callback">
+            {{ okText }}
+          </AppButton>
+          <AppButton v-if="cancelText !== null" @click="close">
+            {{ cancelText }}
+          </AppButton>
         </slot>
       </footer>
     </div>
-    <button class="modal-close is-large" aria-label="close" @click="close"/>
+    <button class="modal-close is-large" aria-label="close" @click="close" />
   </div>
 </template>
 
@@ -80,5 +86,4 @@ export default {
   }
 }
 </script>
-<style>
-</style>
+<style></style>

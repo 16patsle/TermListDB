@@ -1,9 +1,9 @@
 <template>
   <a v-if="href || link" :href="href || '#'" class="navbar-item" @click="click">
-    <slot/>
+    <slot />
   </a>
   <div v-else class="navbar-item">
-    <slot/>
+    <slot />
   </div>
 </template>
 <script>

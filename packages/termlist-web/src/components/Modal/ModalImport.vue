@@ -8,7 +8,9 @@
     :cancel-text="ui.cancel"
   >
     <div slot="modal-body">
-      <p class="subtitle">{{ ui.trelloImportInstructions }}</p>
+      <p class="subtitle">
+        {{ ui.trelloImportInstructions }}
+      </p>
       <div class="field">
         <div class="control">
           <div class="file is-centered has-name is-boxed">
@@ -19,22 +21,30 @@
                 type="file"
                 accept="application/json"
                 @change="handleFiles"
-              >
+              />
               <span class="file-cta">
                 <span class="file-icon">
-                  <i class="fa fa-upload"/>
+                  <i class="fa fa-upload" />
                 </span>
-                <span class="file-label">{{ ui.browseForFile }}</span>
+                <span class="file-label">
+                  {{ ui.browseForFile }}
+                </span>
               </span>
-              <span v-if="fileInfo" class="file-name">{{ fileInfo }}</span>
+              <span v-if="fileInfo" class="file-name">
+                {{ fileInfo }}
+              </span>
             </label>
           </div>
         </div>
       </div>
     </div>
     <div slot="modal-footer">
-      <AppButton :primary="true" @click="importTerm">{{ ui.importTerms }}!</AppButton>
-      <AppButton @click="close">{{ ui.cancel }}</AppButton>
+      <AppButton :primary="true" @click="importTerm">
+        {{ ui.importTerms }}!
+      </AppButton>
+      <AppButton @click="close">
+        {{ ui.cancel }}
+      </AppButton>
     </div>
   </AppModal>
 </template>
@@ -167,5 +177,4 @@ export default {
   }
 }
 </script>
-<style>
-</style>
+<style></style>

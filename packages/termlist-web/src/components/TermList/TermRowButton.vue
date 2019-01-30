@@ -1,7 +1,7 @@
 <template>
   <a href="#" @click.prevent="click">
     <span class="icon is-small">
-      <i :class="'fa fa-'+icon+''"/>
+      <i :class="'fa fa-' + icon + ''" />
     </span>
   </a>
 </template>
