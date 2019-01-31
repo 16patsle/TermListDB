@@ -4,9 +4,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 import App from './App.vue'
 
-import TermDatabase from './bucket'
+import secrets from '../secrets'
+import TermDatabase from './database'
 
 Vue.use(Vuex)
 
@@ -88,7 +91,7 @@ const store = new Vuex.Store({
   actions: {
     async remove({ commit }, term) {
       try {
-        await bucket.remove(term._id)
+        await database.remove(term._id)
         commit('remove', term)
       } catch (e) {
         console.error('Error:', e, term)
@@ -96,7 +99,7 @@ const store = new Vuex.Store({
     },
     async add({ commit }, term) {
       try {
-        await bucket.add(term)
+        await database.add(term)
         commit('add', term)
       } catch (e) {
         console.error('Error:', e, term)
@@ -105,7 +108,7 @@ const store = new Vuex.Store({
     async save({ commit, state }, term) {
       try {
         if (state.terms[term._id] !== term) {
-          await bucket.save(term)
+          await database.save(term)
           commit('save', term)
         } else {
           throw 'Term not changed!'
@@ -117,7 +120,7 @@ const store = new Vuex.Store({
     async importTerms({ commit, state }, term) {
       try {
         if (state.imports.cancel === false) {
-          await bucket.add(term)
+          await database.add(term)
           commit('importTerms', term)
         }
       } catch (e) {
@@ -126,21 +129,21 @@ const store = new Vuex.Store({
     },
     async exportTerms() {
       try {
-        return await bucket.getTerms({ limit: null })
+        return await database.getTerms({ limit: null })
       } catch (e) {
         console.error('Error:', e)
       }
     },
     async getTerms({ commit }, data) {
       try {
-        commit('getTerms', await bucket.getTerms(data))
+        commit('getTerms', await database.getTerms(data))
       } catch (e) {
         console.error('Error:', e, data)
       }
     },
     async find({ commit }, search) {
       try {
-        let searchResults = await bucket.find(search)
+        let searchResults = await database.find(search)
 
         let resultObject = deepmerge.all(searchResults)
 
@@ -151,7 +154,7 @@ const store = new Vuex.Store({
     },
     async getTotal({ commit }) {
       try {
-        commit('getTotal', await bucket.getTerms({ limit: null }))
+        commit('getTotal', await database.getTerms({ limit: null }))
       } catch (e) {
         console.error('Error:', e)
       }
@@ -159,11 +162,17 @@ const store = new Vuex.Store({
   }
 })
 
-const bucket = new TermDatabase()
+firebase.initializeApp(secrets.firebase)
+const database = new TermDatabase(firebase)
 
-new Vue({
-  el: '#app',
-  bucket,
-  store,
-  render: h => h(App)
-})
+const start = async () => {
+  await database.start()
+
+  new Vue({
+    el: '#app',
+    database,
+    store,
+    render: h => h(App)
+  })
+}
+start()
