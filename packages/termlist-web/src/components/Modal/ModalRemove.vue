@@ -1,19 +1,24 @@
 <template>
-  <AppModal 
-    ref="modal" 
-    :title="ui.removeterm" 
-    :callback="removeTerm" 
-    :ok-text="ui.save" 
-    :cancel-text="ui.cancel">
+  <AppModal
+    ref="modal"
+    :title="ui.removeterm"
+    :callback="removeTerm"
+    :ok-text="ui.save"
+    :cancel-text="ui.cancel"
+  >
     <div slot="modal-body">
-      <p class="subtitle">{{ ui.wanttoremove }}</p>
+      <p class="subtitle">
+        {{ ui.wanttoremove }}
+      </p>
       <p>{{ current.term }}</p>
     </div>
     <div slot="modal-footer">
-      <AppButton 
-        :danger="true" 
-        @click="removeTerm">{{ ui.removeterm }}!</AppButton>
-      <AppButton @click="close">{{ ui.cancel }}</AppButton>
+      <AppButton :danger="true" @click="removeTerm">
+        {{ ui.removeterm }}!
+      </AppButton>
+      <AppButton @click="close">
+        {{ ui.cancel }}
+      </AppButton>
     </div>
   </AppModal>
 </template>
@@ -57,5 +62,4 @@ export default {
   }
 }
 </script>
-<style>
-</style>
+<style></style>

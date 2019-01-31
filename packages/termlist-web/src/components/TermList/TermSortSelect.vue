@@ -1,10 +1,7 @@
 <template>
   <div class="field is-expanded">
     <div class="control">
-      <AppSelect 
-        :options="options" 
-        :fullwidth="true" 
-        @change="sort"/>
+      <AppSelect :options="options" :fullwidth="true" @change="sort" />
     </div>
   </div>
 </template>

@@ -4,17 +4,38 @@
     :title="ui.importTerms"
     :close-callback="close"
     :ok-text="null"
-    :cancel-text="ui.cancel">
+    :cancel-text="ui.cancel"
+  >
     <div slot="modal-body">
-      <p class="subtitle">{{ ui.processingImport }}</p>
+      <p class="subtitle">
+        {{ ui.processingImport }}
+      </p>
       <div class="field">
         <div class="control">
           <progress
             :value="$store.state.imports.imported"
             :max="$store.state.imports.total"
-            class="progress is-primary" >{{ Math.round($store.state.imports.imported / $store.state.imports.total * 100) }}%</progress>
-          <p class="has-text-centered">{{ $store.state.imports.imported }} / {{ $store.state.imports.total }}</p>
-          <p class="has-text-centered">{{ Math.round($store.state.imports.imported / $store.state.imports.total * 100) }}%</p>
+            class="progress is-primary"
+          >
+            {{
+              Math.round(
+                ($store.state.imports.imported / $store.state.imports.total) *
+                  100
+              )
+            }}%
+          </progress>
+          <p class="has-text-centered">
+            {{ $store.state.imports.imported }} /
+            {{ $store.state.imports.total }}
+          </p>
+          <p class="has-text-centered">
+            {{
+              Math.round(
+                ($store.state.imports.imported / $store.state.imports.total) *
+                  100
+              )
+            }}%
+          </p>
         </div>
       </div>
     </div>
@@ -22,12 +43,10 @@
 </template>
 <script>
 import AppModal from '../Generic/AppModal.vue'
-import AppButton from '../Generic/AppButton.vue'
 
 export default {
   components: {
-    AppModal,
-    AppButton
+    AppModal
   },
   props: {
     ui: {
@@ -69,5 +88,4 @@ export default {
   }
 }
 </script>
-<style>
-</style>
+<style></style>

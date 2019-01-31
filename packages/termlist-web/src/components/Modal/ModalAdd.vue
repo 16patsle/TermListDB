@@ -1,31 +1,32 @@
 <template>
   <form @submit.prevent>
-    <AppModal
-      ref="modal"
-      :title="ui.addterm">
+    <AppModal ref="modal" :title="ui.addterm">
       <div slot="modal-body">
-        <div
-          v-for="field in fields"
-          v-if="!field.immutable"
-          :key="field.name"
-          class="field">
-          <label class="label">{{ ui[field.name] }}</label>
+        <div v-for="field in mutableFields" :key="field.name" class="field">
+          <label class="label">
+            {{ ui[field.name] }}
+          </label>
           <div class="control">
             <input
               v-if="field.type === 'short'"
-              :ref="field.name+'field'"
+              :ref="field.name + 'field'"
               class="input"
-              type="text">
+              type="text"
+            />
             <textarea
               v-else-if="field.type === 'long'"
-              :ref="field.name+'field'"
+              :ref="field.name + 'field'"
               class="textarea"
-              rows="8"/>
+              rows="8"
+            />
             <AppSelect
-              v-else-if="field.type === 'select' && field.options instanceof Array"
-              :ref="field.name+'field'"
+              v-else-if="
+                field.type === 'select' && field.options instanceof Array
+              "
+              :ref="field.name + 'field'"
               :options="reduce(field.options)"
-              fullwidth/>
+              fullwidth
+            />
           </div>
         </div>
       </div>
@@ -36,8 +37,11 @@
           type="submit"
           class="button is-primary"
           accesskey="s"
-          @click="saveTerm">
-        <AppButton @click="close">{{ ui.cancel }}</AppButton>
+          @click="saveTerm"
+        />
+        <AppButton @click="close">
+          {{ ui.cancel }}
+        </AppButton>
       </div>
     </AppModal>
   </form>
@@ -61,6 +65,13 @@ export default {
     fields: {
       type: Array,
       required: true
+    }
+  },
+  computed: {
+    mutableFields() {
+      return this.fields.filter(field => {
+        return !field.immutable
+      })
     }
   },
   methods: {
@@ -109,5 +120,4 @@ export default {
   }
 }
 </script>
-<style>
-</style>
+<style></style>

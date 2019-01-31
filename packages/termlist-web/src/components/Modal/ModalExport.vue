@@ -4,26 +4,30 @@
     :title="ui.exportTerms"
     :close-callback="close"
     :ok-text="null"
-    :cancel-text="null">
+    :cancel-text="null"
+  >
     <div slot="modal-body">
-      <p class="subtitle">{{ exportInstructions }}</p>
+      <p class="subtitle">
+        {{ exportInstructions }}
+      </p>
       <a
         :href="exportUri"
         :disabled="!exported"
         class="button is-primary"
         download="terms.json"
-        @click="downloadExport">{{ ui.download }}</a>
+        @click="downloadExport"
+      >
+        {{ ui.download }}
+      </a>
     </div>
   </AppModal>
 </template>
 <script>
 import AppModal from '../Generic/AppModal.vue'
-import AppButton from '../Generic/AppButton.vue'
 
 export default {
   components: {
-    AppModal,
-    AppButton
+    AppModal
   },
   props: {
     ui: {
@@ -75,5 +79,4 @@ export default {
   }
 }
 </script>
-<style>
-</style>
+<style></style>

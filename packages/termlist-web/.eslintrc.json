@@ -1,12 +1,33 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2017,
+    "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "extends": ["plugin:vue/recommended", "plugin:prettier/recommended", "eslint:recommended"],
+  "extends": [
+    "plugin:vue/recommended",
+    "plugin:prettier/recommended",
+    "eslint:recommended"
+  ],
   "rules": {
-    "no-console": ["warn", {
-      "allow": ["warn", "error"]
-    }]
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "vue/max-attributes-per-line": [
+      "off"
+    ],
+    "vue/html-self-closing": [
+      "error",
+      {
+        "html": {
+          "void": "any"
+        }
+      }
+    ]
   }
 }

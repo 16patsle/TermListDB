@@ -1,5 +1,6 @@
+/* eslint-env node */
 const path = require('path')
-const webpack = require('webpack')
+//const webpack = require('webpack')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
@@ -43,7 +44,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.scss$/,
+        test: /\.sc?a?ss$/,
         use: [
           {
             loader: 'style-loader' // creates style nodes from JS strings
@@ -112,9 +113,7 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new VueLoaderPlugin()
-  ],
+  plugins: [new VueLoaderPlugin()],
   resolve: {
     alias: {
       vue$: 'vue/dist/vue.esm.js'
