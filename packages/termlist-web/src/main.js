@@ -6,6 +6,8 @@ import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import 'firebase/auth'
+import 'firebaseui/dist/firebaseui.css'
 import App from './App.vue'
 
 import secrets from '../secrets'
@@ -23,6 +25,10 @@ const store = new Vuex.Store({
       total: 0,
       finished: true,
       cancel: false
+    },
+    auth: {
+      authenticated: false,
+      user: undefined
     }
   },
   mutations: {
@@ -86,6 +92,14 @@ const store = new Vuex.Store({
     },
     getTotal(state, terms) {
       state.totalRows = terms.docs.length
+    },
+    setAuthenticated(state, user) {
+      if (user) {
+        state.auth.authenticated = true
+      } else {
+        state.auth.authenticated = false
+      }
+      state.auth.user = user
     }
   },
   actions: {
@@ -170,6 +184,11 @@ const start = async () => {
 
   new Vue({
     el: '#app',
+    created() {
+      firebase.auth().onAuthStateChanged(user => {
+        store.commit('setAuthenticated', user)
+      })
+    },
     database,
     store,
     render: h => h(App)

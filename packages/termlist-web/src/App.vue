@@ -7,7 +7,7 @@
         </AppNavbarItem>
       </template>
       <template slot="start">
-        <AppNavbarItem>
+        <AppNavbarItem v-if="$store.state.auth.authenticated">
           <div class="field is-grouped">
             <div class="control">
               <AppButton :primary="true" @click="addTerm">{{ ui.add }}</AppButton>
@@ -21,7 +21,12 @@
           </div>
         </AppNavbarItem>
       </template>
-      <template slot="end"></template>
+      <template slot="end">
+        <AppNavbarItem v-if="$store.state.auth.authenticated">{{$store.state.auth.user.displayName}}</AppNavbarItem>
+        <AppNavbarItem v-if="$store.state.auth.authenticated">
+          <AppButton @click="$refs.auth.logOut">{{ ui.logOut }}</AppButton>
+        </AppNavbarItem>
+      </template>
     </AppNavbar>
     <ModalAdd ref="addModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"/>
     <ModalEdit ref="editModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"/>
@@ -35,9 +40,11 @@
       @export="exportTerms"
       @close="exportURI = ''"
     />
+    <Authenticate v-show="!$store.state.auth.authenticated" :ui="ui" ref="auth"/>
     <div class="container">
       <TermList
         ref="list"
+        v-if="$store.state.auth.authenticated"
         :utils="utils"
         :ui="ui"
         :terms="terms"
@@ -62,6 +69,7 @@ import ModalExport from './components/Modal/ModalExport.vue'
 import AppButton from './components/Generic/AppButton.vue'
 import AppNavbar from './components/Generic/AppNavbar.vue'
 import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
+import Authenticate from './components/Authenticate.vue'
 import TermList from './components/TermList.vue'
 
 import MarkdownIt from 'markdown-it'
@@ -81,6 +89,7 @@ export default {
     AppButton,
     AppNavbar,
     AppNavbarItem,
+    Authenticate,
     TermList
   },
   data() {
