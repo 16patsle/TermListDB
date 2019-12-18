@@ -94,8 +94,10 @@ const store = new Vuex.Store({
       state.totalRows = terms.docs.length
     },
     setAuthenticated(state, user) {
+      console.log('Auth update')
       if (user) {
         state.auth.authenticated = true
+        database.connect(user)
       } else {
         state.auth.authenticated = false
       }

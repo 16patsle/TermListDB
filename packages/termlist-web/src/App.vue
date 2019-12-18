@@ -125,6 +125,13 @@ export default {
     this.$store.dispatch('getTerms', {
       field: this.sortedBy
     })
+    this.$store.subscribe(mutation => {
+      if (mutation.type === 'setAuthenticated') {
+        this.$store.dispatch('getTerms', {
+          field: this.sortedBy
+        })
+      }
+    })
 
     document.addEventListener('keyup', this.shortcutUp, false)
   },
