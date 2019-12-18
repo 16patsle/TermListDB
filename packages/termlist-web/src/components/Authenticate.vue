@@ -7,7 +7,7 @@
 <script>
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import firebaseui from 'firebaseui'
+import * as firebaseui from 'firebaseui'
 
 export default {
   components: {},
