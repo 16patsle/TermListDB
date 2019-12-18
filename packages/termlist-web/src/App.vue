@@ -18,12 +18,12 @@
             </div>
             <div class="control">
               <AppButton @click="confirmImportTerms">
-                ui.importTerms }}
+                {{ ui.importTerms }}
               </AppButton>
             </div>
             <div class="control">
               <AppButton @click="confirmExportTerms">
-                ui.exportTerms }}
+                {{ ui.exportTerms }}
               </AppButton>
             </div>
           </div>
