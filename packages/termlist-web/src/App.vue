@@ -235,6 +235,8 @@ export default {
       let exported = []
 
       for (let term of terms.docs) {
+        term = term.data()
+
         exported.push({
           _id: term._id,
           term: term.term,
