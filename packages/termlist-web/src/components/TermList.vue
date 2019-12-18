@@ -12,7 +12,9 @@
     <table class="table is-fullwidth is-hoverable">
       <thead>
         <tr>
-          <th v-for="field in fields">{{ ui[field.name] }}</th>
+          <th v-for="field in fields" :key="field.name">
+            {{ ui[field.name] }}
+          </th>
           <th />
         </tr>
       </thead>

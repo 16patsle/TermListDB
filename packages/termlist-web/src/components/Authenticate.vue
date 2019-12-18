@@ -8,7 +8,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import firebaseui from 'firebaseui'
-import secrets from '../../secrets'
 
 export default {
   components: {},
@@ -22,7 +21,7 @@ export default {
     return {
       uiConfig: {
         callbacks: {
-          signInSuccessWithAuthResult(authResult, redirectUrl) {
+          signInSuccessWithAuthResult() {
             return false
           }
         },
