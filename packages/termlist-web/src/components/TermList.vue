@@ -1,46 +1,41 @@
 <template>
   <span>
-    <TermSearchBar 
-      :ui="ui" 
-      :fields="fields" 
-      @search="search"/>
-    <TermSortSelect 
-      :ui="ui" 
-      :fields="fields" 
-      @sort="sort"/>
-    <AppPagination 
-      :ui="ui" 
-      :firstpage="1" 
-      :currentpage="currentPage" 
-      :lastpage="Math.ceil($store.state.totalRows/20)" 
-      @gotopage="gotoPage"/>
+    <TermSearchBar :ui="ui" :fields="fields" @search="search" />
+    <TermSortSelect :ui="ui" :fields="fields" @sort="sort" />
+    <AppPagination
+      :ui="ui"
+      :firstpage="1"
+      :currentpage="currentPage"
+      :lastpage="Math.ceil($store.state.totalRows / 20)"
+      @gotopage="gotoPage"
+    />
     <table class="table is-fullwidth is-hoverable">
       <thead>
         <tr>
           <th v-for="field in fields">{{ ui[field.name] }}</th>
-          <th/>
+          <th />
         </tr>
       </thead>
-      <tbody 
-        class="list" 
-        ref="termlist">
-        <TermRow 
-          v-for="term in terms" 
-          :md="utils.md" 
-          :key="term._id" 
-          :ui="ui" 
-          :term="term" 
-          :fields="fields" 
-          @edit="edit" 
-          @remove="remove"/>
+      <tbody ref="termlist" class="list">
+        <TermRow
+          v-for="term in terms"
+          :key="term._id"
+          :md="utils.md"
+          :ui="ui"
+          :term="term"
+          :fields="fields"
+          @edit="edit"
+          @remove="remove"
+        />
       </tbody>
     </table>
-    <AppPagination 
-      :ui="ui" 
-      :firstpage="1" 
-      :currentpage="currentPage" 
-      :lastpage="Math.ceil($store.state.totalRows/20)" 
-      @gotopage="gotoPage"/>
+    <AppPagination
+      :ui="ui"
+      :firstpage="1"
+      :currentpage="currentPage"
+      :lastpage="Math.ceil($store.state.totalRows / 20)"
+      @gotopage="gotoPage"
+    />
   </span>
 </template>
 <script>

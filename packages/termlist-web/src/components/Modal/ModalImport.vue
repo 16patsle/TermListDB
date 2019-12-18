@@ -26,13 +26,9 @@
                 <span class="file-icon">
                   <i class="fa fa-upload" />
                 </span>
-                <span class="file-label">
-                  {{ ui.browseForFile }}
-                </span>
+                <span class="file-label">{{ ui.browseForFile }}</span>
               </span>
-              <span v-if="fileInfo" class="file-name">
-                {{ fileInfo }}
-              </span>
+              <span v-if="fileInfo" class="file-name">{{ fileInfo }}</span>
             </label>
           </div>
         </div>

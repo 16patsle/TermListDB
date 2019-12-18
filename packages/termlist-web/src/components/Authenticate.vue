@@ -1,7 +1,7 @@
 <template>
   <div class="modal is-active">
-    <div class="modal-background"></div>
-    <div id="firebaseui-auth-container"></div>
+    <div class="modal-background" />
+    <div id="firebaseui-auth-container" />
   </div>
 </template>
 <script>

@@ -3,20 +3,28 @@
     <AppNavbar fixed="top">
       <template v-slot:brand>
         <AppNavbarItem>
-          <h1 class="title">{{ ui.termlist }}</h1>
+          <h1 class="title">
+            {{ ui.termlist }}
+          </h1>
         </AppNavbarItem>
       </template>
       <template v-slot:start>
         <AppNavbarItem v-if="$store.state.auth.authenticated">
           <div class="field is-grouped">
             <div class="control">
-              <AppButton :primary="true" @click="addTerm">{{ ui.add }}</AppButton>
+              <AppButton :primary="true" @click="addTerm">
+                {{ ui.add }}
+              </AppButton>
             </div>
             <div class="control">
-              <AppButton @click="confirmImportTerms">{{ ui.importTerms }}</AppButton>
+              <AppButton @click="confirmImportTerms">
+                ui.importTerms }}
+              </AppButton>
             </div>
             <div class="control">
-              <AppButton @click="confirmExportTerms">{{ ui.exportTerms }}</AppButton>
+              <AppButton @click="confirmExportTerms">
+                ui.exportTerms }}
+              </AppButton>
             </div>
           </div>
         </AppNavbarItem>
@@ -32,11 +40,28 @@
         </AppNavbarItem>
       </template>
     </AppNavbar>
-    <ModalAdd ref="addModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"/>
-    <ModalEdit ref="editModal" :current="currentTerm" :ui="ui" :fields="fields" @save="saveTerm"/>
-    <ModalRemove ref="removeModal" :current="currentTerm" :ui="ui" @remove="removeTerm"/>
-    <ModalImport ref="importModal" :ui="ui" @import="importTerms"/>
-    <ModalImporting ref="importingModal" :ui="ui"/>
+    <ModalAdd
+      ref="addModal"
+      :current="currentTerm"
+      :ui="ui"
+      :fields="fields"
+      @save="saveTerm"
+    />
+    <ModalEdit
+      ref="editModal"
+      :current="currentTerm"
+      :ui="ui"
+      :fields="fields"
+      @save="saveTerm"
+    />
+    <ModalRemove
+      ref="removeModal"
+      :current="currentTerm"
+      :ui="ui"
+      @remove="removeTerm"
+    />
+    <ModalImport ref="importModal" :ui="ui" @import="importTerms" />
+    <ModalImporting ref="importingModal" :ui="ui" />
     <ModalExport
       ref="exportModal"
       :ui="ui"
@@ -44,11 +69,15 @@
       @export="exportTerms"
       @close="exportURI = ''"
     />
-    <Authenticate v-show="!$store.state.auth.authenticated" :ui="ui" ref="auth"/>
+    <Authenticate
+      v-show="!$store.state.auth.authenticated"
+      ref="auth"
+      :ui="ui"
+    />
     <div class="container">
       <TermList
-        ref="list"
         v-if="$store.state.auth.authenticated"
+        ref="list"
         :utils="utils"
         :ui="ui"
         :terms="terms"

@@ -3,9 +3,7 @@
     <AppModal ref="modal" :title="ui.editterm">
       <template v-slot:modal-body>
         <div v-for="field in mutableFields" :key="field.name" class="field">
-          <label class="label">
-            {{ ui[field.name] }}
-          </label>
+          <label class="label">{{ ui[field.name] }}</label>
           <div class="control">
             <input
               v-if="field.type === 'short'"
