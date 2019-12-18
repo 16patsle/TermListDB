@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "npm run dev",
-    "test": "eslint src/**/**/* --fix",
+    "test": "eslint \"src/**/*.{js,vue}\" --fix",
     "dev": "webpack-dev-server --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "prepare": "npm run build"
