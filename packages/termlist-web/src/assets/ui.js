@@ -37,5 +37,7 @@ export default {
     preposition: 'Preposisjon',
     conjunction: 'Konjunksjon',
     pronounciation: 'Uttale'
-  }
+  },
+  logIn: 'Logg inn',
+  logOut: 'Logg ut'
 }

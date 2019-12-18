@@ -1,58 +1,88 @@
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-import secrets from '../secrets'
+import DocumentSnapshotStub from './DocumentSnapshotStub'
+import QuerySnapshotStub from './QuerySnapshotStub'
 
 RegExp.quote = function(str) {
   return (str + '').replace(/[.?*+^$[\]\\(){}|-]/g, '\\$&')
 }
 
 class TermDatabase {
-  constructor() {
-    firebase.initializeApp(secrets.firebase)
+  constructor(firebase) {
+    this.firebase = firebase
+    this.db = firebase.firestore()
+    this.connected = false
+  }
 
-    this.db = firebase
-      .firestore()
-      .enablePersistence()
-      .catch(err => {
-        if (err.code == 'failed-precondition') {
-          // Multiple tabs open, only works in one.
-          // Silently fail
-          console.warn(
-            'DB persistence not enabled because multiple tabs are open.'
-          )
-        } else if (err.code == 'unimplemented') {
-          // The current browser does not support persistence.
-          // Silently fail
-          console.warn('DB persistence not supported in this browser.')
-        }
-      })
+  async start() {
+    await this.db.enablePersistence().catch(err => {
+      if (err.code == 'failed-precondition') {
+        // Multiple tabs open, only works in one.
+        // Silently fail
+        console.warn(
+          'DB persistence not enabled because multiple tabs are open.'
+        )
+      } else if (err.code == 'unimplemented') {
+        // The current browser does not support persistence.
+        // Silently fail
+        console.warn('DB persistence not supported in this browser.')
+      }
+    })
+  }
+
+  connect(user) {
     this.db
       .collection('users')
-      .doc('test')
-      .set({ name: 'Test' })
+      .doc(user.uid)
+      .set({ name: user.displayName })
     this.termsDB = this.db
       .collection('users')
-      .doc('test')
+      .doc(user.uid)
       .collection('termlists')
+    this.connected = true
+    console.log('Connected to ' + user.uid + ' as ' + user.displayName)
   }
 
   get(id) {
+    if (!this.connected) {
+      console.warn('Not connected to db')
+      return new DocumentSnapshotStub()
+    }
     return this.termsDB.doc(id).get()
   }
 
   remove(id) {
+    if (!this.connected) {
+      console.warn('Not connected to db')
+      return
+    }
     return this.termsDB.doc(id).delete()
   }
 
   add(termObject) {
+    if (!this.connected) {
+      console.warn('Not connected to db')
+      return
+    }
+    if (typeof termObject._id !== 'string') {
+      console.log(termObject)
+      throw new Error('Not a string!')
+    }
     return this.termsDB.doc(termObject._id).set(termObject)
   }
 
   save(termObject) {
+    if (!this.connected) {
+      console.warn('Not connected to db')
+      return
+    }
     return this.termsDB.doc(termObject._id).set(termObject)
   }
 
   getTerms(data = {}) {
+    if (!this.connected) {
+      console.warn('Not connected to db')
+      return new QuerySnapshotStub()
+    }
+
     let result = this.termsDB.orderBy(data.field || '_id')
 
     if (data.limit || data.limit === undefined) {
@@ -69,6 +99,11 @@ class TermDatabase {
   }
 
   async find(search) {
+    if (!this.connected) {
+      console.warn('Not connected to db')
+      return new QuerySnapshotStub()
+    }
+
     /* TODO: Figure out why some stuff doesn't appear, and add search button so we don't search on each key press */
     search.search = new RegExp('.*' + RegExp.quote(search.search) + '.*', 'g')
     search.field = search.field || '_id'
