@@ -6,20 +6,20 @@
     :ok-text="ui.save"
     :cancel-text="ui.cancel"
   >
-    <div slot="modal-body">
+    <template v-slot:modal-body>
       <p class="subtitle">
         {{ ui.wanttoremove }}
       </p>
       <p>{{ current.term }}</p>
-    </div>
-    <div slot="modal-footer">
+    </template>
+    <template v-slot:modal-footer>
       <AppButton :danger="true" @click="removeTerm">
         {{ ui.removeterm }}!
       </AppButton>
       <AppButton @click="close">
         {{ ui.cancel }}
       </AppButton>
-    </div>
+    </template>
   </AppModal>
 </template>
 <script>

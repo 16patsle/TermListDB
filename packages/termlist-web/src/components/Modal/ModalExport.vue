@@ -6,7 +6,7 @@
     :ok-text="null"
     :cancel-text="null"
   >
-    <div slot="modal-body">
+    <template v-slot:modal-body>
       <p class="subtitle">
         {{ exportInstructions }}
       </p>
@@ -19,7 +19,7 @@
       >
         {{ ui.download }}
       </a>
-    </div>
+    </template>
   </AppModal>
 </template>
 <script>

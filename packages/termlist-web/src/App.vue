@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <AppNavbar fixed="top">
-      <template slot="brand">
+      <template v-slot:brand>
         <AppNavbarItem>
           <h1 class="title">{{ ui.termlist }}</h1>
         </AppNavbarItem>
       </template>
-      <template slot="start">
+      <template v-slot:start>
         <AppNavbarItem v-if="$store.state.auth.authenticated">
           <div class="field is-grouped">
             <div class="control">
@@ -21,10 +21,14 @@
           </div>
         </AppNavbarItem>
       </template>
-      <template slot="end">
-        <AppNavbarItem v-if="$store.state.auth.authenticated">{{$store.state.auth.user.displayName}}</AppNavbarItem>
+      <template v-slot:end>
         <AppNavbarItem v-if="$store.state.auth.authenticated">
-          <AppButton @click="$refs.auth.logOut">{{ ui.logOut }}</AppButton>
+          {{ $store.state.auth.user.displayName }}
+        </AppNavbarItem>
+        <AppNavbarItem v-if="$store.state.auth.authenticated">
+          <AppButton @click="$refs.auth.logOut">
+            {{ ui.logOut }}
+          </AppButton>
         </AppNavbarItem>
       </template>
     </AppNavbar>

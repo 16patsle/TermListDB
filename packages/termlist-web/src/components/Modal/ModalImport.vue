@@ -7,7 +7,7 @@
     :ok-text="ui.save"
     :cancel-text="ui.cancel"
   >
-    <div slot="modal-body">
+    <template v-slot:modal-body>
       <p class="subtitle">
         {{ ui.trelloImportInstructions }}
       </p>
@@ -37,15 +37,15 @@
           </div>
         </div>
       </div>
-    </div>
-    <div slot="modal-footer">
+    </template>
+    <template v-slot:modal-footer>
       <AppButton :primary="true" @click="importTerm">
         {{ ui.importTerms }}!
       </AppButton>
       <AppButton @click="close">
         {{ ui.cancel }}
       </AppButton>
-    </div>
+    </template>
   </AppModal>
 </template>
 <script>

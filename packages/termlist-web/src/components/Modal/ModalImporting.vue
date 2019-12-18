@@ -6,7 +6,7 @@
     :ok-text="null"
     :cancel-text="ui.cancel"
   >
-    <div slot="modal-body">
+    <template v-slot:modal-body>
       <p class="subtitle">
         {{ ui.processingImport }}
       </p>
@@ -38,7 +38,7 @@
           </p>
         </div>
       </div>
-    </div>
+    </template>
   </AppModal>
 </template>
 <script>

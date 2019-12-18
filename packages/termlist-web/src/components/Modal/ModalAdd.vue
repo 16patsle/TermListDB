@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent>
     <AppModal ref="modal" :title="ui.addterm">
-      <div slot="modal-body">
+      <template v-slot:modal-body>
         <div v-for="field in mutableFields" :key="field.name" class="field">
           <label class="label">
             {{ ui[field.name] }}
@@ -29,8 +29,8 @@
             />
           </div>
         </div>
-      </div>
-      <div slot="modal-footer">
+      </template>
+      <template v-slot:modal-footer>
         <!--<AppButton :primary="true" @click="saveTerm">{{ ui.add }}</AppButton>-->
         <input
           :value="ui.add"
@@ -42,7 +42,7 @@
         <AppButton @click="close">
           {{ ui.cancel }}
         </AppButton>
-      </div>
+      </template>
     </AppModal>
   </form>
 </template>
