@@ -191,6 +191,9 @@ const start = async () => {
     created() {
       firebase.auth().onAuthStateChanged(user => {
         store.commit('setAuthenticated', user)
+        database.userInfoReference.onSnapshot(doc => {
+          this.$store.commit('setTotal', doc.data().termlists_total)
+        })
       })
     },
     database,
