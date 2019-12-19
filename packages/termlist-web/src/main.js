@@ -91,7 +91,7 @@ const store = new Vuex.Store({
       state.terms = termsObject
     },
     getTotal(state, terms) {
-      state.totalRows = terms.docs.length
+      state.totalRows = terms.size
     },
     setAuthenticated(state, user) {
       console.log('Auth update')

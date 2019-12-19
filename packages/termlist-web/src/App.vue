@@ -160,6 +160,7 @@ export default {
     })
     this.$store.subscribe(mutation => {
       if (mutation.type === 'setAuthenticated') {
+        this.$store.dispatch('getTotal')
         this.$store.dispatch('getTerms', {
           field: this.sortedBy
         })
