@@ -9,6 +9,7 @@ class TermDatabase {
   constructor(firebase) {
     this.firebase = firebase
     this.db = firebase.firestore()
+    this.userId = null
     this.connected = false
   }
 
@@ -37,6 +38,7 @@ class TermDatabase {
       .collection('users')
       .doc(user.uid)
       .collection('termlists')
+    this.userId = user.uid
     this.connected = true
     console.log('Connected to ' + user.uid + ' as ' + user.displayName)
   }
@@ -138,6 +140,18 @@ class TermDatabase {
 
       return returnArray
     }
+  }
+
+  async getTotalTerms() {
+    if (!this.connected) {
+      console.warn('Not connected to db')
+      return 0
+    }
+    const data = await this.db
+      .collection('users')
+      .doc(this.userId)
+      .get()
+    return data.data().termlists_total
   }
 }
 
