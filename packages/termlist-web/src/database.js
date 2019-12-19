@@ -11,6 +11,7 @@ class TermDatabase {
     this.db = firebase.firestore()
     this.userId = null
     this.connected = false
+    this.userInfoReference = null;
   }
 
   async start() {
@@ -30,14 +31,13 @@ class TermDatabase {
   }
 
   connect(user) {
-    this.db
+    this.userInfoReference = this.db
       .collection('users')
       .doc(user.uid)
-      .update({ name: user.displayName })
-    this.termsDB = this.db
-      .collection('users')
-      .doc(user.uid)
-      .collection('termlists')
+
+    this.userInfoReference.update({ name: user.displayName })
+    this.termsDB = this.userInfoReference.collection('termlists')
+
     this.userId = user.uid
     this.connected = true
     console.log('Connected to ' + user.uid + ' as ' + user.displayName)
@@ -147,9 +147,7 @@ class TermDatabase {
       console.warn('Not connected to db')
       return 0
     }
-    const data = await this.db
-      .collection('users')
-      .doc(this.userId)
+    const data = await this.userInfoReference
       .get()
     return data.data().termlists_total
   }
