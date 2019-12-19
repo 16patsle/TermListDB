@@ -87,16 +87,12 @@ export default {
       this.$emit('remove', term)
     },
     gotoPage(pageNumber) {
-      if (pageNumber < this.currentPage) {
-        this.$emit('gotopage', pageNumber - 1, true)
-      } else {
-        this.$emit('gotopage', pageNumber - this.currentPage)
-      }
+      this.$emit('gotopage', pageNumber, this.currentPage)
       this.currentPage = pageNumber
     },
     sort(field) {
       this.$emit('sort', field)
-      this.currentPage = 0
+      this.currentPage = 1
     }
   }
 }

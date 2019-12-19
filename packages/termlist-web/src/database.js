@@ -9,7 +9,9 @@ class TermDatabase {
   constructor(firebase) {
     this.firebase = firebase
     this.db = firebase.firestore()
+    this.userId = null
     this.connected = false
+    this.userInfoReference = null
   }
 
   async start() {
@@ -29,14 +31,12 @@ class TermDatabase {
   }
 
   connect(user) {
-    this.db
-      .collection('users')
-      .doc(user.uid)
-      .set({ name: user.displayName })
-    this.termsDB = this.db
-      .collection('users')
-      .doc(user.uid)
-      .collection('termlists')
+    this.userInfoReference = this.db.collection('users').doc(user.uid)
+
+    this.userInfoReference.update({ name: user.displayName })
+    this.termsDB = this.userInfoReference.collection('termlists')
+
+    this.userId = user.uid
     this.connected = true
     console.log('Connected to ' + user.uid + ' as ' + user.displayName)
   }
@@ -86,7 +86,11 @@ class TermDatabase {
     let result = this.termsDB.orderBy(data.field || '_id')
 
     if (data.limit || data.limit === undefined) {
-      result = result.limit(data.limit || 20)
+      if (data.endBefore) {
+        result = result.limitToLast(data.limit || 20)
+      } else {
+        result = result.limit(data.limit || 20)
+      }
     }
     if (data.startAfter) {
       result = result.startAfter(data.startAfter)
@@ -138,6 +142,15 @@ class TermDatabase {
 
       return returnArray
     }
+  }
+
+  async getTotalTerms() {
+    if (!this.connected) {
+      console.warn('Not connected to db')
+      return 0
+    }
+    const data = await this.userInfoReference.get()
+    return data.data().termlists_total
   }
 }
 

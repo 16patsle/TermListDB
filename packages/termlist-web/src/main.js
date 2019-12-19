@@ -34,10 +34,12 @@ const store = new Vuex.Store({
   mutations: {
     remove(state, term) {
       Vue.delete(state.terms, term._id)
+      state.totalRows++
     },
     add(state, term) {
       if (!state.terms[term._id]) {
         Vue.set(state.terms, term._id, term)
+        state.totalRows++
       } else {
         console.error('Already exists!', term)
       }
@@ -72,10 +74,17 @@ const store = new Vuex.Store({
       state.imports.finished = true
       state.imports.cancel = true
     },
-    getTerms(state, terms) {
+    getTerms(state, data) {
       let termsObject = {}
 
-      terms.docs.forEach(_term => {
+      let terms = data.terms.docs
+
+      if (data.showLimit) {
+        // Return last x elements
+        terms = terms.slice(Math.max(terms.length - data.showLimit, 0))
+      }
+
+      terms.forEach(_term => {
         const term = _term.data()
         termsObject[term._id] = term
       })
@@ -90,8 +99,8 @@ const store = new Vuex.Store({
       })
       state.terms = termsObject
     },
-    getTotal(state, terms) {
-      state.totalRows = terms.size
+    setTotal(state, size) {
+      state.totalRows = size
     },
     setAuthenticated(state, user) {
       console.log('Auth update')
@@ -152,7 +161,7 @@ const store = new Vuex.Store({
     },
     async getTerms({ commit }, data) {
       try {
-        commit('getTerms', await database.getTerms(data))
+        commit('getTerms', { terms: await database.getTerms(data), ...data })
       } catch (e) {
         console.error('Error:', e, data)
       }
@@ -168,9 +177,9 @@ const store = new Vuex.Store({
         console.error('Error:', e, search)
       }
     },
-    async getTotal({ commit }) {
+    async fetchTotal({ commit }) {
       try {
-        commit('getTotal', await database.getTerms({ limit: null }))
+        commit('setTotal', await database.getTotalTerms())
       } catch (e) {
         console.error('Error:', e)
       }
@@ -189,6 +198,9 @@ const start = async () => {
     created() {
       firebase.auth().onAuthStateChanged(user => {
         store.commit('setAuthenticated', user)
+        database.userInfoReference.onSnapshot(doc => {
+          this.$store.commit('setTotal', doc.data().termlists_total)
+        })
       })
     },
     database,
