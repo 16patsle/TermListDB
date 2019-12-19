@@ -88,7 +88,11 @@ class TermDatabase {
     let result = this.termsDB.orderBy(data.field || '_id')
 
     if (data.limit || data.limit === undefined) {
-      result = result.limit(data.limit || 20)
+      if (data.endBefore) {
+        result = result.limitToLast(data.limit || 20)
+      } else {
+        result = result.limit(data.limit || 20)
+      }
     }
     if (data.startAfter) {
       result = result.startAfter(data.startAfter)

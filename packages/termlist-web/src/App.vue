@@ -191,24 +191,55 @@ export default {
     removeTerm(term) {
       this.$store.dispatch('remove', term)
     },
-    async gotoPage(pageNumberOffset, isBefore) {
-      // TODO: Implement navigating to arbitrary pages, or just disable that
+    async gotoPage(pageNumber, currentPage) {
       const terms = this.$store.state.terms
+      const pageNumberOffset = pageNumber - currentPage
+      const isBefore = pageNumber < currentPage
 
-      if (isBefore) {
-        await this.$store.dispatch('getTerms', {
-          field: this.sortedBy,
-          endBefore: Object.entries(terms)[0][1][this.sortedBy],
-          pageNumberOffset: Number(pageNumberOffset)
-        })
+      if (Math.abs(pageNumberOffset) === 1) {
+        if (isBefore) {
+          await this.$store.dispatch('getTerms', {
+            field: this.sortedBy,
+            endBefore: Object.entries(terms)[0][1][this.sortedBy]
+          })
+        } else {
+          await this.$store.dispatch('getTerms', {
+            field: this.sortedBy,
+            startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
+              this.sortedBy
+            ]
+          })
+        }
       } else {
-        await this.$store.dispatch('getTerms', {
-          field: this.sortedBy,
-          startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
-            this.sortedBy
-          ],
-          pageNumberOffset: pageNumberOffset - 1
-        })
+        if (isBefore) {
+          const limit = pageNumber * 20
+
+          await this.$store.dispatch('getTerms', {
+            field: this.sortedBy,
+            limit,
+            showLimit: 20
+          })
+        } else {
+          const termsLeft = this.$store.state.totalRows - 20 * currentPage
+          // Amount of terms on x pages
+          const limit = termsLeft
+          let showLimit = 20
+
+          // If the amount of terms won't fill the last page completely,
+          // find out how many are on the last page and add them instead
+          if (termsLeft % 20 !== 0) {
+            showLimit = termsLeft % 20
+          }
+
+          await this.$store.dispatch('getTerms', {
+            field: this.sortedBy,
+            startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
+              this.sortedBy
+            ],
+            limit,
+            showLimit
+          })
+        }
       }
     },
     search(search) {

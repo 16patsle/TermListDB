@@ -74,10 +74,17 @@ const store = new Vuex.Store({
       state.imports.finished = true
       state.imports.cancel = true
     },
-    getTerms(state, terms) {
+    getTerms(state, data) {
       let termsObject = {}
 
-      terms.docs.forEach(_term => {
+      let terms = data.terms.docs
+
+      if (data.showLimit) {
+        // Return last x elements
+        terms = terms.slice(Math.max(terms.length - data.showLimit, 0))
+      }
+
+      terms.forEach(_term => {
         const term = _term.data()
         termsObject[term._id] = term
       })
@@ -154,7 +161,7 @@ const store = new Vuex.Store({
     },
     async getTerms({ commit }, data) {
       try {
-        commit('getTerms', await database.getTerms(data))
+        commit('getTerms', { terms: await database.getTerms(data), ...data })
       } catch (e) {
         console.error('Error:', e, data)
       }
