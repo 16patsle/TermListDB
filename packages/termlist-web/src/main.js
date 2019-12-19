@@ -34,10 +34,12 @@ const store = new Vuex.Store({
   mutations: {
     remove(state, term) {
       Vue.delete(state.terms, term._id)
+      state.totalRows++
     },
     add(state, term) {
       if (!state.terms[term._id]) {
         Vue.set(state.terms, term._id, term)
+        state.totalRows++
       } else {
         console.error('Already exists!', term)
       }
@@ -90,8 +92,8 @@ const store = new Vuex.Store({
       })
       state.terms = termsObject
     },
-    getTotal(state, terms) {
-      state.totalRows = terms.size
+    setTotal(state, size) {
+      state.totalRows = size
     },
     setAuthenticated(state, user) {
       console.log('Auth update')
@@ -168,9 +170,9 @@ const store = new Vuex.Store({
         console.error('Error:', e, search)
       }
     },
-    async getTotal({ commit }) {
+    async fetchTotal({ commit }) {
       try {
-        commit('getTotal', await database.getTerms({ limit: null }))
+        commit('setTotal', await database.getTotalTerms())
       } catch (e) {
         console.error('Error:', e)
       }
