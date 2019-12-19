@@ -32,7 +32,7 @@ class TermDatabase {
     this.db
       .collection('users')
       .doc(user.uid)
-      .set({ name: user.displayName })
+      .update({ name: user.displayName })
     this.termsDB = this.db
       .collection('users')
       .doc(user.uid)
