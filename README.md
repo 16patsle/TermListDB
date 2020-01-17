@@ -1,3 +1,3 @@
 # termlist
 
-Some kind of dictionary using CouchDB as backend and Vue.js on frontend.
+Some kind of dictionary using Firestore as backend and Vue.js on frontend.

@@ -1,6 +1,6 @@
 {
   "name": "termlist-server",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Some kind of dictionary, backend server for termlist-web",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,6 @@
   "dependencies": {
     "express": "^4.16.4",
     "pouchdb": "^7.0.0",
-    "termlist-web": "^1.0.0"
+    "termlist-web": "file:../termlist-web"
   }
 }

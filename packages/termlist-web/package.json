@@ -1,34 +1,47 @@
 {
   "name": "termlist-web",
   "description": "Web frontend for termlist-server",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "author": "Patrick Sletvold",
   "license": "Apache-2.0",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "start": "npm run dev",
+    "test": "eslint \"src/**/*.{js,vue}\" --fix",
+    "dev": "webpack-dev-server --hot",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "prepare": "npm run build"
   },
   "dependencies": {
-    "bulma": "^0.5.3",
+    "bulma": "^0.8.0",
+    "deepmerge": "^4.2.2",
+    "firebase": "^7.6.0",
+    "firebaseui": "^4.3.0",
     "font-awesome": "^4.7.0",
-    "list.js": "^1.5.0",
-    "pouchdb": "^6.3.4",
-    "vue": "^2.3.3"
+    "markdown-it": "^10.0.0",
+    "vue": "^2.6.11",
+    "vuex": "^3.1.2"
   },
   "devDependencies": {
-    "babel-core": "^6.0.0",
-    "babel-loader": "^6.0.0",
-    "babel-preset-env": "^1.5.1",
-    "cross-env": "^3.0.0",
-    "css-loader": "^0.25.0",
-    "file-loader": "^0.9.0",
-    "node-sass": "^4.5.3",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.18.2",
-    "url-loader": "^0.5.9",
-    "vue-loader": "^12.1.0",
-    "vue-template-compiler": "^2.3.3",
-    "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.4.5"
+    "@babel/core": "^7.7.5",
+    "@babel/polyfill": "^7.7.0",
+    "@babel/preset-env": "^7.7.6",
+    "babel-loader": "^8.0.6",
+    "cross-env": "^6.0.3",
+    "css-loader": "^3.4.0",
+    "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-vue": "^6.0.1",
+    "file-loader": "^5.0.2",
+    "node-sass": "^4.13.0",
+    "prettier": "1.16.2",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.2",
+    "url-loader": "^3.0.0",
+    "vue-loader": "^15.8.3",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.41.3",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
   }
 }
