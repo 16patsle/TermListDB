@@ -257,13 +257,17 @@ export default {
         }
       }
     },
-    search(search) {
-      this.$store.dispatch('find', { field: this.sortedBy, ...search })
+    async search(search) {
+      this.loading = true
+      await this.$store.dispatch('find', { field: this.sortedBy, ...search })
+      this.loading = false
     },
-    sort(field) {
-      this.$store.dispatch('getTerms', {
+    async sort(field) {
+      this.loading = true
+      await this.$store.dispatch('getTerms', {
         field: field
       })
+      this.loading = false
 
       this.sortedBy = field
     },
