@@ -34,7 +34,7 @@
           {{ $store.state.auth.user.displayName }}
         </AppNavbarItem>
         <AppNavbarItem v-if="$store.state.auth.authenticated">
-          <AppButton @click="$refs.auth.logOut">
+          <AppButton @click="$refs.auth && $refs.auth.logOut">
             {{ ui.logOut }}
           </AppButton>
         </AppNavbarItem>
@@ -69,11 +69,7 @@
       @export="exportTerms"
       @close="exportURI = ''"
     />
-    <Authenticate
-      v-show="!$store.state.auth.authenticated"
-      ref="auth"
-      :ui="ui"
-    />
+    <Authenticate ref="auth" :ui="ui" />
     <div class="container">
       <TermList
         v-if="$store.state.auth.authenticated"

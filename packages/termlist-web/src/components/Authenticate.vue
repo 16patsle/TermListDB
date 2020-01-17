@@ -1,5 +1,5 @@
 <template>
-  <div class="modal is-active">
+  <div v-show="!$store.state.auth.authenticated" class="modal is-active">
     <div class="modal-background" />
     <div id="firebaseui-auth-container" />
   </div>
