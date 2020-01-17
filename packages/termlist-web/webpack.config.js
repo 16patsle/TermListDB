@@ -1,7 +1,8 @@
 /* eslint-env node */
 const path = require('path')
-//const webpack = require('webpack')
+const webpack = require('webpack')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+require('dotenv').config()
 
 module.exports = {
   entry: './src/main.js',
@@ -113,7 +114,14 @@ module.exports = {
       }
     ]
   },
-  plugins: [new VueLoaderPlugin()],
+  plugins: [
+    new VueLoaderPlugin(),
+    new webpack.EnvironmentPlugin([
+      'FIREBASE_API_KEY',
+      'FIREBASE_AUTH_DOMAIN',
+      'FIREBASE_PROJECT_ID'
+    ])
+  ],
   resolve: {
     alias: {
       vue$: 'vue/dist/vue.esm.js'
