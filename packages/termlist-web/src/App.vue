@@ -198,12 +198,16 @@ export default {
       const pageNumberOffset = pageNumber - currentPage
       const isBefore = pageNumber < currentPage
 
+      this.loading = true
+
       if (Math.abs(pageNumberOffset) === 1) {
         if (isBefore) {
           await this.$store.dispatch('getTerms', {
             field: this.sortedBy,
             endBefore: Object.entries(terms)[0][1][this.sortedBy]
           })
+
+          this.loading = false
         } else {
           await this.$store.dispatch('getTerms', {
             field: this.sortedBy,
@@ -211,6 +215,8 @@ export default {
               this.sortedBy
             ]
           })
+
+          this.loading = false
         }
       } else {
         if (isBefore) {
@@ -221,6 +227,8 @@ export default {
             limit,
             showLimit: 20
           })
+
+          this.loading = false
         } else {
           const termsLeft = this.$store.state.totalRows - 20 * currentPage
           // Amount of terms on x pages
@@ -241,6 +249,8 @@ export default {
             limit,
             showLimit
           })
+
+          this.loading = false
         }
       }
     },
