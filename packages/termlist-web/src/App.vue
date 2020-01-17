@@ -82,6 +82,7 @@
         :ui="ui"
         :terms="terms"
         :fields="fields"
+        :loading="loading"
         @edit="editTerm"
         @remove="confirmRemoveTerm"
         @gotopage="gotoPage"
@@ -134,7 +135,8 @@ export default {
       utils: {
         md: null
       },
-      sortedBy: 'term'
+      sortedBy: 'term',
+      loading: false
     }
   },
   computed: {

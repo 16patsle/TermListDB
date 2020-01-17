@@ -10,7 +10,7 @@
       @gotopage="gotoPage"
     />
     <div class="content-container">
-      <AppLoading class="loading-indicator" />
+      <AppLoading v-if="loading" class="loading-indicator" />
       <table class="table is-fullwidth is-hoverable">
         <thead>
           <tr>
@@ -74,6 +74,11 @@ export default {
     fields: {
       type: Array,
       required: true
+    },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   data() {
