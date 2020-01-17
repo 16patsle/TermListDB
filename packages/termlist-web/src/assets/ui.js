@@ -21,8 +21,7 @@ export default {
   defaultSort: 'Standard sortering (etter dato)',
   importTerms: 'Importer',
   exportTerms: 'Eksporter',
-  trelloImportInstructions:
-    'For å importere ord, velg en eksportfil. Støtter både eksport fra denne appen og fra Trello',
+  trelloImportInstructions: 'For å importere ord, velg en eksportfil.',
   downloadExportInstructions:
     "Trykk på 'Last ned' for å laste ned eksporterte ord",
   browseForFile: 'Velg en fil…',

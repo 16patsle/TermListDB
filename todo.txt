@@ -1,3 +1,0 @@
-2017-11-09 Pass på at slettede ord forsvinner når du sletter dem
-2017-12-13 Gjør det mulig å velge hvilke Trello-lister som blir hvilke typer ord
-2018-04-15 Sett makshøyde på tabellradene og gjør dem klikkbare for å se hele

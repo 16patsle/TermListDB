@@ -98,59 +98,13 @@ export default {
       }
     },
     prepareFileImport(file) {
-      // Look for Trello import
-      if ('idOrganization' in file && 'name' in file && 'invited' in file) {
-        this.importedFile = {
-          lists: file.lists,
-          cards: file.cards
-        }
+      this.importedFile = file
 
-        this.importedTerms = this.prepareTrelloImport(this.importedFile)
-      } else {
-        this.importedFile = file
-
-        this.importedTerms = this.prepareStandardImport(this.importedFile)
-      }
+      this.importedTerms = this.prepareStandardImport(this.importedFile)
 
       this.$emit('import', this.importedTerms)
 
       this.close()
-    },
-    prepareTrelloImport(file) {
-      let importedTerms = []
-      let listObject = {}
-
-      for (let list of file.lists) {
-        this.$set(listObject, list.id, list.name)
-      }
-
-      for (let card of file.cards) {
-        let term = {}
-        term.term = card.name
-        term.desc = card.desc
-        term.date = new Date(card.dateLastActivity).toJSON()
-
-        switch (listObject[card.idList]) {
-          case 'Verb':
-            term.type = 'verb'
-            break
-          case 'Substantiv':
-            term.type = 'noun'
-            break
-          case 'Adjektiv':
-            term.type = 'adjective'
-            break
-          case 'Uttale':
-            term.type = 'pronounciation'
-            break
-          default:
-            break
-        }
-
-        importedTerms.push(term)
-      }
-
-      return importedTerms
     },
     prepareStandardImport(file) {
       let importedTerms = []
