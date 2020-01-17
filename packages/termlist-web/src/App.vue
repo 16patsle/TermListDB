@@ -156,16 +156,23 @@ export default {
       'balance_pairs'
     ])
 
+    this.loading = true
+
     this.$store.dispatch('fetchTotal')
-    this.$store.dispatch('getTerms', {
-      field: this.sortedBy
-    })
+    this.$store
+      .dispatch('getTerms', {
+        field: this.sortedBy
+      })
+      .then(() => (this.loading = false))
+
     this.$store.subscribe(mutation => {
       if (mutation.type === 'setAuthenticated') {
         this.$store.dispatch('fetchTotal')
-        this.$store.dispatch('getTerms', {
-          field: this.sortedBy
-        })
+        this.$store
+          .dispatch('getTerms', {
+            field: this.sortedBy
+          })
+          .then(() => (this.loading = false))
       }
     })
 
