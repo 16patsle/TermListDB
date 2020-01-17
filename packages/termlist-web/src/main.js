@@ -10,7 +10,6 @@ import 'firebase/auth'
 import 'firebaseui/dist/firebaseui.css'
 import App from './App.vue'
 
-import secrets from '../secrets'
 import TermDatabase from './database'
 
 Vue.use(Vuex)
@@ -187,7 +186,13 @@ const store = new Vuex.Store({
   }
 })
 
-firebase.initializeApp(secrets.firebase)
+/* global process */
+firebase.initializeApp({
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID
+})
+
 const database = new TermDatabase(firebase)
 
 const start = async () => {

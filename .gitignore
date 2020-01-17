@@ -5,7 +5,7 @@ npm-debug.log
 yarn-error.log
 .couchdata/
 packages/termlist-server/termlist-web
-packages/termlist-web/secrets.js
+packages/termlist-web/.env
 
 # Editor directories and files
 .idea
