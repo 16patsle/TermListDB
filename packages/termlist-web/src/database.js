@@ -134,7 +134,7 @@ class TermDatabase {
                 return val.data()
               })
               .filter(val => {
-                return search.search.test(val[field])
+                return search.search.test(val[field.name])
               })
           )
         }
