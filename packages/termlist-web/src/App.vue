@@ -78,6 +78,7 @@
         :ui="ui"
         :terms="terms"
         :fields="fields"
+        :loading="loading"
         @edit="editTerm"
         @remove="confirmRemoveTerm"
         @gotopage="gotoPage"
@@ -130,7 +131,8 @@ export default {
       utils: {
         md: null
       },
-      sortedBy: 'term'
+      sortedBy: 'term',
+      loading: false
     }
   },
   computed: {
@@ -150,16 +152,23 @@ export default {
       'balance_pairs'
     ])
 
+    this.loading = true
+
     this.$store.dispatch('fetchTotal')
-    this.$store.dispatch('getTerms', {
-      field: this.sortedBy
-    })
+    this.$store
+      .dispatch('getTerms', {
+        field: this.sortedBy
+      })
+      .then(() => (this.loading = false))
+
     this.$store.subscribe(mutation => {
       if (mutation.type === 'setAuthenticated') {
         this.$store.dispatch('fetchTotal')
-        this.$store.dispatch('getTerms', {
-          field: this.sortedBy
-        })
+        this.$store
+          .dispatch('getTerms', {
+            field: this.sortedBy
+          })
+          .then(() => (this.loading = false))
       }
     })
 
@@ -192,12 +201,16 @@ export default {
       const pageNumberOffset = pageNumber - currentPage
       const isBefore = pageNumber < currentPage
 
+      this.loading = true
+
       if (Math.abs(pageNumberOffset) === 1) {
         if (isBefore) {
           await this.$store.dispatch('getTerms', {
             field: this.sortedBy,
             endBefore: Object.entries(terms)[0][1][this.sortedBy]
           })
+
+          this.loading = false
         } else {
           await this.$store.dispatch('getTerms', {
             field: this.sortedBy,
@@ -205,6 +218,8 @@ export default {
               this.sortedBy
             ]
           })
+
+          this.loading = false
         }
       } else {
         if (isBefore) {
@@ -215,6 +230,8 @@ export default {
             limit,
             showLimit: 20
           })
+
+          this.loading = false
         } else {
           const termsLeft = this.$store.state.totalRows - 20 * currentPage
           // Amount of terms on x pages
@@ -235,16 +252,22 @@ export default {
             limit,
             showLimit
           })
+
+          this.loading = false
         }
       }
     },
-    search(search) {
-      this.$store.dispatch('find', { field: this.sortedBy, ...search })
+    async search(search) {
+      this.loading = true
+      await this.$store.dispatch('find', { field: this.sortedBy, ...search })
+      this.loading = false
     },
-    sort(field) {
-      this.$store.dispatch('getTerms', {
+    async sort(field) {
+      this.loading = true
+      await this.$store.dispatch('getTerms', {
         field: field
       })
+      this.loading = false
 
       this.sortedBy = field
     },
