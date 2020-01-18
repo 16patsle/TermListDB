@@ -9,7 +9,6 @@ module.exports = {
   mode: process.env.NODE_ENV ? process.env.NODE_ENV : 'development',
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
     filename: 'build.js'
   },
   module: {
