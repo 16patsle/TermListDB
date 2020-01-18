@@ -5,7 +5,7 @@
       :key="field.name"
       v-html="getFieldValue(field)"
     />
-    <td class="buttons">
+    <td>
       <TermRowButton icon="pencil" @click="edit" />
       <TermRowButton icon="trash" @click="remove" />
     </td>
