@@ -1,5 +1,5 @@
 {
-  "name": "termlist-auth-ui",
+  "name": "@16patsle/termlist-auth-ui",
   "version": "1.0.0",
   "description": "Custom firebase-ui for termlist",
   "files": [
@@ -28,12 +28,14 @@
     "test": "npm run build && npm run generate-test-files && ./buildtools/run_tests.sh",
     "serve": "npm run build && npm run generate-test-files && gulp serve",
     "generate-test-files": "./buildtools/generate_test_files.sh",
-    "prepublish": "npm run test && cp -r dist demo/public"
+    "prepare": "npm run test",
+    "prepublishOnly": "cp -r dist demo/public"
   },
   "test": "npm run test",
   "repository": {
     "type": "git",
-    "url": "git+https://16patsle@github.com/16patsle/TermListDB.git"
+    "url": "git+https://16patsle@github.com/16patsle/TermListDB.git",
+    "directory": "packages/termlist-auth-ui"
   },
   "bugs": {
     "url": "https://github.com/16patsle/TermListDB/issues"
