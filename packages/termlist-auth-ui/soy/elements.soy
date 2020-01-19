@@ -24,22 +24,24 @@
   {@param? email: string} /** The email address to prefill. */
   {@param? disabled: bool} /** Whether the email input is disabled or not. */
   {@param? changeEmail: bool} /** Whether to use change email label. */
-  <div class="firebaseui-textfield mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <label class="mdl-textfield__label firebaseui-label" for="ui-sign-in-email-input">
+  <div class="field">
+    <label class="label" for="ui-sign-in-email-input">
       {if $changeEmail}
         {msg desc="Label of a change email address input field."}Enter new email address{/msg}
       {else}
         {msg desc="Label of an email address input field."}Email{/msg}
       {/if}
     </label>
-    <input
-        type="email"
-        name="email"
-        id="ui-sign-in-email-input"
-        autocomplete="username"
-        class="mdl-textfield__input firebaseui-input firebaseui-id-email"
-        value="{$email ?: ''}"
-        {if $disabled}disabled{/if}>
+    <div class="control">
+      <input
+          type="email"
+          name="email"
+          id="ui-sign-in-email-input"
+          autocomplete="username"
+          class="input firebaseui-id-email"
+          value="{$email ?: ''}"
+          {if $disabled}disabled{/if}>
+    </div>
   </div>
   <div class="firebaseui-error-wrapper">
     <p class="firebaseui-error firebaseui-text-input-error firebaseui-hidden{sp}
@@ -195,8 +197,7 @@
  */
 {template .submitButton}
   {@param? label: string} /** Label of the button, defaulting to "Next" if not specified. */
-  <button type="submit" class="firebaseui-id-submit firebaseui-button{sp}
-      mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+  <button type="submit" class="firebaseui-id-submit button is-primary">
     {if $label}
       {$label}
     {else}
@@ -339,20 +340,22 @@
  */
 {template .password}
   {@param? current: bool} /** Whether to show "Current password" or "Password" label. */
-  <div class="firebaseui-textfield mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-    <label class="mdl-textfield__label firebaseui-label" for="ui-sign-in-password-input">
+  <div class="field">
+    <label class="label" for="ui-sign-in-email-input">
       {if $current}
         {msg desc="Label of a password field."}Current password{/msg}
       {else}
         {msg desc="Label of a password field."}Password{/msg}
       {/if}
     </label>
-    <input
-        type="password"
-        name="password"
-        id="ui-sign-in-password-input"
-        autocomplete="current-password"
-        class="mdl-textfield__input firebaseui-input firebaseui-id-password">
+    <div class="control">
+      <input
+          type="password"
+          name="password"
+          id="ui-sign-in-password-input"
+          autocomplete="current-password"
+          class="input firebaseui-id-password">
+    </div>
   </div>
   <div class="firebaseui-error-wrapper">
     <p class="firebaseui-error firebaseui-text-input-error firebaseui-hidden{sp}
@@ -377,8 +380,7 @@
  */
 {template .cancelButton}
   {@param? label: string} /** Label of the button, defaulting to "Cancel" if not specified. */
-  <button class="firebaseui-id-secondary-link firebaseui-button mdl-button mdl-js-button{sp}
-                 mdl-button--primary">
+  <button class="firebaseui-id-secondary-link button">
     {if $label}
       {$label}
     {else}
