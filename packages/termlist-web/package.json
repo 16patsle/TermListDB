@@ -16,7 +16,6 @@
     "bulma": "^0.8.0",
     "deepmerge": "^4.2.2",
     "firebase": "^7.6.0",
-    "firebaseui": "^4.3.0",
     "font-awesome": "^4.7.0",
     "markdown-it": "^10.0.0",
     "vue": "^2.6.11",
