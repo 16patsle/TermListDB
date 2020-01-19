@@ -39,11 +39,11 @@
           {call firebaseui.auth.soy2.element.tosPpLink data="all" /}
         {/if}
       </div>
+      <div class="modal-card-foot">
         {if $displayCancelButton}
           {call firebaseui.auth.soy2.element.cancelButton /}
         {/if}
         {call firebaseui.auth.soy2.element.submitButton /}
-      <div class="modal-card-foot">
       </div>
     </form>
   </div>
@@ -72,9 +72,9 @@
           {call firebaseui.auth.soy2.element.tosPpLink data="all" /}
         {/if}
       </div>
+      <div class="modal-card-foot">
         {call firebaseui.auth.soy2.element.passwordRecoveryButton /}
         {call firebaseui.auth.soy2.element.signInButton /}
-      <div class="modal-card-foot">
       </div>
     </form>
   </div>
@@ -109,11 +109,11 @@
           {call firebaseui.auth.soy2.element.tosPpLink data="all" /}
         {/if}
       </div>
+      <div class="modal-card-foot">
         {if $allowCancel}
           {call firebaseui.auth.soy2.element.cancelButton /}
         {/if}
         {call firebaseui.auth.soy2.element.saveButton /}
-      <div class="modal-card-foot">
       </div>
     </form>
   </div>
@@ -142,6 +142,7 @@
         {call firebaseui.auth.soy2.element.email data="all" /}
         {call firebaseui.auth.soy2.element.tosPpLink data="all" /}
       </div>
+      <div class="modal-card-foot">
         {if $allowCancel}
           {call firebaseui.auth.soy2.element.cancelButton /}
         {/if}
@@ -152,7 +153,6 @@
             {/msg}
           {/param}
         {/call}
-      <div class="modal-card-foot">
       </div>
     </form>
   </div>
