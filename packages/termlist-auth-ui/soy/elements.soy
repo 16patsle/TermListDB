@@ -480,16 +480,14 @@
  */
 {template .infoBar}
   {@param message: string} /** The message to show. */
-  <div class="firebaseui-info-bar firebaseui-id-info-bar">
-    <p class="firebaseui-info-bar-message">
-      {$message}&nbsp;&nbsp;
-      <a href="javascript:void(0)"
-         class="firebaseui-link firebaseui-id-dismiss-info-bar">
-        {msg desc="label of a button which dismisses the notification message"}
-          Dismiss
-        {/msg}
-      </a>
-    </p>
+  <div class="notification firebaseui-info-bar firebaseui-id-info-bar">
+    <a href="javascript:void(0)"
+       class="delete firebaseui-id-dismiss-info-bar">
+      {msg desc="label of a button which dismisses the notification message"}
+        Dismiss
+      {/msg}
+    </a>
+    {$message}
   </div>
 {/template}
 
