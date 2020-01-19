@@ -1,7 +1,9 @@
 <template>
-  <div v-show="!$store.state.auth.authenticated" class="modal is-active">
+  <div
+    id="firebaseui-auth-container"
+    :class="{ modal: true, 'is-active': !$store.state.auth.authenticated }"
+  >
     <div class="modal-background" />
-    <div id="firebaseui-auth-container" />
   </div>
 </template>
 <script>
