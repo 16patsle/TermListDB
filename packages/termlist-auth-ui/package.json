@@ -1,6 +1,6 @@
 {
   "name": "@16patsle/termlist-auth-ui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Custom firebase-ui for termlist",
   "files": [
     "dist/firebaseui.js",
