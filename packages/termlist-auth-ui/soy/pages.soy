@@ -24,32 +24,26 @@
   {@param? email: string} /** The email address to prefill. */
   {@param? displayCancelButton: bool} /** Whether to display the cancel button. */
   {@param? displayFullTosPpMessage: bool} /** Whether to display the full message of ToS and PP. */
-  <div class="mdl-card mdl-shadow--2dp firebaseui-container firebaseui-id-page-sign-in">
+  <div class="modal-card firebaseui-container firebaseui-id-page-sign-in">
     <form onsubmit="return false;">
-      <div class="firebaseui-card-header">
-        <h1 class="firebaseui-title">
+      <div class="modal-card-header">
+        <h1 class="modal-card-title">
           {msg desc="Header of the email/password sign-in page."}Sign in with email{/msg}
         </h1>
       </div>
-      <div class="firebaseui-card-content">
-        <div class="firebaseui-relative-wrapper">
-          {call firebaseui.auth.soy2.element.email data="all" /}
-        </div>
-      </div>
-      <div class="firebaseui-card-actions">
-        <div class="firebaseui-form-actions">
-          {if $displayCancelButton}
-            {call firebaseui.auth.soy2.element.cancelButton /}
-          {/if}
-          {call firebaseui.auth.soy2.element.submitButton /}
-        </div>
-      </div>
-      <div class="firebaseui-card-footer">
+      <div class="modal-card-body">
+        {call firebaseui.auth.soy2.element.email data="all" /}
         {if $displayFullTosPpMessage}
           {call firebaseui.auth.soy2.element.fullMessageTosPp data="all" /}
         {else}
           {call firebaseui.auth.soy2.element.tosPpLink data="all" /}
         {/if}
+      </div>
+      <div class="modal-card-footer">
+        {if $displayCancelButton}
+          {call firebaseui.auth.soy2.element.cancelButton /}
+        {/if}
+        {call firebaseui.auth.soy2.element.submitButton /}
       </div>
     </form>
   </div>
@@ -62,29 +56,25 @@
 {template .passwordSignIn}
   {@param? email: string} /** The email address to prefill. */
   {@param? displayFullTosPpMessage: bool} /** Whether to display the full message of ToS and PP. */
-  <div class="mdl-card mdl-shadow--2dp firebaseui-container firebaseui-id-page-password-sign-in">
+  <div class="modal-card firebaseui-container firebaseui-id-page-password-sign-in">
     <form onsubmit="return false;">
-      <div class="firebaseui-card-header">
-        <h1 class="firebaseui-title">{msg desc="Header of a sign-in page."}Sign in{/msg}</h1>
+      <div class="modal-card-header">
+        <h1 class="modal-card-title">
+          {msg desc="Header of a sign-in page."}Sign in{/msg}
+        </h1>
       </div>
-      <div class="firebaseui-card-content">
+      <div class="modal-card-body">
         {call firebaseui.auth.soy2.element.email data="all" /}
         {call firebaseui.auth.soy2.element.password /}
-      </div>
-      <div class="firebaseui-card-actions">
-        <div class="firebaseui-form-links">
-          {call firebaseui.auth.soy2.element.passwordRecoveryButton /}
-        </div>
-        <div class="firebaseui-form-actions">
-          {call firebaseui.auth.soy2.element.signInButton /}
-        </div>
-      </div>
-      <div class="firebaseui-card-footer">
         {if $displayFullTosPpMessage}
           {call firebaseui.auth.soy2.element.fullMessageTosPp data="all" /}
         {else}
           {call firebaseui.auth.soy2.element.tosPpLink data="all" /}
         {/if}
+      </div>
+      <div class="modal-card-footer">
+        {call firebaseui.auth.soy2.element.passwordRecoveryButton /}
+        {call firebaseui.auth.soy2.element.signInButton /}
       </div>
     </form>
   </div>
@@ -100,34 +90,30 @@
   {@param? name: string} /** The name to prefill. */
   {@param? allowCancel: bool} /** Whether to show the cancel link. */
   {@param? displayFullTosPpMessage: bool} /** Whether to display the full message of ToS and PP. */
-  <div class="mdl-card mdl-shadow--2dp firebaseui-container firebaseui-id-page-password-sign-up">
+  <div class="modal-card firebaseui-container firebaseui-id-page-password-sign-up">
     <form onsubmit="return false;">
-      <div class="firebaseui-card-header">
-        <h1 class="firebaseui-title">
+      <div class="modal-card-header">
+        <h1 class="modal-card-title">
           {msg desc="Header of a sign-up page."}Create account{/msg}
         </h1>
       </div>
-      <div class="firebaseui-card-content">
+      <div class="modal-card-body">
         {call firebaseui.auth.soy2.element.email data="all" /}
         {if $requireDisplayName}
           {call firebaseui.auth.soy2.element.name data="all" /}
         {/if}
         {call firebaseui.auth.soy2.element.newPassword /}
-      </div>
-      <div class="firebaseui-card-actions">
-        <div class="firebaseui-form-actions">
-          {if $allowCancel}
-            {call firebaseui.auth.soy2.element.cancelButton /}
-          {/if}
-          {call firebaseui.auth.soy2.element.saveButton /}
-        </div>
-      </div>
-      <div class="firebaseui-card-footer">
         {if $displayFullTosPpMessage}
           {call firebaseui.auth.soy2.element.fullMessageTosPp data="all" /}
         {else}
           {call firebaseui.auth.soy2.element.tosPpLink data="all" /}
         {/if}
+      </div>
+      <div class="modal-card-footer">
+        {if $allowCancel}
+          {call firebaseui.auth.soy2.element.cancelButton /}
+        {/if}
+        {call firebaseui.auth.soy2.element.saveButton /}
       </div>
     </form>
   </div>
@@ -140,37 +126,33 @@
 {template .passwordRecovery}
   {@param? email: string} /** The email address to prefill. */
   {@param? allowCancel: bool} /** Whether to show the cancel link. */
-  <div class="mdl-card mdl-shadow--2dp firebaseui-container firebaseui-id-page-password-recovery">
+  <div class="modal-card firebaseui-container firebaseui-id-page-password-recovery">
     <form onsubmit="return false;">
-      <div class="firebaseui-card-header">
-        <h1 class="firebaseui-title">
+      <div class="modal-card-header">
+        <h1 class="modal-card-title">
           {msg desc="Header of a password recovery page."}Recover password{/msg}
         </h1>
       </div>
-      <div class="firebaseui-card-content">
+      <div class="modal-card-body">
         <p class="firebaseui-text">
           {msg desc="Information on how the user resets their password."}
             Get instructions sent to this email that explain how to reset your password
           {/msg}
         </p>
         {call firebaseui.auth.soy2.element.email data="all" /}
-      </div>
-      <div class="firebaseui-card-actions">
-        <div class="firebaseui-form-actions">
-          {if $allowCancel}
-            {call firebaseui.auth.soy2.element.cancelButton /}
-          {/if}
-          {call firebaseui.auth.soy2.element.submitButton}
-            {param label kind="text"}
-              {msg desc="The button that sends a password recovery email."}
-                Send
-              {/msg}
-            {/param}
-          {/call}
-        </div>
-      </div>
-      <div class="firebaseui-card-footer">
         {call firebaseui.auth.soy2.element.tosPpLink data="all" /}
+      </div>
+      <div class="modal-card-footer">
+        {if $allowCancel}
+          {call firebaseui.auth.soy2.element.cancelButton /}
+        {/if}
+        {call firebaseui.auth.soy2.element.submitButton}
+          {param label kind="text"}
+            {msg desc="The button that sends a password recovery email."}
+              Send
+            {/msg}
+          {/param}
+        {/call}
       </div>
     </form>
   </div>
@@ -183,38 +165,37 @@
 {template .passwordRecoveryEmailSent}
   {@param email: string} /** The email address to which the password reset email has been sent. */
   {@param? allowContinue: bool} /** Whether to show the continue button. */
-  <div class="mdl-card mdl-shadow--2dp{sp}
-      firebaseui-container firebaseui-id-page-password-recovery-email-sent">
-    <div class="firebaseui-card-header">
-      <h1 class="firebaseui-title">
-        {msg desc="Header of a notice page when the password recovery email has been sent."}
-          Check your email
-        {/msg}
-      </h1>
-    </div>
-    <div class="firebaseui-card-content">
-      <p class="firebaseui-text">
+  <div class="modal-card firebaseui-container firebaseui-id-page-password-recovery-email-sent">
+    <form onsubmit="return false;">
+      <div class="modal-card-header">
+        <h1 class="modal-card-title">
+          {msg desc="Header of a notice page when the password recovery email has been sent."}
+            Check your email
+          {/msg}
+        </h1>
+      </div>
+      <div class="modal-card-body">
+        <p class="firebaseui-text">
         {msg desc="Detailed info of a notice page when the password recovery email has been sent."}
           Follow the instructions sent to <strong>{$email}</strong> to recover your password
         {/msg}
       </p>
-    </div>
-    <div class="firebaseui-card-actions">
-      {if $allowContinue}
-        <div class="firebaseui-form-actions">
-          {call firebaseui.auth.soy2.element.submitButton}
-            {param label kind="text"}
-              {msg desc="Label of a button that finishes the password recovery flow."}
-                Done
-              {/msg}
-            {/param}
-          {/call}
-        </div>
-      {/if}
-    </div>
-    <div class="firebaseui-card-footer">
-      {call firebaseui.auth.soy2.element.tosPpLink data="all" /}
-    </div>
+        {call firebaseui.auth.soy2.element.tosPpLink data="all" /}
+      </div>
+      <div class="modal-card-footer">
+        {if $allowContinue}
+          <div class="firebaseui-form-actions">
+            {call firebaseui.auth.soy2.element.submitButton}
+              {param label kind="text"}
+                {msg desc="Label of a button that finishes the password recovery flow."}
+                  Done
+                {/msg}
+              {/param}
+            {/call}
+          </div>
+        {/if}
+      </div>
+    </form>
   </div>
 {/template}
 
