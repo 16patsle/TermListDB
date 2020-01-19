@@ -409,14 +409,14 @@
  */
 {template .tosPpLink}
   {if $ij.tosCallback and $ij.privacyPolicyCallback}
-    <ul class="firebaseui-tos-list firebaseui-tos">
+    <ul class="firebaseui-tos-list">
       <li class="firebaseui-inline-list-item">
-        <a href="javascript:void(0)" class="firebaseui-link firebaseui-tos-link" target="_blank">
+        <a href="javascript:void(0)" target="_blank">
           {msg desc="Label for the terms of service"}Terms of Service{/msg}
         </a>
       </li>
       <li class="firebaseui-inline-list-item">
-        <a href="javascript:void(0)" class="firebaseui-link firebaseui-pp-link" target="_blank">
+        <a href="javascript:void(0)" target="_blank">
           {msg desc="Label for the privacy policy"}Privacy Policy{/msg}
         </a>
       </li>
@@ -460,13 +460,13 @@
  */
 {template .fullMessageTosPp}
   {if $ij.tosCallback and $ij.privacyPolicyCallback}
-    <p class="firebaseui-tos firebaseui-tospp-full-message">
+    <p>
       {msg desc="The terms of service and privacy policy for the first page."}
         By continuing, you are indicating that you accept our{sp}
-        <a href="javascript:void(0)" class="firebaseui-link firebaseui-tos-link" target="_blank">
+        <a href="javascript:void(0)" target="_blank">
           Terms of Service
         </a> and{sp}
-        <a href="javascript:void(0)" class="firebaseui-link firebaseui-pp-link" target="_blank">
+        <a href="javascript:void(0)" target="_blank">
           Privacy Policy
         </a>.
       {/msg}
