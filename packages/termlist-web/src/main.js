@@ -7,7 +7,7 @@ import 'font-awesome/css/font-awesome.css'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import 'firebase/auth'
-import 'firebaseui/dist/firebaseui.css'
+import '@16patsle/termlist-auth-ui/dist/firebaseui.css'
 import App from './App.vue'
 
 import TermDatabase from './database'

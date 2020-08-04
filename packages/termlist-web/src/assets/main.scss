@@ -14,3 +14,9 @@ div {
     padding-bottom: $navbar-height;
   }
 }
+
+.is-top-right {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+}

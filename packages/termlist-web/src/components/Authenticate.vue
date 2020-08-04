@@ -1,13 +1,15 @@
 <template>
-  <div v-show="!$store.state.auth.authenticated" class="modal is-active">
+  <div
+    id="firebaseui-auth-container"
+    :class="{ modal: true, 'is-active': !$store.state.auth.authenticated }"
+  >
     <div class="modal-background" />
-    <div id="firebaseui-auth-container" />
   </div>
 </template>
 <script>
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import * as firebaseui from 'firebaseui'
+import * as firebaseui from '@16patsle/termlist-auth-ui'
 
 export default {
   components: {},

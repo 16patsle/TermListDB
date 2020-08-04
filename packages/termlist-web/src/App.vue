@@ -34,7 +34,7 @@
           {{ $store.state.auth.user.displayName }}
         </AppNavbarItem>
         <AppNavbarItem v-if="$store.state.auth.authenticated">
-          <AppButton @click="$refs.auth && $refs.auth.logOut">
+          <AppButton @click="logOut">
             {{ ui.logOut }}
           </AppButton>
         </AppNavbarItem>
@@ -333,6 +333,9 @@ export default {
       this.exportURI =
         'data:application/json;charset=utf-8, ' +
         encodeURIComponent(JSON.stringify(exported))
+    },
+    logOut() {
+      this.$refs.auth.logOut()
     }
   }
 }
