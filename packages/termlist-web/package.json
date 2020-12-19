@@ -9,7 +9,7 @@
     "start": "npm run dev",
     "test": "eslint \"src/**/*.{js,vue}\" --fix",
     "dev": "webpack serve --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "build": "cross-env NODE_ENV=production webpack --progress",
     "prepare": "npm run build"
   },
   "dependencies": {

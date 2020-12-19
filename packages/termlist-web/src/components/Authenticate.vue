@@ -9,7 +9,7 @@
 <script>
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import * as firebaseui from '@16patsle/termlist-auth-ui'
+import * as firebaseui from 'termlist-auth-ui'
 
 export default {
   components: {},
