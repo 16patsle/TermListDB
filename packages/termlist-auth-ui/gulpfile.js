@@ -22,7 +22,7 @@ const fse = require('fs-extra');
 const flip = require('gulp-css-flip');
 const gulp = require('gulp');
 const path = require('path');
-const sass = require('gulp-sass');
+const sass = require('@selfisekai/gulp-sass');
 const streamqueue = require('streamqueue');
 const util = require('gulp-util');
 
