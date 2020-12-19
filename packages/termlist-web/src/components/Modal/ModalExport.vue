@@ -6,7 +6,7 @@
     :ok-text="null"
     :cancel-text="null"
   >
-    <template v-slot:modal-body>
+    <template #modal-body>
       <p class="subtitle">
         {{ exportInstructions }}
       </p>
@@ -27,17 +27,17 @@ import AppModal from '../Generic/AppModal.vue'
 
 export default {
   components: {
-    AppModal
+    AppModal,
   },
   props: {
     ui: {
       type: Object,
-      required: true
+      required: true,
     },
     exportUri: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {}
@@ -52,7 +52,7 @@ export default {
     },
     exported() {
       return Boolean(this.exportUri)
-    }
+    },
   },
   methods: {
     toggleModal(bool) {
@@ -75,8 +75,8 @@ export default {
       if (!this.exported) {
         e.preventDefault()
       }
-    }
-  }
+    },
+  },
 }
 </script>
 <style></style>

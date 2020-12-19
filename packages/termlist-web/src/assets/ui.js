@@ -35,8 +35,8 @@ export default {
     adverb: 'Adverb',
     preposition: 'Preposisjon',
     conjunction: 'Konjunksjon',
-    pronounciation: 'Uttale'
+    pronounciation: 'Uttale',
   },
   logIn: 'Logg inn',
-  logOut: 'Logg ut'
+  logOut: 'Logg ut',
 }

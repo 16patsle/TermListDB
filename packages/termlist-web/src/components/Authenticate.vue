@@ -16,8 +16,8 @@ export default {
   props: {
     ui: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -25,11 +25,11 @@ export default {
         callbacks: {
           signInSuccessWithAuthResult() {
             return false
-          }
+          },
         },
         credentialHelper: firebaseui.auth.CredentialHelper.NONE,
-        signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID]
-      }
+        signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+      },
     }
   },
   mounted() {
@@ -45,8 +45,8 @@ export default {
     logOut() {
       firebase.auth().signOut()
       this.uiLogin.start('#firebaseui-auth-container', this.uiConfig)
-    }
-  }
+    },
+  },
 }
 </script>
 <style></style>

@@ -16,25 +16,25 @@ import TermRowButton from './TermRowButton.vue'
 
 export default {
   components: {
-    TermRowButton
+    TermRowButton,
   },
   props: {
     md: {
       type: Object,
-      required: true
+      required: true,
     },
     ui: {
       type: Object,
-      required: true
+      required: true,
     },
     term: {
       type: Object,
-      required: true
+      required: true,
     },
     fields: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     edit() {
@@ -57,13 +57,13 @@ export default {
           month: 'numeric',
           day: 'numeric',
           hour: '2-digit',
-          minute: '2-digit'
+          minute: '2-digit',
         }).format(date)
       } else {
         return this.term[field.name]
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

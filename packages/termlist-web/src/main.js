@@ -17,18 +17,18 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     terms: {
-      '0': {}
+      0: {},
     },
     imports: {
       imported: 0,
       total: 0,
       finished: true,
-      cancel: false
+      cancel: false,
     },
     auth: {
       authenticated: false,
-      user: undefined
-    }
+      user: undefined,
+    },
   },
   mutations: {
     remove(state, term) {
@@ -110,7 +110,7 @@ const store = new Vuex.Store({
         state.auth.authenticated = false
       }
       state.auth.user = user
-    }
+    },
   },
   actions: {
     async remove({ commit }, term) {
@@ -182,15 +182,15 @@ const store = new Vuex.Store({
       } catch (e) {
         console.error('Error:', e)
       }
-    }
-  }
+    },
+  },
 })
 
 /* global process */
 firebase.initializeApp({
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID
+  projectId: process.env.FIREBASE_PROJECT_ID,
 })
 
 const database = new TermDatabase(firebase)
@@ -210,7 +210,7 @@ const start = async () => {
     },
     database,
     store,
-    render: h => h(App)
+    render: h => h(App),
   })
 }
 start()

@@ -13,8 +13,8 @@
 <script>
 export default {
   props: {
-    text: { type: String, default: 'Loading...' }
-  }
+    text: { type: String, default: 'Loading...' },
+  },
 }
 </script>
 <style scoped>

@@ -6,13 +6,13 @@
     :ok-text="ui.save"
     :cancel-text="ui.cancel"
   >
-    <template v-slot:modal-body>
+    <template #modal-body>
       <p class="subtitle">
         {{ ui.wanttoremove }}
       </p>
       <p>{{ current.term }}</p>
     </template>
-    <template v-slot:modal-footer>
+    <template #modal-footer>
       <AppButton :danger="true" @click="removeTerm">
         {{ ui.removeterm }}!
       </AppButton>
@@ -29,19 +29,19 @@ import AppButton from '../Generic/AppButton.vue'
 export default {
   components: {
     AppModal,
-    AppButton
+    AppButton,
   },
   props: {
     ui: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       current: {
-        term: ''
-      }
+        term: '',
+      },
     }
   },
   methods: {
@@ -58,8 +58,8 @@ export default {
     },
     close() {
       this.toggleModal(false)
-    }
-  }
+    },
+  },
 }
 </script>
 <style></style>

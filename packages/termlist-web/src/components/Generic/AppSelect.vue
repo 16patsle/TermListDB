@@ -19,20 +19,22 @@ export default {
     defaultoption: { type: Object, default: null },
     options: {
       type: Array,
-      required: true
+      required: true,
     },
-    fullwidth: { type: Boolean, default: false }
+    fullwidth: { type: Boolean, default: false },
   },
   data() {
     return {
-      value: this.defaultoption ? this.defaultoption.name : this.options[0].name
+      value: this.defaultoption
+        ? this.defaultoption.name
+        : this.options[0].name,
     }
   },
   methods: {
     change(e) {
       this.value = e.target.value
       this.$emit('change', e.target.value)
-    }
-  }
+    },
+  },
 }
 </script>

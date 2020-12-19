@@ -56,34 +56,34 @@ export default {
     TermSortSelect,
     TermRow,
     AppPagination,
-    AppLoading
+    AppLoading,
   },
   props: {
     utils: {
       type: Object,
-      required: true
+      required: true,
     },
     ui: {
       type: Object,
-      required: true
+      required: true,
     },
     terms: {
       type: Object,
-      required: true
+      required: true,
     },
     fields: {
       type: Array,
-      required: true
+      required: true,
     },
     loading: {
       type: Boolean,
       required: false,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      currentPage: 1
+      currentPage: 1,
     }
   },
   methods: {
@@ -103,8 +103,8 @@ export default {
     sort(field) {
       this.$emit('sort', field)
       this.currentPage = 1
-    }
-  }
+    },
+  },
 }
 </script>
 

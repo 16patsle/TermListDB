@@ -25,9 +25,7 @@
         </a>
       </li>
       <li v-if="!(currentpage - 2 <= firstpage)">
-        <span class="pagination-ellipsis">
-          &hellip;
-        </span>
+        <span class="pagination-ellipsis"> &hellip; </span>
       </li>
       <li v-if="!(currentpage < firstpage + 2)">
         <a
@@ -57,9 +55,7 @@
         </a>
       </li>
       <li v-if="!(currentpage + 2 >= lastpage)">
-        <span class="pagination-ellipsis">
-          &hellip;
-        </span>
+        <span class="pagination-ellipsis"> &hellip; </span>
       </li>
       <li v-if="!(currentpage > lastpage - 1)">
         <a
@@ -78,20 +74,20 @@ export default {
   props: {
     ui: {
       type: Object,
-      required: true
+      required: true,
     },
     currentpage: {
       type: Number,
-      required: true
+      required: true,
     },
     firstpage: {
       type: Number,
-      default: 1
+      default: 1,
     },
     lastpage: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     lastpageNumber() {
@@ -100,7 +96,7 @@ export default {
       } else {
         return this.lastpage
       }
-    }
+    },
   },
   methods: {
     previous(e) {
@@ -116,7 +112,7 @@ export default {
     },
     gotoPage(pageNumber) {
       this.$emit('gotopage', pageNumber)
-    }
-  }
+    },
+  },
 }
 </script>

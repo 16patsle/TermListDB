@@ -7,7 +7,7 @@
     :ok-text="ui.save"
     :cancel-text="ui.cancel"
   >
-    <template v-slot:modal-body>
+    <template #modal-body>
       <p class="subtitle">
         {{ ui.trelloImportInstructions }}
       </p>
@@ -34,7 +34,7 @@
         </div>
       </div>
     </template>
-    <template v-slot:modal-footer>
+    <template #modal-footer>
       <AppButton :primary="true" @click="importTerm">
         {{ ui.importTerms }}!
       </AppButton>
@@ -51,19 +51,19 @@ import AppButton from '../Generic/AppButton.vue'
 export default {
   components: {
     AppModal,
-    AppButton
+    AppButton,
   },
   props: {
     ui: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       selectedFile: null,
       importedFile: {},
-      importedTerms: []
+      importedTerms: [],
     }
   },
   computed: {
@@ -73,7 +73,7 @@ export default {
       } else {
         return null
       }
-    }
+    },
   },
   methods: {
     toggleModal(bool) {
@@ -123,8 +123,8 @@ export default {
     },
     handleFiles(e) {
       this.selectedFile = e.target.files[0]
-    }
-  }
+    },
+  },
 }
 </script>
 <style></style>

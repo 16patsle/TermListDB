@@ -6,7 +6,7 @@
     :ok-text="null"
     :cancel-text="ui.cancel"
   >
-    <template v-slot:modal-body>
+    <template #modal-body>
       <p class="subtitle">
         {{ ui.processingImport }}
       </p>
@@ -46,19 +46,19 @@ import AppModal from '../Generic/AppModal.vue'
 
 export default {
   components: {
-    AppModal
+    AppModal,
   },
   props: {
     ui: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       selectedFile: null,
       importedFile: {},
-      importedTerms: []
+      importedTerms: [],
     }
   },
   mounted() {
@@ -72,7 +72,7 @@ export default {
         }
       },
       {
-        immediate: true
+        immediate: true,
       }
     )
   },
@@ -84,8 +84,8 @@ export default {
       this.toggleModal(false)
 
       this.$store.commit('cancelImport')
-    }
-  }
+    },
+  },
 }
 </script>
 <style></style>

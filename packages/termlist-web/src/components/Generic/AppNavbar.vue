@@ -2,7 +2,7 @@
   <nav
     :class="{
       'is-fixed-top': fixed === 'top',
-      'is-fixed-bottom': fixed === 'bottom'
+      'is-fixed-bottom': fixed === 'bottom',
     }"
     class="navbar"
     role="navigation"
@@ -27,21 +27,21 @@ export default {
     fixed: {
       type: String,
       default: null,
-      validator: function(value) {
+      validator: function (value) {
         // The value must match one of these strings
         return ['top', 'bottom'].indexOf(value) !== -1
-      }
+      },
     },
     bodyPadding: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
   mounted() {
     if (this.bodyPadding && this.fixed) {
       this.$root.$el.classList.add(`has-navbar-fixed-${this.fixed}`)
     }
   },
-  methods: {}
+  methods: {},
 }
 </script>

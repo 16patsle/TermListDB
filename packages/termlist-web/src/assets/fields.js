@@ -1,11 +1,11 @@
 export default [
   {
     name: 'term',
-    type: 'short'
+    type: 'short',
   },
   {
     name: 'desc',
-    type: 'long'
+    type: 'long',
   },
   {
     name: 'type',
@@ -17,17 +17,17 @@ export default [
       'adverb',
       'preposition',
       'conjunction',
-      'pronounciation'
-    ]
+      'pronounciation',
+    ],
   },
   {
     name: 'date',
     type: 'date',
-    immutable: true
+    immutable: true,
   },
   {
     name: '',
     type: 'filler',
-    immutable: true
-  }
+    immutable: true,
+  },
 ]

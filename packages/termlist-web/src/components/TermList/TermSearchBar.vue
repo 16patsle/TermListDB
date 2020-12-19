@@ -30,12 +30,12 @@ export default {
   props: {
     ui: {
       type: Object,
-      required: true
+      required: true,
     },
     fields: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
     search() {
@@ -43,7 +43,7 @@ export default {
       this.$emit('search', {
         search: this.$refs.searchBar.value,
         selected: this.$refs.columnSelect.value,
-        fields: this.fields
+        fields: this.fields,
       })
     },
     reduce() {
@@ -51,12 +51,12 @@ export default {
         if (!field.immutable && field.type !== 'filler') {
           allFields.push({
             name: field.name,
-            ui: this.ui[field.name]
+            ui: this.ui[field.name],
           })
         }
         return allFields
       }, [])
-    }
-  }
+    },
+  },
 }
 </script>

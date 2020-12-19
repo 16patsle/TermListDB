@@ -1,7 +1,7 @@
 import DocumentSnapshotStub from './DocumentSnapshotStub'
 import QuerySnapshotStub from './QuerySnapshotStub'
 
-RegExp.quote = function(str) {
+RegExp.quote = function (str) {
   return (str + '').replace(/[.?*+^$[\]\\(){}|-]/g, '\\$&')
 }
 
@@ -121,7 +121,7 @@ class TermDatabase {
           })
           .filter(val => {
             return search.search.test(val[search.selected])
-          })
+          }),
       ]
     } else {
       let returnArray = []

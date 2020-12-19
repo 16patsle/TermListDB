@@ -11,17 +11,17 @@ export default {
   props: {
     href: {
       type: String,
-      default: null
+      default: null,
     },
     link: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     click(e) {
       this.$emit('click', e)
-    }
-  }
+    },
+  },
 }
 </script>

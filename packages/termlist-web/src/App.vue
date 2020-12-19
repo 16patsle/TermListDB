@@ -1,14 +1,14 @@
 <template>
   <div id="app">
     <AppNavbar fixed="top">
-      <template v-slot:brand>
+      <template #brand>
         <AppNavbarItem>
           <h1 class="title">
             {{ ui.termlist }}
           </h1>
         </AppNavbarItem>
       </template>
-      <template v-slot:start>
+      <template #start>
         <AppNavbarItem v-if="$store.state.auth.authenticated">
           <div class="field is-grouped">
             <div class="control">
@@ -29,7 +29,7 @@
           </div>
         </AppNavbarItem>
       </template>
-      <template v-slot:end>
+      <template #end>
         <AppNavbarItem v-if="$store.state.auth.authenticated">
           {{ $store.state.auth.user.displayName }}
         </AppNavbarItem>
@@ -120,7 +120,7 @@ export default {
     AppNavbar,
     AppNavbarItem,
     Authenticate,
-    TermList
+    TermList,
   },
   data() {
     return {
@@ -129,16 +129,16 @@ export default {
       currentTerm: null,
       exportURI: '',
       utils: {
-        md: null
+        md: null,
       },
       sortedBy: 'term',
-      loading: false
+      loading: false,
     }
   },
   computed: {
     terms() {
       return this.$store.state.terms
-    }
+    },
   },
   created() {
     this.utils.md = MarkdownIt('zero')
@@ -149,7 +149,7 @@ export default {
       'link',
       'strikethrough',
       'text_collapse',
-      'balance_pairs'
+      'balance_pairs',
     ])
 
     this.loading = true
@@ -157,7 +157,7 @@ export default {
     this.$store.dispatch('fetchTotal')
     this.$store
       .dispatch('getTerms', {
-        field: this.sortedBy
+        field: this.sortedBy,
       })
       .then(() => (this.loading = false))
 
@@ -166,7 +166,7 @@ export default {
         this.$store.dispatch('fetchTotal')
         this.$store
           .dispatch('getTerms', {
-            field: this.sortedBy
+            field: this.sortedBy,
           })
           .then(() => (this.loading = false))
       }
@@ -207,7 +207,7 @@ export default {
         if (isBefore) {
           await this.$store.dispatch('getTerms', {
             field: this.sortedBy,
-            endBefore: Object.entries(terms)[0][1][this.sortedBy]
+            endBefore: Object.entries(terms)[0][1][this.sortedBy],
           })
 
           this.loading = false
@@ -216,7 +216,7 @@ export default {
             field: this.sortedBy,
             startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
               this.sortedBy
-            ]
+            ],
           })
 
           this.loading = false
@@ -228,7 +228,7 @@ export default {
           await this.$store.dispatch('getTerms', {
             field: this.sortedBy,
             limit,
-            showLimit: 20
+            showLimit: 20,
           })
 
           this.loading = false
@@ -250,7 +250,7 @@ export default {
               this.sortedBy
             ],
             limit,
-            showLimit
+            showLimit,
           })
 
           this.loading = false
@@ -265,7 +265,7 @@ export default {
     async sort(field) {
       this.loading = true
       await this.$store.dispatch('getTerms', {
-        field: field
+        field: field,
       })
       this.loading = false
 
@@ -294,7 +294,7 @@ export default {
               'importTerms',
               Object.assign(
                 {
-                  _id: term.date
+                  _id: term.date,
                 },
                 term
               )
@@ -307,7 +307,7 @@ export default {
 
       await this.$store.dispatch('fetchTotal')
       await this.$store.dispatch('getTerms', {
-        field: this.sortedBy
+        field: this.sortedBy,
       })
     },
     confirmExportTerms() {
@@ -326,7 +326,7 @@ export default {
           term: term.term,
           desc: term.desc,
           date: term.date,
-          type: term.type
+          type: term.type,
         })
       }
 
@@ -336,8 +336,8 @@ export default {
     },
     logOut() {
       this.$refs.auth.logOut()
-    }
-  }
+    },
+  },
 }
 </script>
 

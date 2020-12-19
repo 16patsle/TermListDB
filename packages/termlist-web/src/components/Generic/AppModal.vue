@@ -34,33 +34,33 @@ import AppButton from './AppButton.vue'
 
 export default {
   components: {
-    AppButton
+    AppButton,
   },
   props: {
     okText: {
       type: String,
-      default: 'OK'
+      default: 'OK',
     },
     cancelText: {
       type: String,
-      default: 'Cancel'
+      default: 'Cancel',
     },
     title: {
       type: String,
-      default: ''
+      default: '',
     },
     callback: {
       type: Function,
-      default() {}
+      default() {},
     },
     closeCallback: {
       type: Function,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
-      show: false
+      show: false,
     }
   },
   methods: {
@@ -82,8 +82,8 @@ export default {
     },
     isShown() {
       return this.show
-    }
-  }
+    },
+  },
 }
 </script>
 <style></style>

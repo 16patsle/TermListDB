@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent>
     <AppModal ref="modal" :title="ui.editterm">
-      <template v-slot:modal-body>
+      <template #modal-body>
         <div v-for="field in mutableFields" :key="field.name" class="field">
           <label class="label">{{ ui[field.name] }}</label>
           <div class="control">
@@ -28,7 +28,7 @@
           </div>
         </div>
       </template>
-      <template v-slot:modal-footer>
+      <template #modal-footer>
         <input
           :value="ui.save"
           type="submit"
@@ -52,21 +52,21 @@ export default {
   components: {
     AppModal,
     AppButton,
-    AppSelect
+    AppSelect,
   },
   props: {
     ui: {
       type: Object,
-      required: true
+      required: true,
     },
     fields: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      current: null
+      current: null,
     }
   },
   computed: {
@@ -74,7 +74,7 @@ export default {
       return this.fields.filter(field => {
         return !field.immutable
       })
-    }
+    },
   },
   methods: {
     toggleModal(bool) {
@@ -121,12 +121,12 @@ export default {
       return fields.reduce((allFields, field) => {
         allFields.push({
           name: field,
-          ui: this.ui.wordClasses[field]
+          ui: this.ui.wordClasses[field],
         })
         return allFields
       }, [])
-    }
-  }
+    },
+  },
 }
 </script>
 <style></style>

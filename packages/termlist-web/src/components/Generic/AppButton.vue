@@ -11,12 +11,12 @@
 export default {
   props: {
     primary: { type: Boolean, default: false },
-    danger: { type: Boolean, default: false }
+    danger: { type: Boolean, default: false },
   },
   methods: {
     click(e) {
       this.$emit('click', e)
-    }
-  }
+    },
+  },
 }
 </script>
