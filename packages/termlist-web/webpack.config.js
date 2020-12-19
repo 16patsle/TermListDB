@@ -9,7 +9,7 @@ module.exports = {
   mode: process.env.NODE_ENV ? process.env.NODE_ENV : 'development',
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'build.js'
+    filename: 'build.js',
   },
   module: {
     rules: [
@@ -19,121 +19,121 @@ module.exports = {
         options: {
           loaders: {
             scss: 'vue-style-loader!css-loader!sass-loader', // <style lang="scss">
-            sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax' // <style lang="sass">
-          }
+            sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax', // <style lang="sass">
+          },
           // other vue-loader options go here
-        }
+        },
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
       {
         test: /\.sass$/,
         use: [
           {
-            loader: 'style-loader' // creates style nodes from JS strings
+            loader: 'style-loader', // creates style nodes from JS strings
           },
           {
-            loader: 'css-loader' // translates CSS into CommonJS
+            loader: 'css-loader', // translates CSS into CommonJS
           },
           {
-            loader: 'sass-loader' // compiles Sass to CSS
-          }
-        ]
+            loader: 'sass-loader', // compiles Sass to CSS
+          },
+        ],
       },
       {
         test: /\.sc?a?ss$/,
         use: [
           {
-            loader: 'style-loader' // creates style nodes from JS strings
+            loader: 'style-loader', // creates style nodes from JS strings
           },
           {
-            loader: 'css-loader' // translates CSS into CommonJS
+            loader: 'css-loader', // translates CSS into CommonJS
           },
           {
-            loader: 'sass-loader' // compiles Sass to CSS
-          }
-        ]
+            loader: 'sass-loader', // compiles Sass to CSS
+          },
+        ],
       },
       {
         test: /\.css$/,
         use: [
           {
-            loader: 'style-loader' // creates style nodes from JS strings
+            loader: 'style-loader', // creates style nodes from JS strings
           },
           {
-            loader: 'css-loader' // translates CSS into CommonJS
-          }
-        ]
+            loader: 'css-loader', // translates CSS into CommonJS
+          },
+        ],
       },
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          mimetype: 'application/font-woff'
-        }
+          mimetype: 'application/font-woff',
+        },
       },
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          mimetype: 'application/font-woff'
-        }
+          mimetype: 'application/font-woff',
+        },
       },
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          mimetype: 'application/octet-stream'
-        }
+          mimetype: 'application/octet-stream',
+        },
       },
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'file-loader'
+        loader: 'file-loader',
       },
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          mimetype: 'image/svg+xml'
-        }
+          mimetype: 'image/svg+xml',
+        },
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
         loader: 'file-loader',
         options: {
-          name: '[name].[ext]?[hash]'
-        }
-      }
-    ]
+          name: '[name].[ext]?[hash]',
+        },
+      },
+    ],
   },
   plugins: [
     new VueLoaderPlugin(),
     new webpack.EnvironmentPlugin([
       'FIREBASE_API_KEY',
       'FIREBASE_AUTH_DOMAIN',
-      'FIREBASE_PROJECT_ID'
-    ])
+      'FIREBASE_PROJECT_ID',
+    ]),
   ],
   resolve: {
     alias: {
-      vue$: 'vue/dist/vue.esm.js'
-    }
+      vue$: 'vue/dist/vue.esm.js',
+    },
   },
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
-    historyApiFallback: true
+    historyApiFallback: true,
   },
   performance: {
-    hints: false
+    hints: false,
   },
-  devtool: '#eval-source-map'
+  devtool: '#eval-source-map',
 }
 
 if (process.env.NODE_ENV === 'production') {
