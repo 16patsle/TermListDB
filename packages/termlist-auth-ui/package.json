@@ -1,5 +1,5 @@
 {
-  "name": "@16patsle/termlist-auth-ui",
+  "name": "termlist-auth-ui",
   "version": "1.0.1",
   "description": "Custom firebase-ui for termlist",
   "files": [
@@ -55,7 +55,7 @@
     "gulp-connect": "^5.5.0",
     "gulp-css-flip": "^0.4.0",
     "gulp-css-inline-images": "^0.1.1",
-    "gulp-sass": "^2.3.2",
+    "gulp-sass": "^4.1.0",
     "gulp-util": "^3.0.7",
     "protractor": "^5.3.2",
     "streamqueue": "^1.1.1"
