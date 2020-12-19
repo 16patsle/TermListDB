@@ -2,6 +2,7 @@
   "name": "termlist-db",
   "version": "0.2.0",
   "description": "Some kind of dictionary",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "docker-up": "cp -R packages/termlist-web packages/termlist-server/termlist-web && docker-compose up && rm -rf packages/termlist-server/termlist-web",
@@ -17,10 +18,7 @@
     "url": "https://github.com/16patsle/TermListDB/issues"
   },
   "homepage": "https://github.com/16patsle/TermListDB#readme",
-  "devDependencies": {
-    "lerna": "^3.20.2"
-  },
-  "dependencies": {
-    "termlist-server": "file:packages/termlist-server"
-  }
+  "workspaces": [
+    "./packages/*"
+  ]
 }

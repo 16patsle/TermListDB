@@ -2,6 +2,7 @@
   "name": "termlist-web",
   "description": "Web frontend for termlist-server",
   "version": "1.0.4",
+  "private": true,
   "author": "Patrick Sletvold",
   "license": "Apache-2.0",
   "scripts": {
