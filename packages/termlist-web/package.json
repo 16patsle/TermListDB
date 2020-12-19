@@ -8,7 +8,7 @@
   "scripts": {
     "start": "npm run dev",
     "test": "eslint \"src/**/*.{js,vue}\" --fix",
-    "dev": "webpack-dev-server --hot",
+    "dev": "webpack serve --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "prepare": "npm run build"
   },
@@ -16,7 +16,7 @@
     "@16patsle/termlist-auth-ui": "^1.0.1",
     "bulma": "^0.9.1",
     "deepmerge": "^4.2.2",
-    "firebase": "^7.17.1",
+    "firebase": "^8.2.1",
     "font-awesome": "^4.7.0",
     "markdown-it": "^12.0.3",
     "vue": "^2.6.12",
@@ -42,8 +42,8 @@
     "url-loader": "^4.1.1",
     "vue-loader": "^15.9.6",
     "vue-template-compiler": "^2.6.12",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
+    "webpack": "^5.11.0",
+    "webpack-cli": "^4.2.0",
     "webpack-dev-server": "^3.11.0"
   }
 }
