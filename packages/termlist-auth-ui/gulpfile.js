@@ -100,8 +100,8 @@ const ESM_MODULE_WRAPPER = OPTIMIZATION_LEVEL === 'WHITESPACE_ONLY' ?
     '? self : window );' +
     ESM_DIALOG_POLYFILL + ESM_EXPORT;
 
-// The path to Closure Compiler.
-const COMPILER_PATH = 'node_modules/google-closure-compiler-java/compiler.jar';
+// The path to Closure Compiler. It's in the top-level project node_modules directory.
+const COMPILER_PATH = '../../node_modules/google-closure-compiler-java/compiler.jar';
 
 // The path to the temporary directory where intermediate results are stored.
 const TMP_DIR = 'out';
