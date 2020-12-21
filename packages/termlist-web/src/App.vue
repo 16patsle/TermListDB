@@ -89,7 +89,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue'
 import ModalAdd from './components/Modal/ModalAdd.vue'
 import ModalEdit from './components/Modal/ModalEdit.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
@@ -107,7 +108,7 @@ import MarkdownIt from 'markdown-it'
 import ui from './assets/ui.js'
 import fields from './assets/fields.js'
 
-export default {
+export default Vue.extend({
   name: 'App',
   components: {
     ModalAdd,
@@ -178,13 +179,13 @@ export default {
     addTerm() {
       this.$refs.addModal.addTerm()
     },
-    editTerm(term) {
+    editTerm(term: any) {
       this.$refs.editModal.editTerm(term)
     },
-    confirmRemoveTerm(term) {
+    confirmRemoveTerm(term: any) {
       this.$refs.removeModal.confirmRemoveTerm(term)
     },
-    saveTerm(term, data) {
+    saveTerm(term: { term: any }, data: any) {
       if (term.term) {
         // Update existing term
         this.$store.dispatch('save', Object.assign({}, term, data))
@@ -193,10 +194,10 @@ export default {
         this.$store.dispatch('add', Object.assign({}, term, data))
       }
     },
-    removeTerm(term) {
+    removeTerm(term: any) {
       this.$store.dispatch('remove', term)
     },
-    async gotoPage(pageNumber, currentPage) {
+    async gotoPage(pageNumber: number, currentPage: number) {
       const terms = this.$store.state.terms
       const pageNumberOffset = pageNumber - currentPage
       const isBefore = pageNumber < currentPage
@@ -257,12 +258,12 @@ export default {
         }
       }
     },
-    async search(search) {
+    async search(search: any) {
       this.loading = true
       await this.$store.dispatch('find', { field: this.sortedBy, ...search })
       this.loading = false
     },
-    async sort(field) {
+    async sort(field: string) {
       this.loading = true
       await this.$store.dispatch('getTerms', {
         field: field,
@@ -271,7 +272,7 @@ export default {
 
       this.sortedBy = field
     },
-    shortcutUp(e) {
+    shortcutUp(e: KeyboardEvent) {
       if (
         ['input', 'textarea'].indexOf(e.target.tagName.toLowerCase()) === -1 &&
         e.key.toLowerCase() === 'n'
@@ -282,7 +283,7 @@ export default {
     confirmImportTerms() {
       this.$refs.importModal.confirmImportTerm()
     },
-    async importTerms(terms) {
+    async importTerms(terms: string | any[]) {
       this.$store.commit('prepareImport', terms.length)
 
       let imports = []
@@ -338,7 +339,7 @@ export default {
       this.$refs.auth.logOut()
     },
   },
-}
+})
 </script>
 
 <style>
