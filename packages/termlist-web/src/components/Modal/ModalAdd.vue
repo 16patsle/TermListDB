@@ -44,17 +44,17 @@
     </AppModal>
   </form>
 </template>
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
+import type { FieldType } from '../../types/FieldType'
+import type { TermType } from '../../types/TermType'
+import type { SelectOptionType } from '../../types/SelectOptionType'
 
-export default {
-  components: {
-    AppModal,
-    AppButton,
-    AppSelect,
-  },
+const ModalAddProps = Vue.extend({
   props: {
     ui: {
       type: Object,
@@ -65,57 +65,74 @@ export default {
       required: true,
     },
   },
-  computed: {
-    mutableFields() {
-      return this.fields.filter(field => {
-        return !field.immutable
-      })
-    },
-  },
-  methods: {
-    toggleModal(bool) {
-      this.$refs.modal.toggleModal(bool)
-    },
-    addTerm() {
-      this.toggleModal(true)
-      this.$refs.modal.$el
-        .querySelector('.field input, .field textarea, .field select')
-        .focus()
-    },
-    saveTerm() {
-      let termObject = {}
+})
 
-      for (const field of this.fields) {
-        if (!field.immutable && this.$refs[field.name + 'field']) {
-          termObject[field.name] = this.$refs[field.name + 'field'][0].value
-          this.$refs[field.name + 'field'][0].value = ''
-        }
+@Component({
+  components: {
+    AppModal,
+    AppButton,
+    AppSelect,
+  },
+})
+export default class ModalAdd extends ModalAddProps {
+  $refs!: {
+    modal: AppModal
+  }
+  fields!: FieldType[]
+
+  get mutableFields(): FieldType[] {
+    return this.fields.filter(field => {
+      return !field.immutable
+    })
+  }
+
+  toggleModal(bool: boolean): void {
+    this.$refs.modal.toggleModal(bool)
+  }
+
+  addTerm(): void {
+    this.toggleModal(true)
+    this.$refs.modal.$el
+      .querySelector('.field input, .field textarea, .field select')
+      .focus()
+  }
+
+  saveTerm(): void {
+    const date = new Date().toJSON()
+    let termObject: TermType = {
+      _id: date,
+      date,
+    }
+
+    for (const field of this.fields) {
+      if (
+        !field.immutable &&
+        field.name !== '_id' &&
+        this.$refs[field.name + 'field']
+      ) {
+        termObject[field.name] = this.$refs[field.name + 'field'][0].value
+        this.$refs[field.name + 'field'][0].value = ''
       }
-      termObject.date = new Date().toJSON()
+    }
 
-      this.$emit(
-        'save',
-        {
-          _id: termObject.date,
-        },
-        termObject
-      )
+    this.$emit('save', termObject)
 
-      this.toggleModal(false)
-    },
-    close() {
-      this.toggleModal(false)
-    },
-    reduce(fields) {
-      return fields.reduce((allFields, field) => {
-        allFields.push({
-          name: field,
-          ui: this.ui.wordClasses[field],
-        })
-        return allFields
-      }, [])
-    },
-  },
+    this.toggleModal(false)
+  }
+
+  close(): void {
+    this.toggleModal(false)
+  }
+
+  reduce(options: string[]): SelectOptionType[] {
+    return options.reduce((allFields: SelectOptionType[], option) => {
+      allFields.push({
+        name: option,
+        ui: this.ui.wordClasses[option],
+      })
+      return allFields
+    }, [])
+  }
 }
 </script>
 <style></style>

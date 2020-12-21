@@ -10,7 +10,7 @@
       <p class="subtitle">
         {{ ui.wanttoremove }}
       </p>
-      <p>{{ current.term }}</p>
+      <p>{{ currentTerm }}</p>
     </template>
     <template #modal-footer>
       <AppButton :danger="true" @click="removeTerm">
@@ -22,44 +22,56 @@
     </template>
   </AppModal>
 </template>
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
+import type { TermType } from '../../types/TermType'
 
-export default {
-  components: {
-    AppModal,
-    AppButton,
-  },
+const ModalRemoveProps = Vue.extend({
   props: {
     ui: {
       type: Object,
       required: true,
     },
   },
-  data() {
-    return {
-      current: {
-        term: '',
-      },
-    }
+})
+
+@Component({
+  components: {
+    AppModal,
+    AppButton,
   },
-  methods: {
-    toggleModal(bool) {
-      this.$refs.modal.toggleModal(bool)
-    },
-    confirmRemoveTerm(current) {
-      this.current = current
-      this.toggleModal(true)
-    },
-    removeTerm() {
-      this.$emit('remove', this.current)
-      this.toggleModal(false)
-    },
-    close() {
-      this.toggleModal(false)
-    },
-  },
+})
+export default class ModalRemove extends ModalRemoveProps {
+  $refs!: {
+    modal: AppModal
+  }
+
+  current: TermType | null = null
+
+  get currentTerm(): string {
+    return this.current && this.current.term ? this.current.term : ''
+  }
+
+  toggleModal(bool: boolean): void {
+    this.$refs.modal.toggleModal(bool)
+  }
+
+  confirmRemoveTerm(current: TermType): void {
+    this.current = current
+    this.toggleModal(true)
+  }
+
+  removeTerm(): void {
+    this.$emit('remove', this.current)
+    this.toggleModal(false)
+  }
+
+  close(): void {
+    this.toggleModal(false)
+  }
 }
 </script>
 <style></style>

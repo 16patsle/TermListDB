@@ -43,17 +43,17 @@
     </AppModal>
   </form>
 </template>
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
+import type { FieldType } from '../../types/FieldType'
+import type { TermType } from '../../types/TermType'
+import type { SelectOptionType } from '../../types/SelectOptionType'
 
-export default {
-  components: {
-    AppModal,
-    AppButton,
-    AppSelect,
-  },
+const ModalEditProps = Vue.extend({
   props: {
     ui: {
       type: Object,
@@ -64,69 +64,85 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      current: null,
+})
+
+@Component({
+  components: {
+    AppModal,
+    AppButton,
+    AppSelect,
+  },
+})
+export default class ModalEdit extends ModalEditProps {
+  $refs!: {
+    modal: AppModal
+  }
+  fields!: FieldType[]
+
+  current: TermType | null = null
+
+  get mutableFields(): FieldType[] {
+    return (this.fields as FieldType[]).filter(field => {
+      return !field.immutable
+    })
+  }
+
+  toggleModal(bool: boolean): void {
+    this.$refs.modal.toggleModal(bool)
+  }
+
+  editTerm(current: TermType): void {
+    this.current = current
+
+    for (const field of this.fields) {
+      if (!field.immutable && this.$refs[field.name + 'field']) {
+        this.$refs[field.name + 'field'][0].value =
+          this.current[field.name] || ''
+      }
     }
-  },
-  computed: {
-    mutableFields() {
-      return this.fields.filter(field => {
-        return !field.immutable
+    this.toggleModal(true)
+    this.$refs.modal.$el
+      .querySelector('.field input, .field textarea, .field select')
+      .focus()
+  }
+
+  saveTerm(): void {
+    if (this.current === null) {
+      return
+    }
+
+    let termObject: TermType = {
+      _id: this.current._id,
+      date: this.current._id,
+    }
+
+    for (const field of this.fields) {
+      if (!field.immutable && this.$refs[field.name + 'field']) {
+        termObject[field.name] = this.$refs[field.name + 'field'][0].value
+        this.$refs[field.name + 'field'][0].value = ''
+      }
+    }
+
+    this.$emit('save', termObject)
+
+    this.toggleModal(false)
+
+    this.current = null
+  }
+
+  close(): void {
+    this.toggleModal(false)
+  }
+
+  reduce(options: string[]): SelectOptionType[] {
+    return options.reduce((allFields: SelectOptionType[], option) => {
+      allFields.push({
+        name: option,
+        ui: this.ui.wordClasses[option],
       })
-    },
-  },
-  methods: {
-    toggleModal(bool) {
-      this.$refs.modal.toggleModal(bool)
-    },
-    editTerm(current) {
-      this.current = current
-
-      for (const field of this.fields) {
-        if (!field.immutable && this.$refs[field.name + 'field']) {
-          this.$refs[field.name + 'field'][0].value =
-            this.current[field.name] || ''
-        }
-      }
-      this.toggleModal(true)
-      this.$refs.modal.$el
-        .querySelector('.field input, .field textarea, .field select')
-        .focus()
-    },
-    saveTerm() {
-      let termObject = {}
-
-      for (const field of this.fields) {
-        if (!field.immutable && this.$refs[field.name + 'field']) {
-          termObject[field.name] = this.$refs[field.name + 'field'][0].value
-          this.$refs[field.name + 'field'][0].value = ''
-        }
-      }
-
-      if (!termObject.date) {
-        termObject.date = this.current._id
-      }
-
-      this.$emit('save', this.current, termObject)
-
-      this.toggleModal(false)
-
-      this.current = null
-    },
-    close() {
-      this.toggleModal(false)
-    },
-    reduce(fields) {
-      return fields.reduce((allFields, field) => {
-        allFields.push({
-          name: field,
-          ui: this.ui.wordClasses[field],
-        })
-        return allFields
-      }, [])
-    },
-  },
+      return allFields
+    }, [])
+  }
 }
 </script>
 <style></style>

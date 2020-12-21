@@ -108,6 +108,8 @@ import MarkdownIt from 'markdown-it'
 import ui from './assets/ui'
 import fields from './assets/fields'
 
+import type { TermType } from './types/TermType'
+
 export default Vue.extend({
   name: 'App',
   components: {
@@ -123,14 +125,24 @@ export default Vue.extend({
     Authenticate,
     TermList,
   },
-  data() {
+  data(): {
+    ui: typeof ui
+    fields: typeof fields
+    currentTerm: null
+    exportURI: string
+    utils: {
+      md?: typeof MarkdownIt
+    }
+    sortedBy: 'term'
+    loading: boolean
+  } {
     return {
       ui: ui,
       fields: fields,
       currentTerm: null,
       exportURI: '',
       utils: {
-        md: null,
+        md: undefined,
       },
       sortedBy: 'term',
       loading: false,
@@ -179,22 +191,22 @@ export default Vue.extend({
     addTerm() {
       this.$refs.addModal.addTerm()
     },
-    editTerm(term: any) {
+    editTerm(term: TermType) {
       this.$refs.editModal.editTerm(term)
     },
-    confirmRemoveTerm(term: any) {
+    confirmRemoveTerm(term: TermType) {
       this.$refs.removeModal.confirmRemoveTerm(term)
     },
-    saveTerm(term: { term: any }, data: any) {
+    saveTerm(term: TermType) {
       if (term.term) {
         // Update existing term
-        this.$store.dispatch('save', Object.assign({}, term, data))
+        this.$store.dispatch('save', term)
       } else {
         // Add new term
-        this.$store.dispatch('add', Object.assign({}, term, data))
+        this.$store.dispatch('add', term)
       }
     },
-    removeTerm(term: any) {
+    removeTerm(term: TermType) {
       this.$store.dispatch('remove', term)
     },
     async gotoPage(pageNumber: number, currentPage: number) {
