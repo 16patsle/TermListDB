@@ -82,24 +82,21 @@ const storeOptions: StoreOptions<StateType> = {
     getTerms(
       state,
       data: TermQueryType & {
-        terms: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>
+        terms: TermType[]
       }
     ) {
       const termsObject: {
         [key: string]: TermType
       } = {}
 
-      let terms = data.terms.docs
+      let terms = data.terms
 
       if (data.showLimit) {
         // Return last x elements
         terms = terms.slice(Math.max(terms.length - data.showLimit, 0))
       }
 
-      terms.forEach(_term => {
-        const term = _term.data() as TermType
-        termsObject[term._id] = term
-      })
+      terms.forEach(term => (termsObject[term._id] = term))
 
       state.terms = termsObject
     },

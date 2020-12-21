@@ -91,14 +91,10 @@ class TermDatabase {
     return this.termsDB.doc(termObject._id).set(termObject)
   }
 
-  getTerms(
-    data: TermQueryType = {}
-  ):
-    | Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>>
-    | QuerySnapshotStub {
+  async getTerms(data: TermQueryType = {}): Promise<TermType[]> {
     if (!this.connected) {
       console.warn('Not connected to db')
-      return new QuerySnapshotStub()
+      return []
     }
 
     let result = this.termsDB.orderBy(data.field || '_id')
@@ -117,7 +113,7 @@ class TermDatabase {
       result = result.endBefore(data.endBefore)
     }
 
-    return result.get()
+    return (await result.get()).docs.map(val => val.data() as TermType)
   }
 
   async find(search: SearchType): Promise<TermType[]> {
