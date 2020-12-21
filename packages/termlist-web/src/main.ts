@@ -1,7 +1,7 @@
 import '@babel/polyfill'
 import deepmerge from 'deepmerge'
 import Vue from 'vue'
-import Vuex from 'vuex'
+import Vuex, { Store, StoreOptions } from 'vuex'
 import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
 import firebase from 'firebase/app'
@@ -11,10 +11,11 @@ import 'termlist-auth-ui/dist/firebaseui.css'
 import App from './App.vue'
 
 import TermDatabase from './database'
+import { StateType } from './types/StateType'
 
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
+const storeOptions: StoreOptions<StateType> = {
   state: {
     terms: {
       0: {},
@@ -29,6 +30,7 @@ const store = new Vuex.Store({
       authenticated: false,
       user: undefined,
     },
+    totalRows: 0
   },
   mutations: {
     remove(state, term) {
@@ -74,7 +76,7 @@ const store = new Vuex.Store({
       state.imports.cancel = true
     },
     getTerms(state, data) {
-      let termsObject = {}
+      const termsObject = {}
 
       let terms = data.terms.docs
 
@@ -83,7 +85,7 @@ const store = new Vuex.Store({
         terms = terms.slice(Math.max(terms.length - data.showLimit, 0))
       }
 
-      terms.forEach(_term => {
+      terms.forEach((_term: { data: () => any }) => {
         const term = _term.data()
         termsObject[term._id] = term
       })
@@ -91,9 +93,9 @@ const store = new Vuex.Store({
       state.terms = termsObject
     },
     find(state, terms) {
-      let termsObject = {}
+      const termsObject = {}
 
-      terms.forEach(term => {
+      terms.forEach((term: { _id: string | number }) => {
         termsObject[term._id] = term
       })
       state.terms = termsObject
@@ -167,9 +169,9 @@ const store = new Vuex.Store({
     },
     async find({ commit }, search) {
       try {
-        let searchResults = await database.find(search)
+        const searchResults = await database.find(search)
 
-        let resultObject = deepmerge.all(searchResults)
+        const resultObject = deepmerge.all(searchResults)
 
         commit('find', resultObject)
       } catch (e) {
@@ -184,7 +186,9 @@ const store = new Vuex.Store({
       }
     },
   },
-})
+}
+
+const store: Store<StateType> = new Vuex.Store(storeOptions)
 
 /* global process */
 firebase.initializeApp({

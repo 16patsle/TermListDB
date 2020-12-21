@@ -5,7 +5,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 require('dotenv').config()
 
 module.exports = {
-  entry: './src/main.js',
+  entry: './src/main.ts',
   mode: process.env.NODE_ENV ? process.env.NODE_ENV : 'development',
   output: {
     path: path.resolve(__dirname, './dist'),
