@@ -110,6 +110,8 @@ import ui from './assets/ui'
 import fields from './assets/fields'
 
 import type { TermType } from './types/TermType'
+import type { StateType } from './types/StateType'
+import type { Store } from 'vuex'
 
 @Component({
   name: 'App',
@@ -133,6 +135,7 @@ export default class App extends Vue {
     editModal: ModalEdit
     removeModal: ModalRemove
   }
+  $store!: Store<StateType>
 
   ui = ui
   fields = fields
@@ -214,9 +217,7 @@ export default class App extends Vue {
   }
 
   async gotoPage(pageNumber: number, currentPage: number): Promise<void> {
-    const terms: {
-      [key: string]: TermType
-    } = this.$store.state.terms
+    const terms = this.$store.state.terms
     const pageNumberOffset = pageNumber - currentPage
     const isBefore = pageNumber < currentPage
 

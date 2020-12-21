@@ -1,7 +1,8 @@
 import '@babel/polyfill'
 import deepmerge from 'deepmerge'
 import Vue from 'vue'
-import Vuex, { Store, StoreOptions } from 'vuex'
+import Vuex from 'vuex'
+import type { Store, StoreOptions } from 'vuex'
 import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
 import firebase from 'firebase/app'
@@ -11,14 +12,16 @@ import 'termlist-auth-ui/dist/firebaseui.css'
 import App from './App.vue'
 
 import TermDatabase from './database'
-import { StateType } from './types/StateType'
+import type { StateType } from './types/StateType'
+import type { TermQueryType } from './types/TermQueryType'
+import { TermType } from './types/TermType'
 
 Vue.use(Vuex)
 
 const storeOptions: StoreOptions<StateType> = {
   state: {
     terms: {
-      0: {},
+      0: { _id: '', date: '' },
     },
     imports: {
       imported: 0,
@@ -30,14 +33,14 @@ const storeOptions: StoreOptions<StateType> = {
       authenticated: false,
       user: undefined,
     },
-    totalRows: 0
+    totalRows: 0,
   },
   mutations: {
-    remove(state, term) {
+    remove(state, term: TermType) {
       Vue.delete(state.terms, term._id)
       state.totalRows++
     },
-    add(state, term) {
+    add(state, term: TermType) {
       if (!state.terms[term._id]) {
         Vue.set(state.terms, term._id, term)
         state.totalRows++
@@ -45,7 +48,7 @@ const storeOptions: StoreOptions<StateType> = {
         console.error('Already exists!', term)
       }
     },
-    save(state, term) {
+    save(state, term: TermType) {
       if (state.terms[term._id]) {
         Vue.set(state.terms, term._id, term)
       } else if (term._deleted && state.terms[term._id]) {
@@ -75,8 +78,15 @@ const storeOptions: StoreOptions<StateType> = {
       state.imports.finished = true
       state.imports.cancel = true
     },
-    getTerms(state, data) {
-      const termsObject = {}
+    getTerms(
+      state,
+      data: TermQueryType & {
+        terms: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>
+      }
+    ) {
+      const termsObject: {
+        [key: string]: TermType
+      } = {}
 
       let terms = data.terms.docs
 
@@ -85,22 +95,24 @@ const storeOptions: StoreOptions<StateType> = {
         terms = terms.slice(Math.max(terms.length - data.showLimit, 0))
       }
 
-      terms.forEach((_term: { data: () => any }) => {
-        const term = _term.data()
+      terms.forEach(_term => {
+        const term = _term.data() as TermType
         termsObject[term._id] = term
       })
 
       state.terms = termsObject
     },
-    find(state, terms) {
-      const termsObject = {}
+    find(state, terms: TermType[]) {
+      const termsObject: {
+        [key: string]: TermType
+      } = {}
 
-      terms.forEach((term: { _id: string | number }) => {
+      terms.forEach(term => {
         termsObject[term._id] = term
       })
       state.terms = termsObject
     },
-    setTotal(state, size) {
+    setTotal(state, size: number) {
       state.totalRows = size
     },
     setAuthenticated(state, user) {
@@ -155,12 +167,12 @@ const storeOptions: StoreOptions<StateType> = {
     },
     async exportTerms() {
       try {
-        return await database.getTerms({ limit: null })
+        return await database.getTerms({ limit: undefined })
       } catch (e) {
         console.error('Error:', e)
       }
     },
-    async getTerms({ commit }, data) {
+    async getTerms({ commit }, data: TermQueryType) {
       try {
         commit('getTerms', { terms: await database.getTerms(data), ...data })
       } catch (e) {
@@ -212,7 +224,7 @@ const start = async () => {
         })
       })
     },
-    database,
+    //database,
     store,
     render: h => h(App),
   })

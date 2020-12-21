@@ -2,6 +2,7 @@ import type firebase from 'firebase/app'
 import DocumentSnapshotStub from './DocumentSnapshotStub'
 import QuerySnapshotStub from './QuerySnapshotStub'
 import type { FieldType } from './types/FieldType'
+import type { TermQueryType } from './types/TermQueryType'
 import type { TermType } from './types/TermType'
 
 const regexQuote = function (str: string) {
@@ -20,7 +21,7 @@ class TermDatabase {
     this.connected = false
   }
 
-  async start(): void {
+  async start(): Promise<void> {
     await this.db.enablePersistence().catch((err: { code: string }) => {
       if (err.code == 'failed-precondition') {
         // Multiple tabs open, only works in one.
@@ -47,7 +48,13 @@ class TermDatabase {
     console.log('Connected to ' + user.uid + ' as ' + user.displayName)
   }
 
-  get(id: any) {
+  get(
+    id: string
+  ):
+    | Promise<
+        firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
+      >
+    | DocumentSnapshotStub {
     if (!this.connected) {
       console.warn('Not connected to db')
       return new DocumentSnapshotStub()
@@ -55,7 +62,7 @@ class TermDatabase {
     return this.termsDB.doc(id).get()
   }
 
-  remove(id: any): Promise<void> {
+  remove(id: string): Promise<void> {
     if (!this.connected) {
       console.warn('Not connected to db')
       return Promise.reject('Not connected to db')
@@ -84,7 +91,7 @@ class TermDatabase {
   }
 
   getTerms(
-    data = {}
+    data: TermQueryType = {}
   ):
     | Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>>
     | QuerySnapshotStub {
