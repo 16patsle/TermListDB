@@ -4,4 +4,5 @@ export type TermType = {
   desc?: string
   term?: string
   type?: string
+  _deleted?: boolean
 }

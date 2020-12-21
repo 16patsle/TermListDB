@@ -51,9 +51,12 @@ const storeOptions: StoreOptions<StateType> = {
     },
     save(state, term: TermType) {
       if (state.terms[term._id]) {
-        Vue.set(state.terms, term._id, term)
-      } else if (term._deleted && state.terms[term._id]) {
-        Vue.delete(state.terms, term._id)
+        if (term._deleted) {
+          // TODO: Is this still used?
+          Vue.delete(state.terms, term._id)
+        } else {
+          Vue.set(state.terms, term._id, term)
+        }
       } else {
         console.error('Could not save! Term might not exist!', term)
       }
