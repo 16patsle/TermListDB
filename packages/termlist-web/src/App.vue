@@ -111,6 +111,7 @@ import fields from './assets/fields'
 
 import type { TermType } from './types/TermType'
 import type { StateType } from './types/StateType'
+import type { SearchType } from './types/SearchType'
 import type { Store } from 'vuex'
 
 @Component({
@@ -281,7 +282,7 @@ export default class App extends Vue {
     }
   }
 
-  async search(search: any): Promise<void> {
+  async search(search: SearchType): Promise<void> {
     this.loading = true
     await this.$store.dispatch('find', { field: this.sortedBy, ...search })
     this.loading = false

@@ -14,7 +14,8 @@ import App from './App.vue'
 import TermDatabase from './database'
 import type { StateType } from './types/StateType'
 import type { TermQueryType } from './types/TermQueryType'
-import { TermType } from './types/TermType'
+import type { TermType } from './types/TermType'
+import type { SearchType } from './types/SearchType'
 
 Vue.use(Vuex)
 
@@ -57,13 +58,13 @@ const storeOptions: StoreOptions<StateType> = {
         console.error('Could not save! Term might not exist!', term)
       }
     },
-    prepareImport(state, imports) {
+    prepareImport(state, imports: number) {
       state.imports.total = imports
       state.imports.imported = 0
       state.imports.finished = false
       state.imports.cancel = false
     },
-    importTerms(state, term) {
+    importTerms(state, term: TermType) {
       if (!state.terms[term._id]) {
         Vue.set(state.terms, term._id, term)
         state.imports.imported += 1
@@ -115,7 +116,7 @@ const storeOptions: StoreOptions<StateType> = {
     setTotal(state, size: number) {
       state.totalRows = size
     },
-    setAuthenticated(state, user) {
+    setAuthenticated(state, user: firebase.User | null) {
       console.log('Auth update')
       if (user) {
         state.auth.authenticated = true
@@ -127,7 +128,7 @@ const storeOptions: StoreOptions<StateType> = {
     },
   },
   actions: {
-    async remove({ commit }, term) {
+    async remove({ commit }, term: TermType) {
       try {
         await database.remove(term._id)
         commit('remove', term)
@@ -135,7 +136,7 @@ const storeOptions: StoreOptions<StateType> = {
         console.error('Error:', e, term)
       }
     },
-    async add({ commit }, term) {
+    async add({ commit }, term: TermType) {
       try {
         await database.add(term)
         commit('add', term)
@@ -143,7 +144,7 @@ const storeOptions: StoreOptions<StateType> = {
         console.error('Error:', e, term)
       }
     },
-    async save({ commit, state }, term) {
+    async save({ commit, state }, term: TermType) {
       try {
         if (state.terms[term._id] !== term) {
           await database.save(term)
@@ -155,7 +156,7 @@ const storeOptions: StoreOptions<StateType> = {
         console.error('Error:', e, term)
       }
     },
-    async importTerms({ commit, state }, term) {
+    async importTerms({ commit, state }, term: TermType) {
       try {
         if (state.imports.cancel === false) {
           await database.add(term)
@@ -179,7 +180,7 @@ const storeOptions: StoreOptions<StateType> = {
         console.error('Error:', e, data)
       }
     },
-    async find({ commit }, search) {
+    async find({ commit }, search: SearchType) {
       try {
         const searchResults = await database.find(search)
 

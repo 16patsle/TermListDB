@@ -2,6 +2,7 @@ import type firebase from 'firebase/app'
 import DocumentSnapshotStub from './DocumentSnapshotStub'
 import QuerySnapshotStub from './QuerySnapshotStub'
 import type { FieldType } from './types/FieldType'
+import type { SearchType } from './types/SearchType'
 import type { TermQueryType } from './types/TermQueryType'
 import type { TermType } from './types/TermType'
 
@@ -37,7 +38,7 @@ class TermDatabase {
     })
   }
 
-  connect(user: { uid: string; displayName: string }): void {
+  connect(user: firebase.User): void {
     this.userInfoReference = this.db.collection('users').doc(user.uid)
 
     this.userInfoReference.update({ name: user.displayName })
@@ -119,12 +120,7 @@ class TermDatabase {
     return result.get()
   }
 
-  async find(search: {
-    search: RegExp
-    field: string
-    selected: string
-    fields: FieldType[]
-  }): Promise<any[] | QuerySnapshotStub> {
+  async find(search: SearchType): Promise<TermType[]> {
     if (!this.connected) {
       console.warn('Not connected to db')
       return new QuerySnapshotStub()
