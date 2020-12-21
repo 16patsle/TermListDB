@@ -22,13 +22,12 @@
     </template>
   </AppModal>
 </template>
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 
-export default {
-  components: {
-    AppModal,
-  },
+const ModalExportProps = Vue.extend({
   props: {
     ui: {
       type: Object,
@@ -39,44 +38,55 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {}
-  },
-  computed: {
-    exportInstructions() {
-      if (this.exported) {
-        return this.ui.downloadExportInstructions
-      } else {
-        return this.ui.processingExport
-      }
-    },
-    exported() {
-      return Boolean(this.exportUri)
-    },
-  },
-  methods: {
-    toggleModal(bool) {
-      this.$refs.modal.toggleModal(bool)
-    },
-    confirmExportTerm() {
-      this.toggleModal(true)
+})
 
-      this.exportTerms()
-    },
-    close() {
-      this.toggleModal(false)
-
-      this.$emit('close')
-    },
-    exportTerms() {
-      this.$emit('export')
-    },
-    downloadExport(e) {
-      if (!this.exported) {
-        e.preventDefault()
-      }
-    },
+@Component({
+  components: {
+    AppModal,
   },
+})
+export default class ModalExport extends ModalExportProps {
+  $refs!: {
+    modal: AppModal
+  }
+
+  get exportInstructions(): string {
+    if (this.exported) {
+      return this.ui.downloadExportInstructions
+    } else {
+      return this.ui.processingExport
+    }
+  }
+
+  get exported(): boolean {
+    return Boolean(this.exportUri)
+  }
+
+  toggleModal(bool: boolean): void {
+    this.$refs.modal.toggleModal(bool)
+  }
+
+  confirmExportTerm(): void {
+    this.toggleModal(true)
+
+    this.exportTerms()
+  }
+
+  close(): void {
+    this.toggleModal(false)
+
+    this.$emit('close')
+  }
+
+  exportTerms(): void {
+    this.$emit('export')
+  }
+
+  downloadExport(e: MouseEvent): void {
+    if (!this.exported) {
+      e.preventDefault()
+    }
+  }
 }
 </script>
 <style></style>

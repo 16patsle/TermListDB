@@ -134,6 +134,8 @@ export default class App extends Vue {
     addModal: ModalAdd
     editModal: ModalEdit
     removeModal: ModalRemove
+    importModal: ModalImport
+    exportModal: ModalExport
   }
   $store!: Store<StateType>
 

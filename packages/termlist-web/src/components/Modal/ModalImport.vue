@@ -44,87 +44,91 @@
     </template>
   </AppModal>
 </template>
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
+import type { TermType } from '../../types/TermType'
 
-export default {
-  components: {
-    AppModal,
-    AppButton,
-  },
+const ModalImportProps = Vue.extend({
   props: {
     ui: {
       type: Object,
       required: true,
     },
   },
-  data() {
-    return {
-      selectedFile: null,
-      importedFile: {},
-      importedTerms: [],
+})
+
+@Component({
+  components: {
+    AppModal,
+    AppButton,
+  },
+})
+export default class ModalImport extends ModalImportProps {
+  $refs!: {
+    modal: AppModal
+    importFile: HTMLInputElement
+  }
+
+  selectedFile: File | null = null
+  fileReader?: FileReader
+  importedTerms: TermType[] = []
+
+  get fileInfo(): string | null {
+    if (this.selectedFile && this.selectedFile.name) {
+      return this.selectedFile.name
+    } else {
+      return null
     }
-  },
-  computed: {
-    fileInfo() {
-      if (this.selectedFile && this.selectedFile.name) {
-        return this.selectedFile.name
-      } else {
-        return null
-      }
-    },
-  },
-  methods: {
-    toggleModal(bool) {
-      this.$refs.modal.toggleModal(bool)
-    },
-    confirmImportTerm() {
-      this.toggleModal(true)
-    },
-    importTerm() {
-      if (
-        this.selectedFile &&
-        this.selectedFile.type === 'application/json' &&
-        this.selectedFile.size > 0
-      ) {
-        this.fileReader = new FileReader()
-        this.fileReader.onload = e => {
-          let file = JSON.parse(e.target.result)
+  }
+
+  toggleModal(bool: boolean): void {
+    this.$refs.modal.toggleModal(bool)
+  }
+
+  confirmImportTerm(): void {
+    this.toggleModal(true)
+  }
+
+  importTerm(): void {
+    if (
+      this.selectedFile &&
+      this.selectedFile.type === 'application/json' &&
+      this.selectedFile.size > 0
+    ) {
+      this.fileReader = new FileReader()
+      this.fileReader.onload = () => {
+        if (this.fileReader && this.fileReader.result) {
+          let file = JSON.parse(this.fileReader.result.toString())
 
           this.prepareFileImport(file)
         }
-        this.fileReader.readAsText(this.selectedFile)
       }
-    },
-    prepareFileImport(file) {
-      this.importedFile = file
+      this.fileReader.readAsText(this.selectedFile)
+    }
+  }
 
-      this.importedTerms = this.prepareStandardImport(this.importedFile)
+  prepareFileImport(file: TermType[]): void {
+    this.importedTerms = [...file]
 
-      this.$emit('import', this.importedTerms)
+    this.$emit('import', this.importedTerms)
 
-      this.close()
-    },
-    prepareStandardImport(file) {
-      let importedTerms = []
+    this.close()
+  }
 
-      for (let term of file) {
-        importedTerms.push(term)
-      }
+  close(): void {
+    this.toggleModal(false)
 
-      return importedTerms
-    },
-    close() {
-      this.toggleModal(false)
+    this.$refs.importFile.value = ''
+    this.selectedFile = null
+  }
 
-      this.$refs.importFile.value = ''
-      this.selectedFile = null
-    },
-    handleFiles(e) {
-      this.selectedFile = e.target.files[0]
-    },
-  },
+  handleFiles(e: Event): void {
+    const files = (e.target as HTMLInputElement).files
+    this.selectedFile = files ? files[0] : null
+  }
 }
 </script>
 <style></style>

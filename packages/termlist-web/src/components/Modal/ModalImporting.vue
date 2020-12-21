@@ -41,27 +41,35 @@
     </template>
   </AppModal>
 </template>
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 
-export default {
-  components: {
-    AppModal,
-  },
+import type { Store } from 'vuex'
+import type { StateType } from '../../types/StateType'
+
+const ModalImportingProps = Vue.extend({
   props: {
     ui: {
       type: Object,
       required: true,
     },
   },
-  data() {
-    return {
-      selectedFile: null,
-      importedFile: {},
-      importedTerms: [],
-    }
+})
+
+@Component({
+  components: {
+    AppModal,
   },
-  mounted() {
+})
+export default class ModalImporting extends ModalImportingProps {
+  $refs!: {
+    modal: AppModal
+  }
+  $store!: Store<StateType>
+
+  mounted(): void {
     this.$watch(
       () => this.$store.state.imports.finished,
       value => {
@@ -75,17 +83,17 @@ export default {
         immediate: true,
       }
     )
-  },
-  methods: {
-    toggleModal(bool) {
-      this.$refs.modal.toggleModal(bool)
-    },
-    close() {
-      this.toggleModal(false)
+  }
 
-      this.$store.commit('cancelImport')
-    },
-  },
+  toggleModal(bool: boolean): void {
+    this.$refs.modal.toggleModal(bool)
+  }
+
+  close(): void {
+    this.toggleModal(false)
+
+    this.$store.commit('cancelImport')
+  }
 }
 </script>
 <style></style>
