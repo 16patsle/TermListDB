@@ -1,21 +1,25 @@
+import type firebase from 'firebase/app'
 import DocumentSnapshotStub from './DocumentSnapshotStub'
 import QuerySnapshotStub from './QuerySnapshotStub'
 
-RegExp.quote = function (str) {
+const regexQuote = function (str: string) {
   return (str + '').replace(/[.?*+^$[\]\\(){}|-]/g, '\\$&')
 }
 
 class TermDatabase {
-  constructor(firebase) {
-    this.firebase = firebase
-    this.db = firebase.firestore()
-    this.userId = null
+  db: firebase.firestore.Firestore
+  userId?: string
+  connected: boolean
+  userInfoReference?: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+  termsDB: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>
+  
+  constructor(firestore: firebase.firestore.Firestore) {
+    this.db = firestore
     this.connected = false
-    this.userInfoReference = null
   }
 
   async start() {
-    await this.db.enablePersistence().catch(err => {
+    await this.db.enablePersistence().catch((err: { code: string }) => {
       if (err.code == 'failed-precondition') {
         // Multiple tabs open, only works in one.
         // Silently fail
@@ -30,7 +34,7 @@ class TermDatabase {
     })
   }
 
-  connect(user) {
+  connect(user: { uid: string; displayName: string }) {
     this.userInfoReference = this.db.collection('users').doc(user.uid)
 
     this.userInfoReference.update({ name: user.displayName })
@@ -41,7 +45,7 @@ class TermDatabase {
     console.log('Connected to ' + user.uid + ' as ' + user.displayName)
   }
 
-  get(id) {
+  get(id: any) {
     if (!this.connected) {
       console.warn('Not connected to db')
       return new DocumentSnapshotStub()
@@ -49,7 +53,7 @@ class TermDatabase {
     return this.termsDB.doc(id).get()
   }
 
-  remove(id) {
+  remove(id: any) {
     if (!this.connected) {
       console.warn('Not connected to db')
       return
@@ -57,7 +61,7 @@ class TermDatabase {
     return this.termsDB.doc(id).delete()
   }
 
-  add(termObject) {
+  add(termObject: { _id: any }) {
     if (!this.connected) {
       console.warn('Not connected to db')
       return
@@ -69,7 +73,7 @@ class TermDatabase {
     return this.termsDB.doc(termObject._id).set(termObject)
   }
 
-  save(termObject) {
+  save(termObject: { _id: any }) {
     if (!this.connected) {
       console.warn('Not connected to db')
       return
@@ -102,38 +106,43 @@ class TermDatabase {
     return result.get()
   }
 
-  async find(search) {
+  async find(search: {
+    search: RegExp
+    field: string
+    selected: string
+    fields: any
+  }) {
     if (!this.connected) {
       console.warn('Not connected to db')
       return new QuerySnapshotStub()
     }
 
     /* TODO: Figure out why some stuff doesn't appear, and add search button so we don't search on each key press */
-    search.search = new RegExp('.*' + RegExp.quote(search.search) + '.*', 'g')
+    search.search = new RegExp('.*' + regexQuote(search.search) + '.*', 'g')
     search.field = search.field || '_id'
 
     const allTerms = await this.termsDB.orderBy(search.field).get()
     if (search.selected && search.selected !== 'all') {
       return [
         allTerms.docs
-          .map(val => {
+          .map((val: { data: () => any }) => {
             return val.data()
           })
-          .filter(val => {
+          .filter((val: { [x: string]: any }) => {
             return search.search.test(val[search.selected])
           }),
       ]
     } else {
-      let returnArray = []
+      const returnArray = []
 
       for (const field of search.fields) {
         if (!field.immutable) {
           returnArray.push(
             allTerms.docs
-              .map(val => {
+              .map((val: { data: () => any }) => {
                 return val.data()
               })
-              .filter(val => {
+              .filter((val: { [x: string]: any }) => {
                 return search.search.test(val[field.name])
               })
           )

@@ -193,7 +193,7 @@ firebase.initializeApp({
   projectId: process.env.FIREBASE_PROJECT_ID,
 })
 
-const database = new TermDatabase(firebase)
+const database = new TermDatabase(firebase.firestore())
 
 const start = async () => {
   await database.start()
