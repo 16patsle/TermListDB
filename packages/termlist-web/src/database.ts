@@ -1,6 +1,8 @@
 import type firebase from 'firebase/app'
 import DocumentSnapshotStub from './DocumentSnapshotStub'
 import QuerySnapshotStub from './QuerySnapshotStub'
+import type { FieldType } from './types/FieldType'
+import type { TermType } from './types/TermType'
 
 const regexQuote = function (str: string) {
   return (str + '').replace(/[.?*+^$[\]\\(){}|-]/g, '\\$&')
@@ -12,13 +14,13 @@ class TermDatabase {
   connected: boolean
   userInfoReference?: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
   termsDB: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>
-  
+
   constructor(firestore: firebase.firestore.Firestore) {
     this.db = firestore
     this.connected = false
   }
 
-  async start() {
+  async start(): void {
     await this.db.enablePersistence().catch((err: { code: string }) => {
       if (err.code == 'failed-precondition') {
         // Multiple tabs open, only works in one.
@@ -34,7 +36,7 @@ class TermDatabase {
     })
   }
 
-  connect(user: { uid: string; displayName: string }) {
+  connect(user: { uid: string; displayName: string }): void {
     this.userInfoReference = this.db.collection('users').doc(user.uid)
 
     this.userInfoReference.update({ name: user.displayName })
@@ -53,18 +55,18 @@ class TermDatabase {
     return this.termsDB.doc(id).get()
   }
 
-  remove(id: any) {
+  remove(id: any): Promise<void> {
     if (!this.connected) {
       console.warn('Not connected to db')
-      return
+      return Promise.reject('Not connected to db')
     }
     return this.termsDB.doc(id).delete()
   }
 
-  add(termObject: { _id: any }) {
+  add(termObject: TermType): Promise<void> {
     if (!this.connected) {
       console.warn('Not connected to db')
-      return
+      return Promise.reject('Not connected to db')
     }
     if (typeof termObject._id !== 'string') {
       console.log(termObject)
@@ -73,15 +75,19 @@ class TermDatabase {
     return this.termsDB.doc(termObject._id).set(termObject)
   }
 
-  save(termObject: { _id: any }) {
+  save(termObject: { _id: any }): Promise<void> {
     if (!this.connected) {
       console.warn('Not connected to db')
-      return
+      return Promise.reject('Not connected to db')
     }
     return this.termsDB.doc(termObject._id).set(termObject)
   }
 
-  getTerms(data = {}) {
+  getTerms(
+    data = {}
+  ):
+    | Promise<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>>
+    | QuerySnapshotStub {
     if (!this.connected) {
       console.warn('Not connected to db')
       return new QuerySnapshotStub()
@@ -110,8 +116,8 @@ class TermDatabase {
     search: RegExp
     field: string
     selected: string
-    fields: any
-  }) {
+    fields: FieldType[]
+  }): Promise<any[] | QuerySnapshotStub> {
     if (!this.connected) {
       console.warn('Not connected to db')
       return new QuerySnapshotStub()
@@ -153,7 +159,7 @@ class TermDatabase {
     }
   }
 
-  async getTotalTerms() {
+  async getTotalTerms(): Promise<number> {
     if (!this.connected) {
       console.warn('Not connected to db')
       return 0
