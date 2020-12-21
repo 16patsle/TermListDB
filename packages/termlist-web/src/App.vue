@@ -113,6 +113,7 @@ import type { TermType } from './types/TermType'
 import type { StateType } from './types/StateType'
 import type { SearchType } from './types/SearchType'
 import type { Store } from 'vuex'
+import type { FieldNameType } from './types/FieldNameType'
 
 @Component({
   name: 'App',
@@ -150,7 +151,7 @@ export default class App extends Vue {
   } = {
     md: undefined,
   }
-  sortedBy = 'term'
+  sortedBy: FieldNameType = 'term'
   loading = false
 
   get terms(): {
@@ -288,7 +289,7 @@ export default class App extends Vue {
     this.loading = false
   }
 
-  async sort(field: string): Promise<void> {
+  async sort(field: FieldNameType): Promise<void> {
     this.loading = true
     await this.$store.dispatch('getTerms', {
       field: field,

@@ -1,8 +1,10 @@
+import type { FieldNameType } from './FieldNameType'
+
 export type TermQueryType = {
   /**
    * The field to sort by.
    */
-  field?: string
+  field?: FieldNameType
   /**
    * The maximum number of items to return.
    */

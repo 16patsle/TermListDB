@@ -35,3 +35,5 @@ const fields: FieldType[] = [
 ]
 
 export default fields
+
+export const fieldNames = ['term', 'desc', 'type', 'date'] as const
