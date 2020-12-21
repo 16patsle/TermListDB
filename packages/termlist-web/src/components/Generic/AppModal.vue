@@ -29,13 +29,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import AppButton from './AppButton.vue'
 
-export default {
-  components: {
-    AppButton,
-  },
+const AppModalProps = Vue.extend({
   props: {
     okText: {
       type: String,
@@ -58,32 +57,39 @@ export default {
       default: null,
     },
   },
-  data() {
-    return {
-      show: false,
+})
+
+@Component({
+  components: {
+    AppButton,
+  },
+})
+export default class AppModal extends AppModalProps {
+  show = false
+
+  $refs!: {
+    modal: Element
+  }
+
+  close(): void {
+    if (this.closeCallback) {
+      this.closeCallback()
+    } else {
+      this.toggleModal(false)
     }
-  },
-  methods: {
-    close() {
-      if (this.closeCallback) {
-        this.closeCallback()
-      } else {
-        this.toggleModal(false)
-      }
-    },
-    toggleModal(bool) {
-      this.show = bool
-      if (bool) {
-        this.$refs.modal.classList.add('is-active')
-      } else {
-        this.$refs.modal.classList.remove('is-active')
-      }
-      //this.$emit('toggle', bool);
-    },
-    isShown() {
-      return this.show
-    },
-  },
+  }
+  toggleModal(bool: boolean): void {
+    this.show = bool
+    if (bool) {
+      this.$refs.modal.classList.add('is-active')
+    } else {
+      this.$refs.modal.classList.remove('is-active')
+    }
+    //this.$emit('toggle', bool);
+  }
+  isShown(): boolean {
+    return this.show
+  }
 }
 </script>
 <style></style>
