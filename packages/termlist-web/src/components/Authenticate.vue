@@ -8,36 +8,34 @@
 </template>
 <script lang="ts">
 import Vue from 'vue'
+import Component from 'vue-class-component'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import * as firebaseui from 'termlist-auth-ui'
 
-export default Vue.extend({
-  components: {},
+const AuthenticateProps = Vue.extend({
   props: {
     ui: {
       type: Object,
       required: true,
     },
   },
-  data(): {
-    uiConfig: firebaseui.auth.Config
-    uiLogin: firebaseui.auth.AuthUI | null
-  } {
-    return {
-      uiConfig: {
-        callbacks: {
-          signInSuccessWithAuthResult() {
-            return false
-          },
-        },
-        credentialHelper: firebaseui.auth.CredentialHelper.NONE,
-        signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+})
+
+@Component
+export default class Aunthenticate extends AuthenticateProps {
+  uiConfig: firebaseui.auth.Config = {
+    callbacks: {
+      signInSuccessWithAuthResult(): boolean {
+        return false
       },
-      uiLogin: null,
-    }
-  },
-  mounted() {
+    },
+    credentialHelper: firebaseui.auth.CredentialHelper.NONE,
+    signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID],
+  }
+  uiLogin: firebaseui.auth.AuthUI | null = null
+
+  mounted(): void {
     if (firebaseui.auth.AuthUI.getInstance()) {
       this.uiLogin = firebaseui.auth.AuthUI.getInstance()
     } else {
@@ -47,15 +45,14 @@ export default Vue.extend({
       this.uiLogin.reset()
       this.uiLogin.start('#firebaseui-auth-container', this.uiConfig)
     }
-  },
-  methods: {
-    logOut() {
-      firebase.auth().signOut()
-      if (this.uiLogin) {
-        this.uiLogin.start('#firebaseui-auth-container', this.uiConfig)
-      }
-    },
-  },
-})
+  }
+
+  logOut(): void {
+    firebase.auth().signOut()
+    if (this.uiLogin) {
+      this.uiLogin.start('#firebaseui-auth-container', this.uiConfig)
+    }
+  }
+}
 </script>
 <style></style>
