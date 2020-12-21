@@ -2,6 +2,11 @@
   "[vue]": {
     "editor.formatOnSave": false
   },
-  "eslint.validate": ["javascript", "javascriptreact", "vue"],
+  "eslint.validate": [
+    "typescript",
+    "javascript",
+    "javascriptreact",
+    "vue"
+  ],
   "eslint.workingDirectories": ["packages/termlist-web"]
 }
