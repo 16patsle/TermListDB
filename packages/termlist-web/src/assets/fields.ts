@@ -1,4 +1,6 @@
-export default [
+import type { FieldType } from '../types/FieldType'
+
+const fields: FieldType[] = [
   {
     name: 'term',
     type: 'short',
@@ -31,3 +33,5 @@ export default [
     immutable: true,
   },
 ]
+
+export default fields

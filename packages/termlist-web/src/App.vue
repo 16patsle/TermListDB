@@ -105,8 +105,8 @@ import TermList from './components/TermList.vue'
 
 import MarkdownIt from 'markdown-it'
 
-import ui from './assets/ui.js'
-import fields from './assets/fields.js'
+import ui from './assets/ui'
+import fields from './assets/fields'
 
 export default Vue.extend({
   name: 'App',
