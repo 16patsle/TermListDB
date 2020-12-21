@@ -13,8 +13,12 @@
     </select>
   </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import type { SelectOptionType } from '../../types/SelectOptionType'
+
+const AppSelectProps = Vue.extend({
   props: {
     defaultoption: { type: Object, default: null },
     options: {
@@ -23,18 +27,25 @@ export default {
     },
     fullwidth: { type: Boolean, default: false },
   },
-  data() {
-    return {
-      value: this.defaultoption
-        ? this.defaultoption.name
-        : this.options[0].name,
+})
+
+@Component
+export default class AppSelect extends AppSelectProps {
+  defaultoption!: SelectOptionType | null
+  options!: SelectOptionType[]
+  value!: string
+
+  created(): void {
+    if (this.defaultoption) {
+      this.value = this.defaultoption.name
+    } else {
+      this.options[0].name
     }
-  },
-  methods: {
-    change(e) {
-      this.value = e.target.value
-      this.$emit('change', e.target.value)
-    },
-  },
+  }
+
+  change(e: Event): void {
+    this.value = (e.target as HTMLInputElement).value
+    this.$emit('change', this.value)
+  }
 }
 </script>
