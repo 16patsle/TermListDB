@@ -1,6 +1,11 @@
 {
   "presets": [
-    "@babel/preset-typescript",
+    [
+      "@babel/preset-typescript",
+      {
+        "allExtensions": true
+      }
+    ],
     [
       "@babel/preset-env",
       {
@@ -8,5 +13,8 @@
         "shippedProposals": true
       }
     ]
+  ],
+  "plugins": [
+    ["@babel/proposal-decorators", { "legacy": true }]
   ]
 }
