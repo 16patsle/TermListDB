@@ -91,6 +91,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import Component from 'vue-class-component'
 import ModalAdd from './components/Modal/ModalAdd.vue'
 import ModalEdit from './components/Modal/ModalEdit.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
@@ -110,7 +111,7 @@ import fields from './assets/fields'
 
 import type { TermType } from './types/TermType'
 
-export default Vue.extend({
+@Component({
   name: 'App',
   components: {
     ModalAdd,
@@ -125,35 +126,33 @@ export default Vue.extend({
     Authenticate,
     TermList,
   },
-  data(): {
-    ui: typeof ui
-    fields: typeof fields
-    currentTerm: null
-    exportURI: string
-    utils: {
-      md?: typeof MarkdownIt
-    }
-    sortedBy: 'term'
-    loading: boolean
+})
+export default class App extends Vue {
+  $refs!: {
+    addModal: ModalAdd
+    editModal: ModalEdit
+    removeModal: ModalRemove
+  }
+
+  ui = ui
+  fields = fields
+  currentTerm: TermType | null = null
+  exportURI = ''
+  utils: {
+    md?: typeof MarkdownIt
+  } = {
+    md: undefined,
+  }
+  sortedBy = 'term'
+  loading = false
+
+  get terms(): {
+    [key: string]: TermType
   } {
-    return {
-      ui: ui,
-      fields: fields,
-      currentTerm: null,
-      exportURI: '',
-      utils: {
-        md: undefined,
-      },
-      sortedBy: 'term',
-      loading: false,
-    }
-  },
-  computed: {
-    terms() {
-      return this.$store.state.terms
-    },
-  },
-  created() {
+    return this.$store.state.terms
+  }
+
+  created(): void {
     this.utils.md = MarkdownIt('zero')
     this.utils.md.enable([
       'emphasis',
@@ -186,172 +185,189 @@ export default Vue.extend({
     })
 
     document.addEventListener('keyup', this.shortcutUp, false)
-  },
-  methods: {
-    addTerm() {
-      this.$refs.addModal.addTerm()
-    },
-    editTerm(term: TermType) {
-      this.$refs.editModal.editTerm(term)
-    },
-    confirmRemoveTerm(term: TermType) {
-      this.$refs.removeModal.confirmRemoveTerm(term)
-    },
-    saveTerm(term: TermType) {
-      if (term.term) {
-        // Update existing term
-        this.$store.dispatch('save', term)
+  }
+
+  addTerm(): void {
+    this.$refs.addModal.addTerm()
+  }
+
+  editTerm(term: TermType): void {
+    this.$refs.editModal.editTerm(term)
+  }
+
+  confirmRemoveTerm(term: TermType): void {
+    this.$refs.removeModal.confirmRemoveTerm(term)
+  }
+
+  saveTerm(term: TermType): void {
+    if (term.term) {
+      // Update existing term
+      this.$store.dispatch('save', term)
+    } else {
+      // Add new term
+      this.$store.dispatch('add', term)
+    }
+  }
+
+  removeTerm(term: TermType): void {
+    this.$store.dispatch('remove', term)
+  }
+
+  async gotoPage(pageNumber: number, currentPage: number): Promise<void> {
+    const terms: {
+      [key: string]: TermType
+    } = this.$store.state.terms
+    const pageNumberOffset = pageNumber - currentPage
+    const isBefore = pageNumber < currentPage
+
+    this.loading = true
+
+    if (Math.abs(pageNumberOffset) === 1) {
+      if (isBefore) {
+        await this.$store.dispatch('getTerms', {
+          field: this.sortedBy,
+          endBefore: Object.entries(terms)[0][1][this.sortedBy],
+        })
+
+        this.loading = false
       } else {
-        // Add new term
-        this.$store.dispatch('add', term)
+        await this.$store.dispatch('getTerms', {
+          field: this.sortedBy,
+          startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
+            this.sortedBy
+          ],
+        })
+
+        this.loading = false
       }
-    },
-    removeTerm(term: TermType) {
-      this.$store.dispatch('remove', term)
-    },
-    async gotoPage(pageNumber: number, currentPage: number) {
-      const terms = this.$store.state.terms
-      const pageNumberOffset = pageNumber - currentPage
-      const isBefore = pageNumber < currentPage
+    } else {
+      if (isBefore) {
+        const limit = pageNumber * 20
 
-      this.loading = true
+        await this.$store.dispatch('getTerms', {
+          field: this.sortedBy,
+          limit,
+          showLimit: 20,
+        })
 
-      if (Math.abs(pageNumberOffset) === 1) {
-        if (isBefore) {
-          await this.$store.dispatch('getTerms', {
-            field: this.sortedBy,
-            endBefore: Object.entries(terms)[0][1][this.sortedBy],
-          })
-
-          this.loading = false
-        } else {
-          await this.$store.dispatch('getTerms', {
-            field: this.sortedBy,
-            startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
-              this.sortedBy
-            ],
-          })
-
-          this.loading = false
-        }
+        this.loading = false
       } else {
-        if (isBefore) {
-          const limit = pageNumber * 20
+        const termsLeft = this.$store.state.totalRows - 20 * currentPage
+        // Amount of terms on x pages
+        const limit = termsLeft
+        let showLimit = 20
 
-          await this.$store.dispatch('getTerms', {
-            field: this.sortedBy,
-            limit,
-            showLimit: 20,
-          })
-
-          this.loading = false
-        } else {
-          const termsLeft = this.$store.state.totalRows - 20 * currentPage
-          // Amount of terms on x pages
-          const limit = termsLeft
-          let showLimit = 20
-
-          // If the amount of terms won't fill the last page completely,
-          // find out how many are on the last page and add them instead
-          if (termsLeft % 20 !== 0) {
-            showLimit = termsLeft % 20
-          }
-
-          await this.$store.dispatch('getTerms', {
-            field: this.sortedBy,
-            startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
-              this.sortedBy
-            ],
-            limit,
-            showLimit,
-          })
-
-          this.loading = false
+        // If the amount of terms won't fill the last page completely,
+        // find out how many are on the last page and add them instead
+        if (termsLeft % 20 !== 0) {
+          showLimit = termsLeft % 20
         }
+
+        await this.$store.dispatch('getTerms', {
+          field: this.sortedBy,
+          startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
+            this.sortedBy
+          ],
+          limit,
+          showLimit,
+        })
+
+        this.loading = false
       }
-    },
-    async search(search: any) {
-      this.loading = true
-      await this.$store.dispatch('find', { field: this.sortedBy, ...search })
-      this.loading = false
-    },
-    async sort(field: string) {
-      this.loading = true
-      await this.$store.dispatch('getTerms', {
-        field: field,
-      })
-      this.loading = false
+    }
+  }
 
-      this.sortedBy = field
-    },
-    shortcutUp(e: KeyboardEvent) {
-      if (
-        ['input', 'textarea'].indexOf(e.target.tagName.toLowerCase()) === -1 &&
-        e.key.toLowerCase() === 'n'
-      ) {
-        this.addTerm()
-      }
-    },
-    confirmImportTerms() {
-      this.$refs.importModal.confirmImportTerm()
-    },
-    async importTerms(terms: string | any[]) {
-      this.$store.commit('prepareImport', terms.length)
+  async search(search: any): Promise<void> {
+    this.loading = true
+    await this.$store.dispatch('find', { field: this.sortedBy, ...search })
+    this.loading = false
+  }
 
-      let imports = []
+  async sort(field: string): Promise<void> {
+    this.loading = true
+    await this.$store.dispatch('getTerms', {
+      field: field,
+    })
+    this.loading = false
 
-      for (let term of terms) {
-        if (this.$store.state.imports.cancel === false) {
-          imports.push(
-            this.$store.dispatch(
-              'importTerms',
-              Object.assign(
-                {
-                  _id: term.date,
-                },
-                term
-              )
+    this.sortedBy = field
+  }
+
+  shortcutUp(e: KeyboardEvent): void {
+    if (
+      e.target &&
+      ['input', 'textarea'].indexOf(
+        (e.target as Element).tagName.toLowerCase()
+      ) === -1 &&
+      e.key.toLowerCase() === 'n'
+    ) {
+      this.addTerm()
+    }
+  }
+
+  confirmImportTerms(): void {
+    this.$refs.importModal.confirmImportTerm()
+  }
+
+  async importTerms(terms: TermType[]): Promise<void> {
+    this.$store.commit('prepareImport', terms.length)
+
+    let imports = []
+
+    for (let term of terms) {
+      if (this.$store.state.imports.cancel === false) {
+        imports.push(
+          this.$store.dispatch(
+            'importTerms',
+            Object.assign(
+              {
+                _id: term.date,
+              },
+              term
             )
           )
-        }
+        )
       }
+    }
 
-      await Promise.all(imports)
+    await Promise.all(imports)
 
-      await this.$store.dispatch('fetchTotal')
-      await this.$store.dispatch('getTerms', {
-        field: this.sortedBy,
+    await this.$store.dispatch('fetchTotal')
+    await this.$store.dispatch('getTerms', {
+      field: this.sortedBy,
+    })
+  }
+
+  confirmExportTerms(): void {
+    this.$refs.exportModal.confirmExportTerm()
+  }
+
+  async exportTerms(): Promise<void> {
+    const terms = await this.$store.dispatch('exportTerms')
+
+    let exported = []
+
+    for (let term of terms.docs) {
+      term = term.data()
+
+      exported.push({
+        _id: term._id,
+        term: term.term,
+        desc: term.desc,
+        date: term.date,
+        type: term.type,
       })
-    },
-    confirmExportTerms() {
-      this.$refs.exportModal.confirmExportTerm()
-    },
-    async exportTerms() {
-      const terms = await this.$store.dispatch('exportTerms')
+    }
 
-      let exported = []
+    this.exportURI =
+      'data:application/json;charset=utf-8, ' +
+      encodeURIComponent(JSON.stringify(exported))
+  }
 
-      for (let term of terms.docs) {
-        term = term.data()
-
-        exported.push({
-          _id: term._id,
-          term: term.term,
-          desc: term.desc,
-          date: term.date,
-          type: term.type,
-        })
-      }
-
-      this.exportURI =
-        'data:application/json;charset=utf-8, ' +
-        encodeURIComponent(JSON.stringify(exported))
-    },
-    logOut() {
-      this.$refs.auth.logOut()
-    },
-  },
-})
+  logOut(): void {
+    this.$refs.auth.logOut()
+  }
+}
 </script>
 
 <style>
