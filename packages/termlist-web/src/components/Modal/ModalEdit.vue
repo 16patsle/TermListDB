@@ -135,12 +135,12 @@ export default class ModalEdit extends ModalEditProps {
   }
 
   reduce(options: string[]): SelectOptionType[] {
-    return options.reduce((allFields: SelectOptionType[], option) => {
-      allFields.push({
+    return options.reduce((allOptions: SelectOptionType[], option) => {
+      allOptions.push({
         name: option,
         ui: this.ui.wordClasses[option],
       })
-      return allFields
+      return allOptions
     }, [])
   }
 }
