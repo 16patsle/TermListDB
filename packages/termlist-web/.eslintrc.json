@@ -1,12 +1,18 @@
 {
+  "parser": "vue-eslint-parser",
   "parserOptions": {
     "ecmaVersion": 2018,
+    "parser": "@typescript-eslint/parser",
     "sourceType": "module"
   },
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "extends": [
     "plugin:vue/recommended",
     "plugin:prettier/recommended",
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
     "no-console": [
@@ -29,5 +35,13 @@
         }
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.js"],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off"
+      }
+    }
+  ]
 }

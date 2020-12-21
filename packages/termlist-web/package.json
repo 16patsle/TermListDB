@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "npm run dev",
-    "test": "eslint \"src/**/*.{js,vue}\" --fix",
+    "test": "eslint \"src/**/*.{ts,js,vue}\" --fix",
     "dev": "webpack serve --hot",
     "build": "cross-env NODE_ENV=production webpack --progress",
     "prepare": "npm run build"
@@ -27,6 +27,8 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
+    "@typescript-eslint/eslint-plugin": "4.1.0",
+    "@typescript-eslint/parser": "4.1.0",
     "babel-loader": "^8.2.2",
     "cross-env": "^7.0.3",
     "css-loader": "^5.0.1",
