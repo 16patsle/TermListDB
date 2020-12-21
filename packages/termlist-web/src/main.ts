@@ -182,11 +182,7 @@ const storeOptions: StoreOptions<StateType> = {
     },
     async find({ commit }, search: SearchType) {
       try {
-        const searchResults = await database.find(search)
-
-        const resultObject = deepmerge.all(searchResults)
-
-        commit('find', resultObject)
+        commit('find', await database.find(search))
       } catch (e) {
         console.error('Error:', e, search)
       }

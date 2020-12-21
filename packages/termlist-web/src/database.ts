@@ -123,43 +123,32 @@ class TermDatabase {
   async find(search: SearchType): Promise<TermType[]> {
     if (!this.connected) {
       console.warn('Not connected to db')
-      return new QuerySnapshotStub()
+      return []
     }
 
     /* TODO: Figure out why some stuff doesn't appear, and add search button so we don't search on each key press */
-    search.search = new RegExp('.*' + regexQuote(search.search) + '.*', 'g')
+    const regex = new RegExp('.*' + regexQuote(search.search) + '.*', 'g')
     search.field = search.field || '_id'
 
     const allTerms = await this.termsDB.orderBy(search.field).get()
+    let fields = search.fields
     if (search.selected && search.selected !== 'all') {
-      return [
-        allTerms.docs
-          .map((val: { data: () => any }) => {
-            return val.data()
-          })
-          .filter((val: { [x: string]: any }) => {
-            return search.search.test(val[search.selected])
-          }),
-      ]
-    } else {
-      const returnArray = []
-
-      for (const field of search.fields) {
-        if (!field.immutable) {
-          returnArray.push(
-            allTerms.docs
-              .map((val: { data: () => any }) => {
-                return val.data()
-              })
-              .filter((val: { [x: string]: any }) => {
-                return search.search.test(val[field.name])
-              })
-          )
-        }
-      }
-
-      return returnArray
+      fields = fields.filter(val => val.name === search.selected)
     }
+    const returnArray: TermType[] = []
+
+    for (const field of fields) {
+      if (!field.immutable) {
+        allTerms.docs.forEach(val => {
+          const data = val.data() as TermType
+          if (regex.test(data[field.name])) {
+            returnArray.push(data)
+          }
+        })
+      }
+    }
+
+    return returnArray
   }
 
   async getTotalTerms(): Promise<number> {
