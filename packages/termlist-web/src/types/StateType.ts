@@ -1,6 +1,8 @@
+import type { TermType } from './TermType'
+
 export type StateType = {
   terms: {
-    [key: number]: any
+    [key: string]: TermType
   }
   imports: {
     imported: number
@@ -11,6 +13,6 @@ export type StateType = {
   auth: {
     authenticated: boolean
     user: any
-  },
+  }
   totalRows: number
 }
