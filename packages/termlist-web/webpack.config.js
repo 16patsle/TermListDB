@@ -20,12 +20,13 @@ module.exports = {
           loaders: {
             scss: 'vue-style-loader!css-loader!sass-loader', // <style lang="scss">
             sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax', // <style lang="sass">
+            ts: 'babel-loader', // <script lang="ts">
           },
           // other vue-loader options go here
         },
       },
       {
-        test: /\.js$/,
+        test: /\.(j|t)s$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
       },
@@ -125,6 +126,7 @@ module.exports = {
     alias: {
       vue$: 'vue/dist/vue.esm.js',
     },
+    extensions: ['.ts', '.js'],
   },
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
