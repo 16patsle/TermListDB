@@ -1,5 +1,8 @@
 import type firebase from 'firebase/app'
 import DocumentSnapshotStub from './DocumentSnapshotStub'
+
+import fields from './assets/fields'
+
 import type { SearchType } from './types/SearchType'
 import type { TermQueryType } from './types/TermQueryType'
 import type { TermType } from './types/TermType'
@@ -128,23 +131,15 @@ class TermDatabase {
       query = query.where('_firstThreeChars', '==', search.search.substr(0, 3))
     }
     const allTerms = await query.get()
-    let fields = search.fields
-    if (search.selected && search.selected !== 'all') {
-      fields = fields.filter(val => val.name === search.selected)
-    }
     const returnArray: TermType[] = []
 
-    for (const field of fields) {
-      if (!field.immutable) {
-        allTerms.docs.forEach(val => {
-          const data = val.data() as TermType
-          const fieldValue = data[field.name]
-          if (fieldValue && regex.test(fieldValue)) {
-            returnArray.push(data)
-          }
-        })
+    allTerms.docs.forEach(val => {
+      const data = val.data() as TermType
+      const fieldValue = data.term
+      if (fieldValue && regex.test(fieldValue)) {
+        returnArray.push(data)
       }
-    }
+    })
 
     return returnArray
   }
