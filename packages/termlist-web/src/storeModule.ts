@@ -1,4 +1,10 @@
-import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
+import {
+  Module,
+  VuexModule,
+  Mutation,
+  Action,
+  getModule,
+} from 'vuex-module-decorators'
 import Vue from 'vue'
 
 import database from './utils/firebase'
@@ -8,7 +14,7 @@ import type { TermQueryType } from './types/TermQueryType'
 import type { TermType } from './types/TermType'
 import type { SearchType } from './types/SearchType'
 
-@Module
+@Module({ name: 'storeModule' })
 export default class StoreModule extends VuexModule {
   terms: {
     [key: string]: TermType
