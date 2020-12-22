@@ -13,10 +13,14 @@
       <table class="table is-fullwidth is-hoverable">
         <thead>
           <tr>
-            <th v-for="field in fields" :key="field.name">
+            <th
+              v-for="field in fields"
+              :key="field.name"
+              :class="field.name || field.type"
+            >
               {{ ui[field.name] }}
             </th>
-            <th />
+            <th class="row-buttons" />
           </tr>
         </thead>
         <tbody ref="termlist" class="list">
@@ -115,5 +119,13 @@ export default class TermList extends TermListProps {
 .loading-indicator {
   position: absolute;
   top: 0;
+}
+
+.table th.date {
+  width: 9.6em;
+}
+
+.table th.row-buttons {
+  width: 3.9em;
 }
 </style>
