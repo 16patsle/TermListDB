@@ -55,10 +55,6 @@ import fields from '../assets/fields'
 
 const TermListProps = Vue.extend({
   props: {
-    terms: {
-      type: Object,
-      required: true,
-    },
     loading: {
       type: Boolean,
       required: false,
@@ -79,6 +75,7 @@ const TermListProps = Vue.extend({
 export default class TermList extends TermListProps {
   ui = ui
   fields = fields
+  terms = this.$store.state.storeModule.terms
   currentPage = 1
 
   search(search: SearchType): void {

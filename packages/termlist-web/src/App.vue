@@ -60,7 +60,6 @@
       <TermList
         v-if="$store.state.storeModule.auth.authenticated"
         ref="list"
-        :terms="terms"
         :loading="loading"
         @edit="editTerm"
         @remove="confirmRemoveTerm"
@@ -129,12 +128,6 @@ export default class App extends Vue {
   exportURI = ''
   sortedBy: FieldNameType = 'term'
   loading = false
-
-  get terms(): {
-    [key: string]: TermType
-  } {
-    return this.$store.state.storeModule.terms
-  }
 
   created(): void {
     this.loading = true
