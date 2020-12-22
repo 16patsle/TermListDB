@@ -88,6 +88,7 @@ import Authenticate from './components/Authenticate.vue'
 import TermList from './components/TermList.vue'
 
 import ui from './assets/ui'
+import storeModule from './utils/storeModule'
 
 import type { TermType } from './types/TermType'
 import type { StateType } from './types/StateType'
@@ -121,6 +122,7 @@ export default class App extends Vue {
     auth: Authenticate
   }
   $store!: Store<StateType>
+  storeModule = storeModule
 
   ui = ui
   currentTerm: TermType | null = null
@@ -137,18 +139,18 @@ export default class App extends Vue {
   created(): void {
     this.loading = true
 
-    this.$store.dispatch('fetchTotal')
-    this.$store
-      .dispatch('getTerms', {
+    this.storeModule.fetchTotal()
+    this.storeModule
+      .getTerms({
         field: this.sortedBy,
       })
       .then(() => (this.loading = false))
 
     this.$store.subscribe(mutation => {
       if (mutation.type === 'setAuthenticated') {
-        this.$store.dispatch('fetchTotal')
-        this.$store
-          .dispatch('getTerms', {
+        this.storeModule.fetchTotal()
+        this.storeModule
+          .getTerms({
             field: this.sortedBy,
           })
           .then(() => (this.loading = false))
@@ -173,19 +175,19 @@ export default class App extends Vue {
   saveTerm(term: TermType): void {
     if (term.term) {
       // Update existing term
-      this.$store.dispatch('save', term)
+      this.storeModule.save(term)
     } else {
       // Add new term
-      this.$store.dispatch('add', term)
+      this.storeModule.add(term)
     }
   }
 
   removeTerm(term: TermType): void {
-    this.$store.dispatch('remove', term)
+    this.storeModule.remove(term)
   }
 
   async gotoPage(pageNumber: number, currentPage: number): Promise<void> {
-    const terms = this.$store.state.storeModule.terms
+    const terms = this.storeModule.terms
     const pageNumberOffset = pageNumber - currentPage
     const isBefore = pageNumber < currentPage
 
@@ -193,14 +195,14 @@ export default class App extends Vue {
 
     if (Math.abs(pageNumberOffset) === 1) {
       if (isBefore) {
-        await this.$store.dispatch('getTerms', {
+        await this.storeModule.getTerms({
           field: this.sortedBy,
           endBefore: Object.entries(terms)[0][1][this.sortedBy],
         })
 
         this.loading = false
       } else {
-        await this.$store.dispatch('getTerms', {
+        await this.storeModule.getTerms({
           field: this.sortedBy,
           startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
             this.sortedBy
@@ -213,7 +215,7 @@ export default class App extends Vue {
       if (isBefore) {
         const limit = pageNumber * 20
 
-        await this.$store.dispatch('getTerms', {
+        await this.storeModule.getTerms({
           field: this.sortedBy,
           limit,
           showLimit: 20,
@@ -221,8 +223,7 @@ export default class App extends Vue {
 
         this.loading = false
       } else {
-        const termsLeft =
-          this.$store.state.storeModule.totalRows - 20 * currentPage
+        const termsLeft = this.storeModule.totalRows - 20 * currentPage
         // Amount of terms on x pages
         const limit = termsLeft
         let showLimit = 20
@@ -233,7 +234,7 @@ export default class App extends Vue {
           showLimit = termsLeft % 20
         }
 
-        await this.$store.dispatch('getTerms', {
+        await this.storeModule.getTerms({
           field: this.sortedBy,
           startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
             this.sortedBy
@@ -249,13 +250,13 @@ export default class App extends Vue {
 
   async search(search: SearchType): Promise<void> {
     this.loading = true
-    await this.$store.dispatch('find', { field: this.sortedBy, ...search })
+    await this.storeModule.find({ field: this.sortedBy, ...search })
     this.loading = false
   }
 
   async sort(field: FieldNameType): Promise<void> {
     this.loading = true
-    await this.$store.dispatch('getTerms', {
+    await this.storeModule.getTerms({
       field: field,
     })
     this.loading = false
@@ -280,12 +281,12 @@ export default class App extends Vue {
   }
 
   async importTerms(terms: TermType[]): Promise<void> {
-    this.$store.commit('prepareImport', terms.length)
+    this.storeModule.prepareImport(terms.length)
 
     let imports = []
 
     for (let term of terms) {
-      if (this.$store.state.storeModule.imports.cancel === false) {
+      if (this.storeModule.imports.cancel === false) {
         imports.push(
           this.$store.dispatch(
             'importTerms',
@@ -302,8 +303,8 @@ export default class App extends Vue {
 
     await Promise.all(imports)
 
-    await this.$store.dispatch('fetchTotal')
-    await this.$store.dispatch('getTerms', {
+    await this.storeModule.fetchTotal()
+    await this.storeModule.getTerms({
       field: this.sortedBy,
     })
   }
@@ -313,21 +314,13 @@ export default class App extends Vue {
   }
 
   async exportTerms(): Promise<void> {
-    const terms = await this.$store.dispatch('exportTerms')
-
-    let exported = []
-
-    for (let term of terms.docs) {
-      term = term.data()
-
-      exported.push({
-        _id: term._id,
-        term: term.term,
-        desc: term.desc,
-        date: term.date,
-        type: term.type,
-      })
-    }
+    let exported = (await this.storeModule.exportTerms()).map(term => ({
+      _id: term._id,
+      term: term.term,
+      desc: term.desc,
+      date: term.date,
+      type: term.type,
+    }))
 
     this.exportURI =
       'data:application/json;charset=utf-8, ' +
