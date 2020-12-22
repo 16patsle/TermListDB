@@ -88,7 +88,6 @@ import Authenticate from './components/Authenticate.vue'
 import TermList from './components/TermList.vue'
 
 import ui from './assets/ui'
-import fields from './assets/fields'
 
 import type { TermType } from './types/TermType'
 import type { StateType } from './types/StateType'
@@ -124,7 +123,6 @@ export default class App extends Vue {
   $store!: Store<StateType>
 
   ui = ui
-  fields = fields
   currentTerm: TermType | null = null
   exportURI = ''
   sortedBy: FieldNameType = 'term'
