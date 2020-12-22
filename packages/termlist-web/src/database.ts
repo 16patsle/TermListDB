@@ -121,7 +121,13 @@ class TermDatabase {
     const regex = new RegExp('.*' + regexQuote(search.search) + '.*', 'g')
     search.field = search.field || '_id'
 
-    const allTerms = await this.termsDB.orderBy(search.field).get()
+    let query = this.termsDB.orderBy(search.field)
+    if (search.search.length < 3) {
+      query = query.where('_firstChar', '==', search.search.substr(0, 1))
+    } else {
+      query = query.where('_firstThreeChars', '==', search.search.substr(0, 3))
+    }
+    const allTerms = await query.get()
     let fields = search.fields
     if (search.selected && search.selected !== 'all') {
       fields = fields.filter(val => val.name === search.selected)

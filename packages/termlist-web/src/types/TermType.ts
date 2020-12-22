@@ -12,4 +12,12 @@ export type TermType = {
     | 'conjunction'
     | 'pronounciation'
   _deleted?: boolean
+  /**
+   * First character of term
+   */
+  _firstChar?: string
+  /**
+   * First three characters of term
+   */
+  _firstThreeChars?: string
 }
