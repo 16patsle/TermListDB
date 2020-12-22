@@ -147,7 +147,7 @@ export default class App extends Vue {
   currentTerm: TermType | null = null
   exportURI = ''
   utils: {
-    md?: typeof MarkdownIt
+    md?: MarkdownIt
   } = {
     md: undefined,
   }
