@@ -3,9 +3,10 @@
     <td
       v-for="field in fields"
       :key="field.name"
+      :class="field.name || field.type"
       v-html="getFieldValue(field)"
     />
-    <td>
+    <td class="row-buttons">
       <TermRowButton icon="pencil" @click="edit" />
       <TermRowButton icon="trash" @click="remove" />
     </td>
