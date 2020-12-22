@@ -1,10 +1,12 @@
+import type { FieldNameType } from './FieldNameType'
+
 export type RegularFieldType = {
-  name: string
+  name: FieldNameType
   type: 'short' | 'long' | 'date' | 'filler'
   immutable?: boolean
 }
 export type SelectFieldType = {
-  name: string
+  name: FieldNameType
   type: 'select'
   options: string[]
   immutable?: boolean

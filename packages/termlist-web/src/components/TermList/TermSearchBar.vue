@@ -28,7 +28,7 @@ import Component from 'vue-class-component'
 import AppSelect from '../Generic/AppSelect.vue'
 
 import type { FieldType } from '../../types/FieldType'
-import { SelectOptionType } from '../../types/SelectOptionType'
+import type { SelectOptionType } from '../../types/SelectOptionType'
 
 const TermSearchBarProps = Vue.extend({
   props: {

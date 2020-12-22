@@ -5,13 +5,15 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import AppSelect from '../Generic/AppSelect.vue'
 
-export default {
-  components: {
-    AppSelect,
-  },
+import type { FieldType } from '../../types/FieldType'
+import type { SelectOptionType } from '../../types/SelectOptionType'
+
+const TermSortSelectProps = Vue.extend({
   props: {
     ui: {
       type: Object,
@@ -22,27 +24,30 @@ export default {
       required: true,
     },
   },
-  computed: {
-    options() {
-      let optionsArray = []
+})
 
-      this.fields.forEach(field => {
-        if (field.type !== 'filler') {
-          optionsArray.push({
-            name: field.name,
-            ui: this.ui.sortBy + this.ui[field.name].toLowerCase(),
-          })
-        }
-      })
+@Component({ components: { AppSelect } })
+export default class TermSortSelect extends TermSortSelectProps {
+  fields!: FieldType[]
 
-      return optionsArray
-    },
-  },
-  methods: {
-    sort(value) {
-      // Sort
-      this.$emit('sort', value)
-    },
-  },
+  get options(): SelectOptionType[] {
+    let optionsArray: SelectOptionType[] = []
+
+    this.fields.forEach(field => {
+      if (field.type !== 'filler') {
+        optionsArray.push({
+          name: field.name,
+          ui: this.ui.sortBy + this.ui[field.name].toLowerCase(),
+        })
+      }
+    })
+
+    return optionsArray
+  }
+
+  sort(value: string): void {
+    // Sort
+    this.$emit('sort', value)
+  }
 }
 </script>

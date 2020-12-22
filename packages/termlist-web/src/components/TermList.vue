@@ -43,21 +43,19 @@
     />
   </span>
 </template>
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import TermSearchBar from './TermList/TermSearchBar.vue'
 import TermSortSelect from './TermList/TermSortSelect.vue'
 import TermRow from './TermList/TermRow.vue'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
 
-export default {
-  components: {
-    TermSearchBar,
-    TermSortSelect,
-    TermRow,
-    AppPagination,
-    AppLoading,
-  },
+import type { SearchType } from '../types/SearchType'
+import type { TermType } from '../types/TermType'
+
+const TermListProps = Vue.extend({
   props: {
     utils: {
       type: Object,
@@ -81,30 +79,41 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      currentPage: 1,
-    }
+})
+
+@Component({
+  components: {
+    TermSearchBar,
+    TermSortSelect,
+    TermRow,
+    AppPagination,
+    AppLoading,
   },
-  methods: {
-    search(search) {
-      this.$emit('search', search)
-    },
-    edit(term) {
-      this.$emit('edit', term)
-    },
-    remove(term) {
-      this.$emit('remove', term)
-    },
-    gotoPage(pageNumber) {
-      this.$emit('gotopage', pageNumber, this.currentPage)
-      this.currentPage = pageNumber
-    },
-    sort(field) {
-      this.$emit('sort', field)
-      this.currentPage = 1
-    },
-  },
+})
+export default class TermList extends TermListProps {
+  currentPage = 1
+
+  search(search: SearchType): void {
+    this.$emit('search', search)
+  }
+
+  edit(term: TermType): void {
+    this.$emit('edit', term)
+  }
+
+  remove(term: TermType): void {
+    this.$emit('remove', term)
+  }
+
+  gotoPage(pageNumber: number): void {
+    this.$emit('gotopage', pageNumber, this.currentPage)
+    this.currentPage = pageNumber
+  }
+
+  sort(field: string): void {
+    this.$emit('sort', field)
+    this.currentPage = 1
+  }
 }
 </script>
 
