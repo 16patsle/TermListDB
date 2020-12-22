@@ -8,5 +8,9 @@
     "javascriptreact",
     "vue"
   ],
-  "eslint.workingDirectories": ["packages/termlist-web"]
+  "eslint.workingDirectories": [
+    "packages/termlist-web"
+  ],
+  "vetur.experimental.templateInterpolationService": true,
+  "vetur.validation.templateProps": true
 }
