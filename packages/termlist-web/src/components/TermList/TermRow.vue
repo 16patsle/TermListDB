@@ -14,19 +14,17 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { FieldType } from '../../types/FieldType'
-import { TermType } from '../../types/TermType'
 import TermRowButton from './TermRowButton.vue'
+
+import type { FieldType } from '../../types/FieldType'
+import type { TermType } from '../../types/TermType'
 
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
+import md from '../../utils/markdown'
 
 const TermRowProps = Vue.extend({
   props: {
-    md: {
-      type: Object,
-      required: true,
-    },
     term: {
       type: Object,
       required: true,
@@ -53,7 +51,7 @@ export default class TermRow extends TermRowProps {
     if (!this.term[field.name]) {
       return ''
     } else if (field.name === 'desc') {
-      return this.md.render(String(this.term[field.name]))
+      return md.render(String(this.term[field.name]))
     } else if (field.name === 'type') {
       return this.term.type ? this.ui.wordClasses[this.term.type] : ''
     } else if (field.name === 'date') {

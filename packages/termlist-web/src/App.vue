@@ -60,7 +60,6 @@
       <TermList
         v-if="$store.state.auth.authenticated"
         ref="list"
-        :utils="utils"
         :terms="terms"
         :loading="loading"
         @edit="editTerm"
@@ -87,8 +86,6 @@ import AppNavbar from './components/Generic/AppNavbar.vue'
 import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
 import Authenticate from './components/Authenticate.vue'
 import TermList from './components/TermList.vue'
-
-import MarkdownIt from 'markdown-it'
 
 import ui from './assets/ui'
 import fields from './assets/fields'
@@ -130,11 +127,6 @@ export default class App extends Vue {
   fields = fields
   currentTerm: TermType | null = null
   exportURI = ''
-  utils: {
-    md?: MarkdownIt
-  } = {
-    md: undefined,
-  }
   sortedBy: FieldNameType = 'term'
   loading = false
 
@@ -145,17 +137,6 @@ export default class App extends Vue {
   }
 
   created(): void {
-    this.utils.md = MarkdownIt('zero')
-    this.utils.md.enable([
-      'emphasis',
-      'entity',
-      'escape',
-      'link',
-      'strikethrough',
-      'text_collapse',
-      'balance_pairs',
-    ])
-
     this.loading = true
 
     this.$store.dispatch('fetchTotal')

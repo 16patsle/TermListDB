@@ -23,7 +23,6 @@
           <TermRow
             v-for="term in terms"
             :key="term._id"
-            :md="utils.md"
             :term="term"
             @edit="edit"
             @remove="remove"
@@ -56,10 +55,6 @@ import fields from '../assets/fields'
 
 const TermListProps = Vue.extend({
   props: {
-    utils: {
-      type: Object,
-      required: true,
-    },
     terms: {
       type: Object,
       required: true,
