@@ -9,7 +9,7 @@
         </AppNavbarItem>
       </template>
       <template #start>
-        <AppNavbarItem v-if="$store.state.auth.authenticated">
+        <AppNavbarItem v-if="$store.state.storeModule.auth.authenticated">
           <div class="field is-grouped">
             <div class="control">
               <AppButton :primary="true" @click="addTerm">
@@ -30,10 +30,10 @@
         </AppNavbarItem>
       </template>
       <template #end>
-        <AppNavbarItem v-if="$store.state.auth.authenticated">
-          {{ $store.state.auth.user.displayName }}
+        <AppNavbarItem v-if="$store.state.storeModule.auth.authenticated">
+          {{ $store.state.storeModule.auth.user.displayName }}
         </AppNavbarItem>
-        <AppNavbarItem v-if="$store.state.auth.authenticated">
+        <AppNavbarItem v-if="$store.state.storeModule.auth.authenticated">
           <AppButton @click="logOut">
             {{ ui.logOut }}
           </AppButton>
@@ -58,7 +58,7 @@
     <Authenticate ref="auth" />
     <div class="container">
       <TermList
-        v-if="$store.state.auth.authenticated"
+        v-if="$store.state.storeModule.auth.authenticated"
         ref="list"
         :terms="terms"
         :loading="loading"
@@ -131,7 +131,7 @@ export default class App extends Vue {
   get terms(): {
     [key: string]: TermType
   } {
-    return this.$store.state.terms
+    return this.$store.state.storeModule.terms
   }
 
   created(): void {
@@ -185,7 +185,7 @@ export default class App extends Vue {
   }
 
   async gotoPage(pageNumber: number, currentPage: number): Promise<void> {
-    const terms = this.$store.state.terms
+    const terms = this.$store.state.storeModule.terms
     const pageNumberOffset = pageNumber - currentPage
     const isBefore = pageNumber < currentPage
 
@@ -221,7 +221,8 @@ export default class App extends Vue {
 
         this.loading = false
       } else {
-        const termsLeft = this.$store.state.totalRows - 20 * currentPage
+        const termsLeft =
+          this.$store.state.storeModule.totalRows - 20 * currentPage
         // Amount of terms on x pages
         const limit = termsLeft
         let showLimit = 20
@@ -284,7 +285,7 @@ export default class App extends Vue {
     let imports = []
 
     for (let term of terms) {
-      if (this.$store.state.imports.cancel === false) {
+      if (this.$store.state.storeModule.imports.cancel === false) {
         imports.push(
           this.$store.dispatch(
             'importTerms',

@@ -5,7 +5,7 @@
     <AppPagination
       :firstpage="1"
       :currentpage="currentPage"
-      :lastpage="Math.ceil($store.state.totalRows / 20)"
+      :lastpage="Math.ceil($store.state.storeModule.totalRows / 20)"
       @gotopage="gotoPage"
     />
     <div class="content-container">
@@ -33,7 +33,7 @@
     <AppPagination
       :firstpage="1"
       :currentpage="currentPage"
-      :lastpage="Math.ceil($store.state.totalRows / 20)"
+      :lastpage="Math.ceil($store.state.storeModule.totalRows / 20)"
       @gotopage="gotoPage"
     />
   </span>

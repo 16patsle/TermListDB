@@ -13,25 +13,27 @@
       <div class="field">
         <div class="control">
           <progress
-            :value="$store.state.imports.imported"
-            :max="$store.state.imports.total"
+            :value="$store.state.storeModule.imports.imported"
+            :max="$store.state.storeModule.imports.total"
             class="progress is-primary"
           >
             {{
               Math.round(
-                ($store.state.imports.imported / $store.state.imports.total) *
+                ($store.state.storeModule.imports.imported /
+                  $store.state.storeModule.imports.total) *
                   100
               )
             }}%
           </progress>
           <p class="has-text-centered">
-            {{ $store.state.imports.imported }} /
-            {{ $store.state.imports.total }}
+            {{ $store.state.storeModule.imports.imported }} /
+            {{ $store.state.storeModule.imports.total }}
           </p>
           <p class="has-text-centered">
             {{
               Math.round(
-                ($store.state.imports.imported / $store.state.imports.total) *
+                ($store.state.storeModule.imports.imported /
+                  $store.state.storeModule.imports.total) *
                   100
               )
             }}%
@@ -66,7 +68,7 @@ export default class ModalImporting extends Vue {
 
   mounted(): void {
     this.$watch(
-      () => this.$store.state.imports.finished,
+      () => this.$store.state.storeModule.imports.finished,
       value => {
         if (!value) {
           this.toggleModal(true)

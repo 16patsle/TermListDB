@@ -1,7 +1,10 @@
 <template>
   <div
     id="firebaseui-auth-container"
-    :class="{ modal: true, 'is-active': !$store.state.auth.authenticated }"
+    :class="{
+      modal: true,
+      'is-active': !$store.state.storeModule.auth.authenticated,
+    }"
   >
     <div class="modal-background" />
   </div>
