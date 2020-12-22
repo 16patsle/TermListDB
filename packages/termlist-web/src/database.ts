@@ -11,13 +11,11 @@ const regexQuote = function (str: string) {
 class TermDatabase {
   db: firebase.firestore.Firestore
   userId?: string
-  connected: boolean
   userInfoReference?: firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
-  termsDB: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>
+  termsDB?: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>
 
   constructor(firestore: firebase.firestore.Firestore) {
     this.db = firestore
-    this.connected = false
   }
 
   async start(): Promise<void> {
@@ -43,7 +41,6 @@ class TermDatabase {
     this.termsDB = this.userInfoReference.collection('termlists')
 
     this.userId = user.uid
-    this.connected = true
     console.log('Connected to ' + user.uid + ' as ' + user.displayName)
   }
 
@@ -54,7 +51,7 @@ class TermDatabase {
         firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
       >
     | DocumentSnapshotStub {
-    if (!this.connected) {
+    if (!this.termsDB) {
       console.warn('Not connected to db')
       return new DocumentSnapshotStub()
     }
@@ -62,7 +59,7 @@ class TermDatabase {
   }
 
   remove(id: string): Promise<void> {
-    if (!this.connected) {
+    if (!this.termsDB) {
       console.warn('Not connected to db')
       return Promise.reject('Not connected to db')
     }
@@ -70,7 +67,7 @@ class TermDatabase {
   }
 
   add(termObject: TermType): Promise<void> {
-    if (!this.connected) {
+    if (!this.termsDB) {
       console.warn('Not connected to db')
       return Promise.reject('Not connected to db')
     }
@@ -82,7 +79,7 @@ class TermDatabase {
   }
 
   save(termObject: TermType): Promise<void> {
-    if (!this.connected) {
+    if (!this.termsDB) {
       console.warn('Not connected to db')
       return Promise.reject('Not connected to db')
     }
@@ -90,7 +87,7 @@ class TermDatabase {
   }
 
   async getTerms(data: TermQueryType = {}): Promise<TermType[]> {
-    if (!this.connected) {
+    if (!this.termsDB) {
       console.warn('Not connected to db')
       return []
     }
@@ -115,7 +112,7 @@ class TermDatabase {
   }
 
   async find(search: SearchType): Promise<TermType[]> {
-    if (!this.connected) {
+    if (!this.termsDB) {
       console.warn('Not connected to db')
       return []
     }
@@ -135,7 +132,8 @@ class TermDatabase {
       if (!field.immutable) {
         allTerms.docs.forEach(val => {
           const data = val.data() as TermType
-          if (regex.test(data[field.name])) {
+          const fieldValue = data[field.name]
+          if (fieldValue && regex.test(fieldValue)) {
             returnArray.push(data)
           }
         })
@@ -146,12 +144,12 @@ class TermDatabase {
   }
 
   async getTotalTerms(): Promise<number> {
-    if (!this.connected) {
+    if (!this.userInfoReference) {
       console.warn('Not connected to db')
       return 0
     }
-    const data = await this.userInfoReference.get()
-    return data.data().termlists_total
+    const data = (await this.userInfoReference.get()).data()
+    return data ? data.termlists_total : 0
   }
 }
 
