@@ -39,7 +39,7 @@ export default class StoreModule extends VuexModule {
   totalRows = 0
 
   @Mutation
-  removeMutation(term: TermType): void {
+  protected removeMutation(term: TermType): void {
     Vue.delete(this.terms, term._id)
     this.totalRows++
   }
@@ -55,7 +55,7 @@ export default class StoreModule extends VuexModule {
   }
 
   @Mutation
-  addMutation(term: TermType): void {
+  protected addMutation(term: TermType): void {
     if (!this.terms[term._id]) {
       Vue.set(this.terms, term._id, term)
       this.totalRows++
@@ -75,7 +75,7 @@ export default class StoreModule extends VuexModule {
   }
 
   @Mutation
-  saveMutation(term: TermType): void {
+  protected saveMutation(term: TermType): void {
     if (this.terms[term._id]) {
       if (term._deleted) {
         // TODO: Is this still used?
@@ -111,7 +111,7 @@ export default class StoreModule extends VuexModule {
   }
 
   @Mutation
-  importTermsMutation(term: TermType): void {
+  protected importTermsMutation(term: TermType): void {
     if (!this.terms[term._id]) {
       Vue.set(this.terms, term._id, term)
       this.imports.imported += 1
@@ -152,7 +152,7 @@ export default class StoreModule extends VuexModule {
   }
 
   @Mutation
-  getTermsMutation(
+  protected getTermsMutation(
     data: TermQueryType & {
       terms: TermType[]
     }
@@ -186,7 +186,7 @@ export default class StoreModule extends VuexModule {
   }
 
   @Mutation
-  findMutation(terms: TermType[]): void {
+  protected findMutation(terms: TermType[]): void {
     const termsObject: {
       [key: string]: TermType
     } = {}
