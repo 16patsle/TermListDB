@@ -3,6 +3,13 @@ export type TermType = {
   date: string
   desc?: string
   term?: string
-  type?: string
+  type?:
+    | 'verb'
+    | 'noun'
+    | 'adjective'
+    | 'adverb'
+    | 'preposition'
+    | 'conjunction'
+    | 'pronounciation'
   _deleted?: boolean
 }
