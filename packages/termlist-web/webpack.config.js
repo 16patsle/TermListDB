@@ -27,7 +27,7 @@ module.exports = {
       {
         test: /\.(j|t)s$/,
         loader: 'babel-loader',
-        exclude: /node_modules/,
+        exclude: /node_modules(?!\/vuex-module-decorators)/,
       },
       {
         test: /\.sass$/,
