@@ -17,9 +17,14 @@ const start = async () => {
     created() {
       firebase.auth().onAuthStateChanged(user => {
         store.commit('setAuthenticated', user)
-        database.userInfoReference.onSnapshot(doc => {
-          this.$store.commit('setTotal', doc.data().termlists_total)
-        })
+        if (database.userInfoReference) {
+          database.userInfoReference.onSnapshot(doc => {
+            const data = doc.data()
+            if (data) {
+              this.$store.commit('setTotal', data.termlists_total)
+            }
+          })
+        }
       })
     },
     store,
