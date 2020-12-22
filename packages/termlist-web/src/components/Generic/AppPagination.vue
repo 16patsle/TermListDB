@@ -69,10 +69,12 @@
     </ul>
   </nav>
 </template>
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'vue-class-component'
 import ui from '../../assets/ui'
 
-export default {
+const AppPaginationProps = Vue.extend({
   props: {
     currentpage: {
       type: Number,
@@ -87,35 +89,36 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      ui: ui,
+})
+
+@Component
+export default class AppPagination extends AppPaginationProps {
+  ui = ui
+
+  get lastpageNumber(): string {
+    if (isNaN(this.lastpage)) {
+      return ' '
+    } else {
+      return String(this.lastpage)
     }
-  },
-  computed: {
-    lastpageNumber() {
-      if (isNaN(this.lastpage)) {
-        return ' '
-      } else {
-        return this.lastpage
-      }
-    },
-  },
-  methods: {
-    previous(e) {
-      this.$emit('goto', e)
-      this.gotoPage(this.currentpage - 1)
-    },
-    next(e) {
-      this.$emit('goto', e)
-      this.gotoPage(this.currentpage + 1)
-    },
-    clickPage(e) {
-      this.gotoPage(Number(e.target.textContent))
-    },
-    gotoPage(pageNumber) {
-      this.$emit('gotopage', pageNumber)
-    },
-  },
+  }
+
+  previous(e: MouseEvent): void {
+    this.$emit('goto', e)
+    this.gotoPage(this.currentpage - 1)
+  }
+
+  next(e: MouseEvent): void {
+    this.$emit('goto', e)
+    this.gotoPage(this.currentpage + 1)
+  }
+
+  clickPage(e: MouseEvent): void {
+    this.gotoPage(Number((e.target as Element).textContent))
+  }
+
+  gotoPage(pageNumber: number): void {
+    this.$emit('gotopage', pageNumber)
+  }
 }
 </script>
