@@ -50,7 +50,7 @@ const AppModalProps = Vue.extend({
     },
     callback: {
       type: Function,
-      default() {},
+      default: null,
     },
     closeCallback: {
       type: Function,

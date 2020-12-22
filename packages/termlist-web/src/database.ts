@@ -1,7 +1,5 @@
 import type firebase from 'firebase/app'
 import DocumentSnapshotStub from './DocumentSnapshotStub'
-import QuerySnapshotStub from './QuerySnapshotStub'
-import type { FieldType } from './types/FieldType'
 import type { SearchType } from './types/SearchType'
 import type { TermQueryType } from './types/TermQueryType'
 import type { TermType } from './types/TermType'
@@ -83,7 +81,7 @@ class TermDatabase {
     return this.termsDB.doc(termObject._id).set(termObject)
   }
 
-  save(termObject: { _id: any }): Promise<void> {
+  save(termObject: TermType): Promise<void> {
     if (!this.connected) {
       console.warn('Not connected to db')
       return Promise.reject('Not connected to db')

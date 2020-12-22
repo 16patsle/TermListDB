@@ -1,3 +1,4 @@
+import type firebase from 'firebase/app'
 import type { TermType } from './TermType'
 
 export type StateType = {
@@ -12,7 +13,7 @@ export type StateType = {
   }
   auth: {
     authenticated: boolean
-    user: any
+    user: firebase.User
   }
   totalRows: number
 }
