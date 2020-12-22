@@ -75,8 +75,13 @@ const TermListProps = Vue.extend({
 export default class TermList extends TermListProps {
   ui = ui
   fields = fields
-  terms = this.$store.state.storeModule.terms
   currentPage = 1
+
+  get terms(): {
+    [key: string]: TermType
+  } {
+    return this.$store.state.storeModule.terms
+  }
 
   search(search: SearchType): void {
     this.$emit('search', search)
