@@ -1,9 +1,8 @@
 <template>
   <span>
-    <TermSearchBar :ui="ui" :fields="fields" @search="search" />
-    <TermSortSelect :ui="ui" :fields="fields" @sort="sort" />
+    <TermSearchBar @search="search" />
+    <TermSortSelect @sort="sort" />
     <AppPagination
-      :ui="ui"
       :firstpage="1"
       :currentpage="currentPage"
       :lastpage="Math.ceil($store.state.totalRows / 20)"
@@ -25,9 +24,7 @@
             v-for="term in terms"
             :key="term._id"
             :md="utils.md"
-            :ui="ui"
             :term="term"
-            :fields="fields"
             @edit="edit"
             @remove="remove"
           />
@@ -35,7 +32,6 @@
       </table>
     </div>
     <AppPagination
-      :ui="ui"
       :firstpage="1"
       :currentpage="currentPage"
       :lastpage="Math.ceil($store.state.totalRows / 20)"
@@ -55,22 +51,17 @@ import AppLoading from './Generic/AppLoading.vue'
 import type { SearchType } from '../types/SearchType'
 import type { TermType } from '../types/TermType'
 
+import ui from '../assets/ui'
+import fields from '../assets/fields'
+
 const TermListProps = Vue.extend({
   props: {
     utils: {
       type: Object,
       required: true,
     },
-    ui: {
-      type: Object,
-      required: true,
-    },
     terms: {
       type: Object,
-      required: true,
-    },
-    fields: {
-      type: Array,
       required: true,
     },
     loading: {
@@ -91,6 +82,8 @@ const TermListProps = Vue.extend({
   },
 })
 export default class TermList extends TermListProps {
+  ui = ui
+  fields = fields
   currentPage = 1
 
   search(search: SearchType): void {

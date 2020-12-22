@@ -27,12 +27,10 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 
+import ui from '../../assets/ui'
+
 const ModalExportProps = Vue.extend({
   props: {
-    ui: {
-      type: Object,
-      required: true,
-    },
     exportUri: {
       type: String,
       required: true,
@@ -49,6 +47,8 @@ export default class ModalExport extends ModalExportProps {
   $refs!: {
     modal: AppModal
   }
+
+  ui = ui
 
   get exportInstructions(): string {
     if (this.exported) {

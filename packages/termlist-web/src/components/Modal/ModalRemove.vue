@@ -27,16 +27,10 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
+
 import type { TermType } from '../../types/TermType'
 
-const ModalRemoveProps = Vue.extend({
-  props: {
-    ui: {
-      type: Object,
-      required: true,
-    },
-  },
-})
+import ui from '../../assets/ui'
 
 @Component({
   components: {
@@ -44,11 +38,12 @@ const ModalRemoveProps = Vue.extend({
     AppButton,
   },
 })
-export default class ModalRemove extends ModalRemoveProps {
+export default class ModalRemove extends Vue {
   $refs!: {
     modal: AppModal
   }
 
+  ui = ui
   current: TermType | null = null
 
   get currentTerm(): string {

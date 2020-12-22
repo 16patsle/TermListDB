@@ -49,25 +49,20 @@ import AppModal from '../Generic/AppModal.vue'
 import type { Store } from 'vuex'
 import type { StateType } from '../../types/StateType'
 
-const ModalImportingProps = Vue.extend({
-  props: {
-    ui: {
-      type: Object,
-      required: true,
-    },
-  },
-})
+import ui from '../../assets/ui'
 
 @Component({
   components: {
     AppModal,
   },
 })
-export default class ModalImporting extends ModalImportingProps {
+export default class ModalImporting extends Vue {
   $refs!: {
     modal: AppModal
   }
   $store!: Store<StateType>
+
+  ui = ui
 
   mounted(): void {
     this.$watch(

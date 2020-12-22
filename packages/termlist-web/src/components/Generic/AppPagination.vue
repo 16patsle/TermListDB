@@ -70,12 +70,10 @@
   </nav>
 </template>
 <script>
+import ui from '../../assets/ui'
+
 export default {
   props: {
-    ui: {
-      type: Object,
-      required: true,
-    },
     currentpage: {
       type: Number,
       required: true,
@@ -88,6 +86,11 @@ export default {
       type: Number,
       required: true,
     },
+  },
+  data() {
+    return {
+      ui: ui,
+    }
   },
   computed: {
     lastpageNumber() {

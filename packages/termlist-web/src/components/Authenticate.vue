@@ -13,17 +13,11 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import * as firebaseui from 'termlist-auth-ui'
 
-const AuthenticateProps = Vue.extend({
-  props: {
-    ui: {
-      type: Object,
-      required: true,
-    },
-  },
-})
+import ui from '../assets/ui'
 
 @Component
-export default class Aunthenticate extends AuthenticateProps {
+export default class Aunthenticate extends Vue {
+  ui = ui
   uiConfig: firebaseui.auth.Config = {
     callbacks: {
       signInSuccessWithAuthResult(): boolean {

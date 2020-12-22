@@ -40,44 +40,28 @@
         </AppNavbarItem>
       </template>
     </AppNavbar>
-    <ModalAdd
-      ref="addModal"
-      :current="currentTerm"
-      :ui="ui"
-      :fields="fields"
-      @save="saveTerm"
-    />
-    <ModalEdit
-      ref="editModal"
-      :current="currentTerm"
-      :ui="ui"
-      :fields="fields"
-      @save="saveTerm"
-    />
+    <ModalAdd ref="addModal" :current="currentTerm" @save="saveTerm" />
+    <ModalEdit ref="editModal" :current="currentTerm" @save="saveTerm" />
     <ModalRemove
       ref="removeModal"
       :current="currentTerm"
-      :ui="ui"
       @remove="removeTerm"
     />
-    <ModalImport ref="importModal" :ui="ui" @import="importTerms" />
-    <ModalImporting ref="importingModal" :ui="ui" />
+    <ModalImport ref="importModal" @import="importTerms" />
+    <ModalImporting ref="importingModal" />
     <ModalExport
       ref="exportModal"
-      :ui="ui"
       :export-uri="exportURI"
       @export="exportTerms"
       @close="exportURI = ''"
     />
-    <Authenticate ref="auth" :ui="ui" />
+    <Authenticate ref="auth" />
     <div class="container">
       <TermList
         v-if="$store.state.auth.authenticated"
         ref="list"
         :utils="utils"
-        :ui="ui"
         :terms="terms"
-        :fields="fields"
         :loading="loading"
         @edit="editTerm"
         @remove="confirmRemoveTerm"

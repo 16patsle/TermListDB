@@ -10,25 +10,15 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import AppSelect from '../Generic/AppSelect.vue'
 
-import type { FieldType } from '../../types/FieldType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
 
-const TermSortSelectProps = Vue.extend({
-  props: {
-    ui: {
-      type: Object,
-      required: true,
-    },
-    fields: {
-      type: Array,
-      required: true,
-    },
-  },
-})
+import ui from '../../assets/ui'
+import fields from '../../assets/fields'
 
 @Component({ components: { AppSelect } })
-export default class TermSortSelect extends TermSortSelectProps {
-  fields!: FieldType[]
+export default class TermSortSelect extends Vue {
+  ui = ui
+  fields = fields
 
   get options(): SelectOptionType[] {
     let optionsArray: SelectOptionType[] = []

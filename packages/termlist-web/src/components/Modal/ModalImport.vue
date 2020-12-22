@@ -49,16 +49,10 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
+
 import type { TermType } from '../../types/TermType'
 
-const ModalImportProps = Vue.extend({
-  props: {
-    ui: {
-      type: Object,
-      required: true,
-    },
-  },
-})
+import ui from '../../assets/ui'
 
 @Component({
   components: {
@@ -66,12 +60,13 @@ const ModalImportProps = Vue.extend({
     AppButton,
   },
 })
-export default class ModalImport extends ModalImportProps {
+export default class ModalImport extends Vue {
   $refs!: {
     modal: AppModal
     importFile: HTMLInputElement
   }
 
+  ui = ui
   selectedFile: File | null = null
   fileReader?: FileReader
   importedTerms: TermType[] = []

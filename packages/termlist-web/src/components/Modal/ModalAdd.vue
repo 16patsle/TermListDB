@@ -50,22 +50,13 @@ import Component from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
+
 import type { FieldType } from '../../types/FieldType'
 import type { TermType } from '../../types/TermType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
 
-const ModalAddProps = Vue.extend({
-  props: {
-    ui: {
-      type: Object,
-      required: true,
-    },
-    fields: {
-      type: Array,
-      required: true,
-    },
-  },
-})
+import ui from '../../assets/ui'
+import fields from '../../assets/fields'
 
 @Component({
   components: {
@@ -74,11 +65,13 @@ const ModalAddProps = Vue.extend({
     AppSelect,
   },
 })
-export default class ModalAdd extends ModalAddProps {
+export default class ModalAdd extends Vue {
   $refs!: {
     modal: AppModal
   }
-  fields!: FieldType[]
+
+  ui = ui
+  fields = fields
 
   get mutableFields(): FieldType[] {
     return this.fields.filter(field => {

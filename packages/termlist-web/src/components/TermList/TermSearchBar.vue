@@ -27,29 +27,20 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import AppSelect from '../Generic/AppSelect.vue'
 
-import type { FieldType } from '../../types/FieldType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
 
-const TermSearchBarProps = Vue.extend({
-  props: {
-    ui: {
-      type: Object,
-      required: true,
-    },
-    fields: {
-      type: Array,
-      required: true,
-    },
-  },
-})
+import ui from '../../assets/ui'
+import fields from '../../assets/fields'
 
 @Component({ components: { AppSelect } })
-export default class TermSearchBar extends TermSearchBarProps {
+export default class TermSearchBar extends Vue {
   $refs!: {
     searchBar: HTMLInputElement
     columnSelect: AppSelect
   }
-  fields!: FieldType[]
+
+  ui = ui
+  fields = fields
 
   search(): void {
     // Search
