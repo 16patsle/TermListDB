@@ -226,7 +226,7 @@ export default class StoreModule extends VuexModule {
     if (user) {
       this.auth.authenticated = true
       database.connect(user)
-      this.auth.user
+      this.auth.user = user
     } else {
       this.auth.authenticated = false
       this.auth.user = undefined
