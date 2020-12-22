@@ -9,7 +9,7 @@
         </AppNavbarItem>
       </template>
       <template #start>
-        <AppNavbarItem v-if="$store.state.storeModule.auth.authenticated">
+        <AppNavbarItem v-if="storeModule.auth.authenticated">
           <div class="field is-grouped">
             <div class="control">
               <AppButton :primary="true" @click="addTerm">
@@ -30,10 +30,12 @@
         </AppNavbarItem>
       </template>
       <template #end>
-        <AppNavbarItem v-if="$store.state.storeModule.auth.authenticated">
-          {{ $store.state.storeModule.auth.user.displayName }}
+        <AppNavbarItem
+          v-if="storeModule.auth.authenticated && storeModule.auth.user"
+        >
+          {{ storeModule.auth.user.displayName }}
         </AppNavbarItem>
-        <AppNavbarItem v-if="$store.state.storeModule.auth.authenticated">
+        <AppNavbarItem v-if="storeModule.auth.authenticated">
           <AppButton @click="logOut">
             {{ ui.logOut }}
           </AppButton>
@@ -58,7 +60,7 @@
     <Authenticate ref="auth" />
     <div class="container">
       <TermList
-        v-if="$store.state.storeModule.auth.authenticated"
+        v-if="storeModule.auth.authenticated"
         ref="list"
         :loading="loading"
         @edit="editTerm"
