@@ -245,17 +245,12 @@ export default class App extends Vue {
 
   async search(search: TermQueryType): Promise<void> {
     this.loading = true
-    if (search.search !== '') {
-      await this.storeModule.getTerms({
-        field: this.sortedBy,
-        search: search.search,
-      })
-    } else {
-      this.storeModule.fetchTotal()
-      await this.storeModule.getTerms({
-        field: this.sortedBy,
-      })
-    }
+
+    this.storeModule.fetchTotal()
+    await this.storeModule.getTerms({
+      field: this.sortedBy,
+      search: search.search,
+    })
 
     this.loading = false
   }
