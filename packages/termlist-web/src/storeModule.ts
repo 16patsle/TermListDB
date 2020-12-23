@@ -67,7 +67,7 @@ export default class StoreModule extends VuexModule {
   async add(term: TermType): Promise<void> {
     try {
       term._firstChar = term.term ? term.term.substr(0, 1) : undefined
-      term._firstThreeChar = term.term ? term.term.substr(0, 3) : undefined
+      term._firstThreeChars = term.term ? term.term.substr(0, 3) : undefined
 
       await database.add(term)
       this.context.commit('addMutation', term)
