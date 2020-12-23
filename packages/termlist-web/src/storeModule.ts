@@ -197,16 +197,18 @@ export default class StoreModule extends VuexModule {
       [key: string]: TermType
     } = {}
 
-    terms.forEach(term => {
-      termsObject[term._id] = term
-    })
+    terms.forEach(term => (termsObject[term._id] = term))
+
     this.terms = termsObject
   }
 
   @Action
   async find(search: SearchType): Promise<void> {
     try {
-      this.context.commit('findMutation', await database.find(search))
+      this.context.commit(
+        'findMutation',
+        await database.getTerms({ field: search.field, search: search.search })
+      )
     } catch (e) {
       console.error('Error:', e, search)
     }

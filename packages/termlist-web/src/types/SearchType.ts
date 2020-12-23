@@ -1,3 +1,5 @@
+import type { FieldNameType } from './FieldNameType'
+
 export type SearchType = {
   /**
    * String to search for
@@ -6,5 +8,5 @@ export type SearchType = {
   /**
    * The field to sort by.
    */
-  field?: string
+  field?: FieldNameType
 }

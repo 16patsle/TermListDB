@@ -21,4 +21,8 @@ export type TermQueryType = {
    * The maximum amount of items to show.
    */
   showLimit?: number
+  /**
+   * String to search for, if we're searching
+   */
+  search?: string
 }

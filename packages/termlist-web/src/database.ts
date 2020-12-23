@@ -95,53 +95,42 @@ class TermDatabase {
       return []
     }
 
-    let result = this.termsDB.orderBy(data.field || '_id')
+    let query = this.termsDB.orderBy(data.field || '_id')
 
     if (data.limit || data.limit === undefined) {
       if (data.endBefore) {
-        result = result.limitToLast(data.limit || 20)
+        query = query.limitToLast(data.limit || 20)
       } else {
-        result = result.limit(data.limit || 20)
+        query = query.limit(data.limit || 20)
       }
     }
     if (data.startAfter) {
-      result = result.startAfter(data.startAfter)
+      query = query.startAfter(data.startAfter)
     }
     if (data.endBefore) {
-      result = result.endBefore(data.endBefore)
+      query = query.endBefore(data.endBefore)
     }
 
-    return (await result.get()).docs.map(val => val.data() as TermType)
-  }
-
-  async find(search: SearchType): Promise<TermType[]> {
-    if (!this.termsDB) {
-      console.warn('Not connected to db')
-      return []
-    }
-
-    /* TODO: Figure out why some stuff doesn't appear, and add search button so we don't search on each key press */
-    const regex = new RegExp('.*' + regexQuote(search.search) + '.*', 'g')
-    search.field = search.field || '_id'
-
-    let query = this.termsDB.orderBy(search.field)
-    if (search.search.length < 3) {
-      query = query.where('_firstChar', '==', search.search.substr(0, 1))
+    if (!data.search) {
+      return (await query.get()).docs.map(val => val.data() as TermType)
     } else {
-      query = query.where('_firstThreeChars', '==', search.search.substr(0, 3))
-    }
-    const allTerms = await query.get()
-    const returnArray: TermType[] = []
+      const regex = new RegExp('.*' + regexQuote(data.search) + '.*', 'g')
 
-    allTerms.docs.forEach(val => {
-      const data = val.data() as TermType
-      const fieldValue = data.term
-      if (fieldValue && regex.test(fieldValue)) {
-        returnArray.push(data)
+      if (data.search.length < 3) {
+        query = query.where('_firstChar', '==', data.search.substr(0, 1))
+      } else {
+        query = query.where('_firstThreeChars', '==', data.search.substr(0, 3))
       }
-    })
 
-    return returnArray
+      return (await query.get()).docs.reduce((returnArray, val) => {
+        const data = val.data() as TermType
+        const { term } = data
+        if (term && regex.test(term)) {
+          returnArray.push(data)
+        }
+        return returnArray
+      }, [] as TermType[])
+    }
   }
 
   async getTotalTerms(): Promise<number> {
