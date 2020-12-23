@@ -1,9 +1,6 @@
 import type firebase from 'firebase/app'
 import DocumentSnapshotStub from './DocumentSnapshotStub'
 
-import fields from './assets/fields'
-
-import type { SearchType } from './types/SearchType'
 import type { TermQueryType } from './types/TermQueryType'
 import type { TermType } from './types/TermType'
 

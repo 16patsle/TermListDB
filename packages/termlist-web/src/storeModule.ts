@@ -6,7 +6,6 @@ import database from './utils/firebase'
 import type firebase from 'firebase/app'
 import type { TermQueryType } from './types/TermQueryType'
 import type { TermType } from './types/TermType'
-import type { SearchType } from './types/SearchType'
 
 @Module({ name: 'storeModule' })
 export default class StoreModule extends VuexModule {
@@ -188,29 +187,6 @@ export default class StoreModule extends VuexModule {
       })
     } catch (e) {
       console.error('Error:', e, data)
-    }
-  }
-
-  @Mutation
-  protected findMutation(terms: TermType[]): void {
-    const termsObject: {
-      [key: string]: TermType
-    } = {}
-
-    terms.forEach(term => (termsObject[term._id] = term))
-
-    this.terms = termsObject
-  }
-
-  @Action
-  async find(search: SearchType): Promise<void> {
-    try {
-      this.context.commit(
-        'findMutation',
-        await database.getTerms({ field: search.field, search: search.search })
-      )
-    } catch (e) {
-      console.error('Error:', e, search)
     }
   }
 

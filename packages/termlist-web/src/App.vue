@@ -93,9 +93,9 @@ import storeModule from './utils/storeModule'
 
 import type { TermType } from './types/TermType'
 import type { StateType } from './types/StateType'
-import type { SearchType } from './types/SearchType'
 import type { Store } from 'vuex'
 import type { FieldNameType } from './types/FieldNameType'
+import type { TermQueryType } from './types/TermQueryType'
 
 @Component({
   name: 'App',
@@ -243,10 +243,13 @@ export default class App extends Vue {
     }
   }
 
-  async search(search: SearchType): Promise<void> {
+  async search(search: TermQueryType): Promise<void> {
     this.loading = true
     if (search.search !== '') {
-      await this.storeModule.find({ field: this.sortedBy, ...search })
+      await this.storeModule.getTerms({
+        field: this.sortedBy,
+        search: search.search,
+      })
     } else {
       this.storeModule.fetchTotal()
       await this.storeModule.getTerms({

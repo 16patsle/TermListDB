@@ -51,8 +51,8 @@ import TermRow from './TermList/TermRow.vue'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
 
-import type { SearchType } from '../types/SearchType'
 import type { TermType } from '../types/TermType'
+import type { TermQueryType } from '../types/TermQueryType'
 
 import ui from '../assets/ui'
 import fields from '../assets/fields'
@@ -87,7 +87,7 @@ export default class TermList extends TermListProps {
     return this.$store.state.storeModule.terms
   }
 
-  search(search: SearchType): void {
+  search(search: TermQueryType): void {
     this.$emit('search', search)
   }
 
