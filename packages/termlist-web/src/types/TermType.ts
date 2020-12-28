@@ -13,11 +13,8 @@ export type TermType = {
     | 'pronounciation'
   _deleted?: boolean
   /**
-   * First character of term
+   * Slices of the term name used for searching
+   * Usually contain the first char and the first three chars
    */
-  _firstChar?: string
-  /**
-   * First three characters of term
-   */
-  _firstThreeChars?: string
+  _charSlices?: string[]
 }

@@ -113,11 +113,11 @@ class TermDatabase {
     } else {
       const regex = new RegExp('.*' + regexQuote(data.search) + '.*', 'g')
 
+      let slice = data.search.substr(0, 3)
       if (data.search.length < 3) {
-        query = query.where('_firstChar', '==', data.search.substr(0, 1))
-      } else {
-        query = query.where('_firstThreeChars', '==', data.search.substr(0, 3))
+        slice = data.search.substr(0, 1)
       }
+      query = query.where('_charSlices', 'array-contains', slice)
 
       return (await query.get()).docs.reduce((returnArray, val) => {
         const data = val.data() as TermType
