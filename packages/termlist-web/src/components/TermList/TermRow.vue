@@ -75,4 +75,8 @@ export default class TermRow extends TermRowProps {
 tr.term-row td {
   white-space: pre-line;
 }
+
+tr.term-row td.desc p {
+  display: inline-block;
+}
 </style>
