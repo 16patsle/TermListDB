@@ -5,7 +5,7 @@
     <AppPagination
       :firstpage="1"
       :currentpage="currentPage"
-      :lastpage="Math.ceil($store.state.storeModule.totalRows / 20)"
+      :lastpage="lastPage"
       @gotopage="gotoPage"
     />
     <div class="content-container">
@@ -40,7 +40,7 @@
     <AppPagination
       :firstpage="1"
       :currentpage="currentPage"
-      :lastpage="Math.ceil($store.state.storeModule.totalRows / 20)"
+      :lastpage="lastPage"
       @gotopage="gotoPage"
     />
   </span>
@@ -92,6 +92,14 @@ export default class TermList extends TermListProps {
 
   get termCount(): number {
     return Object.keys(this.terms).length
+  }
+
+  get lastPage(): number {
+    if (this.termCount < 20) {
+      return this.currentPage
+    } else {
+      return Math.ceil(this.$store.state.storeModule.totalRows / 20)
+    }
   }
 
   search(search: TermQueryType): void {

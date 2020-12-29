@@ -39,6 +39,7 @@
       <li>
         <a
           :aria-label="ui.pagenumber + ' ' + currentpage"
+          :disabled="firstpage == currentpage && currentpage == lastpage"
           class="pagination-link is-current"
           aria-current="page"
         >
