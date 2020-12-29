@@ -40,4 +40,5 @@ export default {
   logIn: 'Logg inn',
   logOut: 'Logg ut',
   noTermsMatching: 'Ingen ord matcher.',
+  selectTermType: 'Velg en ordklasse...',
 }

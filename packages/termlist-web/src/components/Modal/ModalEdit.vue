@@ -127,13 +127,16 @@ export default class ModalEdit extends Vue {
   }
 
   reduce(options: string[]): SelectOptionType[] {
-    return options.reduce((allOptions: SelectOptionType[], option) => {
-      allOptions.push({
-        name: option,
-        ui: this.ui.wordClasses[option],
-      })
-      return allOptions
-    }, [])
+    return options.reduce(
+      (allOptions: SelectOptionType[], option) => {
+        allOptions.push({
+          name: option,
+          ui: this.ui.wordClasses[option],
+        })
+        return allOptions
+      },
+      [{ name: '', ui: this.ui.selectTermType }]
+    )
   }
 }
 </script>
