@@ -10,7 +10,10 @@
     />
     <div class="content-container">
       <AppLoading v-if="loading" class="loading-indicator" />
-      <table class="table is-fullwidth is-hoverable">
+      <div v-if="termCount < 1" class="no-terms-indicator">
+        {{ ui.noTermsMatching }}
+      </div>
+      <table v-if="termCount > 1" class="table is-fullwidth is-hoverable">
         <thead>
           <tr>
             <th
@@ -87,6 +90,10 @@ export default class TermList extends TermListProps {
     return this.$store.state.storeModule.terms
   }
 
+  get termCount(): number {
+    return Object.keys(this.terms).length
+  }
+
   search(search: TermQueryType): void {
     this.$emit('search', search)
   }
@@ -119,6 +126,10 @@ export default class TermList extends TermListProps {
 .loading-indicator {
   position: absolute;
   top: 0;
+}
+
+.no-terms-indicator {
+  margin-bottom: 1.5em;
 }
 
 .table th.date {
