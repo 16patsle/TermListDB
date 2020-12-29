@@ -66,7 +66,7 @@
         @edit="editTerm"
         @remove="confirmRemoveTerm"
         @gotopage="gotoPage"
-        @search="search"
+        @search="debouncedSearch"
         @sort="sort"
       />
     </div>
@@ -76,6 +76,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import debounce from 'lodash.debounce'
 import ModalAdd from './components/Modal/ModalAdd.vue'
 import ModalEdit from './components/Modal/ModalEdit.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
@@ -130,6 +131,7 @@ export default class App extends Vue {
   exportURI = ''
   sortedBy: FieldNameType = 'term'
   loading = false
+  debouncedSearch = debounce(this.search, 400)
 
   created(): void {
     this.loading = true
