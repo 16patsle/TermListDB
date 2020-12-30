@@ -104,9 +104,12 @@ export default class ModalEdit extends Vue {
     }
 
     this.toggleModal(true)
-    this.$refs.modal.$el
-      .querySelector('.field input, .field textarea, .field select')
-      .focus()
+    const focus = this.$refs.modal.$el.querySelector(
+      '.field input, .field textarea, .field select'
+    ) as HTMLElement
+    if (focus) {
+      focus.focus()
+    }
   }
 
   addTerm(): void {
