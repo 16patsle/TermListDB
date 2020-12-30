@@ -52,19 +52,18 @@
     <AppModal
       ref="modalUnsavedWarning"
       :title="ui.unsavedWarningTitle"
-      :ok-text="ui.save"
-      :callback="saveTerm"
-      :cancel-text="ui.discard"
-      :close-callback="
-        () => {
-          dirty = false
-          close()
-        }
-      "
     >
       <template #modal-body>
         {{ ui.unsavedWarningText }}
       </template>
+      <template #modal-footer>
+      <AppButton primary @click="saveTerm">
+        {{ ui.save }}
+      </AppButton>
+      <AppButton danger @click="discard">
+        {{ ui.discard }}
+      </AppButton>
+    </template>
     </AppModal>
   </form>
 </template>
@@ -250,6 +249,11 @@ export default class ModalEdit extends Vue {
       this.toggleModal(false)
       this.toggleModalUnsavedWarning(false)
     }
+  }
+
+  discard(): void {
+    this.dirty = false
+    this.close()
   }
 
   reduce(options: string[]): SelectOptionType[] {
