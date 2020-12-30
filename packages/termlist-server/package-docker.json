@@ -1,6 +1,6 @@
 {
   "name": "termlist-server",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Some kind of dictionary, backend server for termlist-web",
   "main": "index.js",
   "scripts": {
