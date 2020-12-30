@@ -1,7 +1,13 @@
 <template>
   <div class="field is-expanded">
     <div class="control">
-      <AppSelect :options="options" :fullwidth="true" @change="sort" />
+      <AppSelect
+        :default-option="false"
+        :options="options"
+        :fullwidth="true"
+        :value="sortValue"
+        @input="sort"
+      />
     </div>
   </div>
 </template>
@@ -11,6 +17,7 @@ import Component from 'vue-class-component'
 import AppSelect from '../Generic/AppSelect.vue'
 
 import type { SelectOptionType } from '../../types/SelectOptionType'
+import type { FieldNameType } from '../../types/FieldNameType'
 
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
@@ -19,6 +26,7 @@ import fields from '../../assets/fields'
 export default class TermSortSelect extends Vue {
   ui = ui
   fields = fields
+  sortValue = fields[0].name
 
   get options(): SelectOptionType[] {
     let optionsArray: SelectOptionType[] = []
@@ -35,7 +43,8 @@ export default class TermSortSelect extends Vue {
     return optionsArray
   }
 
-  sort(value: string): void {
+  sort(value: FieldNameType): void {
+    this.sortValue = value
     // Sort
     this.$emit('sort', value)
   }
