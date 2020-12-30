@@ -8,14 +8,18 @@
             <input
               v-if="field.type === 'short'"
               :ref="field.name + 'field'"
+              :data-field="field.name"
               class="input"
               type="text"
+              @keyup="handleKeyUp"
             />
             <textarea
               v-else-if="field.type === 'long'"
               :ref="field.name + 'field'"
+              :data-field="field.name"
               class="textarea"
               rows="8"
+              @keyup="handleKeyUp"
             />
             <AppSelect
               v-else-if="
@@ -23,7 +27,9 @@
               "
               :ref="field.name + 'field'"
               :options="reduce(field.options)"
+              :data-field="field.name"
               fullwidth
+              @change="handleSelectChange"
             />
           </div>
         </div>
@@ -46,6 +52,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import debounce from 'lodash.debounce'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
@@ -79,11 +86,43 @@ export default class ModalEdit extends Vue {
   fields = fields
   current: TermType | null = null
   mode: 'add' | 'edit' = 'edit'
+  // @ts-expect-error We need to assign a value here, but the object is populated later.
+  debouncedChangeHandlers: {
+    [K in FieldNameType]: () => void
+  } = {}
 
   get mutableFields(): FieldType[] {
     return (this.fields as FieldType[]).filter(field => {
       return !field.immutable
     })
+  }
+
+  created(): void {
+    for (const field of this.fields) {
+      if (!field.immutable) {
+        this.debouncedChangeHandlers[field.name] = debounce(
+          this.handleDirty.bind(this, field.name),
+          400
+        )
+      }
+    }
+  }
+
+  handleKeyUp(e: KeyboardEvent): void {
+    this.debouncedChangeHandlers[
+      (e.target as HTMLElement).dataset.field as FieldNameType
+    ]()
+  }
+
+  handleSelectChange(_value: never, target: HTMLElement): void {
+    const el = (target as HTMLElement).parentElement
+    if (el) {
+      this.debouncedChangeHandlers[el.dataset.field as FieldNameType]()
+    }
+  }
+
+  handleDirty(fieldName?: string): void {
+    console.log(fieldName)
   }
 
   toggleModal(bool: boolean): void {

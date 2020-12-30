@@ -45,7 +45,7 @@ export default class AppSelect extends AppSelectProps {
 
   change(e: Event): void {
     this.value = (e.target as HTMLInputElement).value
-    this.$emit('change', this.value)
+    this.$emit('change', this.value, e.target)
   }
 }
 </script>
