@@ -171,6 +171,11 @@ export default class App extends Vue {
       term._id = term.date
       // Add new term
       this.storeModule.add(term as TermType)
+
+      // Reload from first page
+      this.storeModule.getTerms({
+      field: this.sortedBy,
+    })
     }
   }
 
