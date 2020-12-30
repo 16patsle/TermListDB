@@ -157,11 +157,15 @@ export default class ModalEdit extends Vue {
     this.current = current
     this.mode = mode
 
-    if (this.mode === 'edit' && this.current) {
-      for (const field of this.fields) {
-        const refName = `${field.name}field` as `${FieldNameType}field`
-        if (!field.immutable && this.$refs[refName]) {
+    for (const field of this.fields) {
+      const refName = `${field.name}field` as `${FieldNameType}field`
+      if (!field.immutable && this.$refs[refName]) {
+        if (this.mode === 'edit' && this.current) {
+          // Populate fields with term values
           this.$refs[refName][0].value = this.current[field.name] || ''
+        } else {
+          // Reset fields
+          this.$refs[refName][0].value = ''
         }
       }
     }
