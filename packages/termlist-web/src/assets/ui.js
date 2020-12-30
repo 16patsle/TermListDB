@@ -41,4 +41,7 @@ export default {
   logOut: 'Logg ut',
   noTermsMatching: 'Ingen ord matcher.',
   selectTermType: 'Velg en ordklasse...',
+  unsavedWarningTitle: 'Ikke-lagrede endringer',
+  unsavedWarningText: 'Du har endringer som ikke er lagret. Vil du lagre?',
+  discard: 'Forkast',
 }

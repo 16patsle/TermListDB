@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent>
-    <AppModal ref="modal" :title="ui.editterm">
+    <AppModal ref="modal" :title="ui.editterm" :close-callback="close">
       <template #modal-body>
         Dirty: {{ dirty }}
         <div v-for="field in mutableFields" :key="field.name" class="field">
@@ -48,6 +48,23 @@
         </AppButton>
       </template>
     </AppModal>
+    <AppModal
+      ref="modalUnsavedWarning"
+      :title="ui.unsavedWarningTitle"
+      :ok-text="ui.save"
+      :callback="saveTerm"
+      :cancel-text="ui.discard"
+      :close-callback="
+        () => {
+          dirty = false
+          close()
+        }
+      "
+    >
+      <template #modal-body>
+        {{ ui.unsavedWarningText }}
+      </template>
+    </AppModal>
   </form>
 </template>
 <script lang="ts">
@@ -76,6 +93,7 @@ import fields from '../../assets/fields'
 export default class ModalEdit extends Vue {
   $refs!: {
     modal: AppModal
+    modalUnsavedWarning: AppModal
   } & {
     [K in `${FieldNameType}field`]:
       | HTMLInputElement[]
@@ -153,6 +171,10 @@ export default class ModalEdit extends Vue {
     this.$refs.modal.toggleModal(bool)
   }
 
+  toggleModalUnsavedWarning(bool: boolean): void {
+    this.$refs.modalUnsavedWarning.toggleModal(bool)
+  }
+
   editTerm(current: TermType | null, mode: 'add' | 'edit' = 'edit'): void {
     this.current = current
     this.mode = mode
@@ -210,12 +232,19 @@ export default class ModalEdit extends Vue {
     this.$emit('save', termObject)
 
     this.toggleModal(false)
+    this.toggleModalUnsavedWarning(false)
 
     this.current = null
+    this.dirty = false
   }
 
   close(): void {
-    this.toggleModal(false)
+    if (this.dirty) {
+      this.toggleModalUnsavedWarning(true)
+    } else {
+      this.toggleModal(false)
+      this.toggleModalUnsavedWarning(false)
+    }
   }
 
   reduce(options: string[]): SelectOptionType[] {
