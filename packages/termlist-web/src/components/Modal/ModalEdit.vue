@@ -2,6 +2,7 @@
   <form @submit.prevent>
     <AppModal ref="modal" :title="ui.editterm">
       <template #modal-body>
+        Dirty: {{ dirty }}
         <div v-for="field in mutableFields" :key="field.name" class="field">
           <label class="label">{{ ui[field.name] }}</label>
           <div class="control">
@@ -90,6 +91,11 @@ export default class ModalEdit extends Vue {
   debouncedChangeHandlers: {
     [K in FieldNameType]: () => void
   } = {}
+  // @ts-expect-error We need to assign a value here, but the object is populated later.
+  dirtyFields: {
+    [K in FieldNameType]: boolean
+  } = {}
+  dirty = false
 
   get mutableFields(): FieldType[] {
     return (this.fields as FieldType[]).filter(field => {
@@ -104,6 +110,7 @@ export default class ModalEdit extends Vue {
           this.handleDirty.bind(this, field.name),
           400
         )
+        this.dirtyFields[field.name] = false
       }
     }
   }
@@ -121,8 +128,25 @@ export default class ModalEdit extends Vue {
     }
   }
 
-  handleDirty(fieldName?: string): void {
-    console.log(fieldName)
+  handleDirty(fieldName: FieldNameType): void {
+    const refName = `${fieldName}field` as `${FieldNameType}field`
+    if (this.mode === 'add' && this.$refs[refName][0].value === '') {
+      // When adding a term and the field is empty
+      this.dirtyFields[fieldName] = false
+    } else if (
+      this.mode === 'edit' &&
+      this.current &&
+      this.current[fieldName] === this.$refs[refName][0].value
+    ) {
+      // When editing a term and the field's value is unchanged
+      this.dirtyFields[fieldName] = false
+    } else {
+      this.dirtyFields[fieldName] = true
+    }
+
+    this.dirty = Object.values(this.dirtyFields).reduce((prev, curr) => {
+      return curr || prev
+    }, false)
   }
 
   toggleModal(bool: boolean): void {
