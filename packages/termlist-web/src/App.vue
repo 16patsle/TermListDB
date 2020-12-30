@@ -42,10 +42,9 @@
         </AppNavbarItem>
       </template>
     </AppNavbar>
-    <ModalEdit ref="editModal" :current="currentTerm" @save="saveTerm" />
+    <ModalEdit ref="editModal" @save="saveTerm" />
     <ModalRemove
       ref="removeModal"
-      :current="currentTerm"
       @remove="removeTerm"
     />
     <ModalImport ref="importModal" @import="importTerms" />
@@ -123,7 +122,6 @@ export default class App extends Vue {
   storeModule = storeModule
 
   ui = ui
-  currentTerm: TermType | null = null
   exportURI = ''
   sortedBy: FieldNameType = 'term'
   loading = false
