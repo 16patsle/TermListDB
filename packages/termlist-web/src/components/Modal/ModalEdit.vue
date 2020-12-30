@@ -53,6 +53,7 @@ import AppSelect from '../Generic/AppSelect.vue'
 import type { FieldType } from '../../types/FieldType'
 import type { TermType } from '../../types/TermType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
+import type { FieldNameType } from '../../types/FieldNameType'
 
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
@@ -67,6 +68,11 @@ import fields from '../../assets/fields'
 export default class ModalEdit extends Vue {
   $refs!: {
     modal: AppModal
+  } & {
+    [K in `${FieldNameType}field`]:
+      | HTMLInputElement[]
+      | HTMLTextAreaElement[]
+      | AppSelect[]
   }
 
   ui = ui
@@ -90,9 +96,9 @@ export default class ModalEdit extends Vue {
 
     if (this.mode === 'edit' && this.current) {
       for (const field of this.fields) {
-        if (!field.immutable && this.$refs[field.name + 'field']) {
-          this.$refs[field.name + 'field'][0].value =
-            this.current[field.name] || ''
+        const refName = `${field.name}field` as `${FieldNameType}field`
+        if (!field.immutable && this.$refs[refName]) {
+          this.$refs[refName][0].value = this.current[field.name] || ''
         }
       }
     }
@@ -126,13 +132,10 @@ export default class ModalEdit extends Vue {
     }
 
     for (const field of this.fields) {
-      if (
-        !field.immutable &&
-        field.name !== '_id' &&
-        this.$refs[field.name + 'field']
-      ) {
-        termObject[field.name] = this.$refs[field.name + 'field'][0].value
-        this.$refs[field.name + 'field'][0].value = ''
+      const refName = `${field.name}field` as `${FieldNameType}field`
+      if (!field.immutable && field.name !== '_id' && this.$refs[refName]) {
+        termObject[field.name] = this.$refs[refName][0].value
+        this.$refs[refName][0].value = ''
       }
     }
 
