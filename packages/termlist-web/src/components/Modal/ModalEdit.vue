@@ -8,7 +8,7 @@
           <div class="control">
             <input
               v-if="field.type === 'short'"
-              :ref="field.name + 'field'"
+              v-model="currentTerm[field.name]"
               :data-field="field.name"
               class="input"
               type="text"
@@ -16,7 +16,7 @@
             />
             <textarea
               v-else-if="field.type === 'long'"
-              :ref="field.name + 'field'"
+              v-model="currentTerm[field.name]"
               :data-field="field.name"
               class="textarea"
               rows="8"
@@ -26,7 +26,8 @@
               v-else-if="
                 field.type === 'select' && field.options instanceof Array
               "
-              :ref="field.name + 'field'"
+              v-model="currentTerm[field.name]"
+              :default-option-name="ui.selectTermType"
               :options="reduce(field.options)"
               :data-field="field.name"
               fullwidth
@@ -83,6 +84,13 @@ import type { FieldNameType } from '../../types/FieldNameType'
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 
+const emptyTerm: TermDefType = {
+  date: new Date().toJSON(),
+  desc: undefined,
+  term: undefined,
+  type: undefined,
+}
+
 @Component({
   components: {
     AppModal,
@@ -94,16 +102,12 @@ export default class ModalEdit extends Vue {
   $refs!: {
     modal: AppModal
     modalUnsavedWarning: AppModal
-  } & {
-    [K in `${FieldNameType}field`]:
-      | HTMLInputElement[]
-      | HTMLTextAreaElement[]
-      | AppSelect[]
   }
 
   ui = ui
   fields = fields
-  current: TermType | null = null
+  currentTerm: TermDefType = Object.assign({}, emptyTerm)
+  originalTerm: TermType | null = null
   mode: 'add' | 'edit' = 'edit'
   // @ts-expect-error We need to assign a value here, but the object is populated later.
   debouncedChangeHandlers: {
@@ -147,14 +151,13 @@ export default class ModalEdit extends Vue {
   }
 
   handleDirty(fieldName: FieldNameType): void {
-    const refName = `${fieldName}field` as `${FieldNameType}field`
-    if (this.mode === 'add' && this.$refs[refName][0].value === '') {
+    if (this.mode === 'add' && this.currentTerm[fieldName] === '') {
       // When adding a term and the field is empty
       this.dirtyFields[fieldName] = false
     } else if (
       this.mode === 'edit' &&
-      this.current &&
-      this.current[fieldName] === this.$refs[refName][0].value
+      this.originalTerm &&
+      this.originalTerm[fieldName] === this.currentTerm[fieldName]
     ) {
       // When editing a term and the field's value is unchanged
       this.dirtyFields[fieldName] = false
@@ -175,19 +178,22 @@ export default class ModalEdit extends Vue {
     this.$refs.modalUnsavedWarning.toggleModal(bool)
   }
 
-  editTerm(current: TermType | null, mode: 'add' | 'edit' = 'edit'): void {
-    this.current = current
+  editTerm(originalTerm: TermType | null, mode: 'add' | 'edit' = 'edit'): void {
+    this.originalTerm = originalTerm
     this.mode = mode
 
+    if (originalTerm) {
+      this.currentTerm.date = originalTerm.date
+    }
+
     for (const field of this.fields) {
-      const refName = `${field.name}field` as `${FieldNameType}field`
-      if (!field.immutable && this.$refs[refName]) {
-        if (this.mode === 'edit' && this.current) {
+      if (!field.immutable) {
+        if (this.mode === 'edit' && originalTerm) {
           // Populate fields with term values
-          this.$refs[refName][0].value = this.current[field.name] || ''
+          this.currentTerm[field.name] = originalTerm[field.name] || ''
         } else {
           // Reset fields
-          this.$refs[refName][0].value = ''
+          this.currentTerm[field.name] = ''
         }
       }
     }
@@ -212,20 +218,19 @@ export default class ModalEdit extends Vue {
         date: new Date().toJSON(),
       }
     } else {
-      if (this.current === null) {
+      if (this.originalTerm === null) {
         return
       }
       termObject = {
-        _id: this.current._id,
-        date: this.current._id,
+        _id: this.originalTerm._id,
+        date: this.originalTerm._id,
       }
     }
 
     for (const field of this.fields) {
-      const refName = `${field.name}field` as `${FieldNameType}field`
-      if (!field.immutable && field.name !== '_id' && this.$refs[refName]) {
-        termObject[field.name] = this.$refs[refName][0].value
-        this.$refs[refName][0].value = ''
+      if (!field.immutable && field.name !== '_id') {
+        termObject[field.name] = this.currentTerm[field.name]
+        this.currentTerm[field.name] = ''
       }
     }
 
@@ -234,7 +239,7 @@ export default class ModalEdit extends Vue {
     this.toggleModal(false)
     this.toggleModalUnsavedWarning(false)
 
-    this.current = null
+    this.originalTerm = null
     this.dirty = false
   }
 
@@ -248,16 +253,13 @@ export default class ModalEdit extends Vue {
   }
 
   reduce(options: string[]): SelectOptionType[] {
-    return options.reduce(
-      (allOptions: SelectOptionType[], option) => {
-        allOptions.push({
-          name: option,
-          ui: this.ui.wordClasses[option],
-        })
-        return allOptions
-      },
-      [{ name: '', ui: this.ui.selectTermType }]
-    )
+    return options.reduce((allOptions: SelectOptionType[], option) => {
+      allOptions.push({
+        name: option,
+        ui: this.ui.wordClasses[option],
+      })
+      return allOptions
+    }, [])
   }
 }
 </script>
