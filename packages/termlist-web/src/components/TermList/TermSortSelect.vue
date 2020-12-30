@@ -4,7 +4,7 @@
       <AppSelect
         :default-option="false"
         :options="options"
-        :fullwidth="true"
+        fullwidth
         :value="sortValue"
         @input="sort"
       />

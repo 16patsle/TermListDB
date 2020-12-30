@@ -13,7 +13,7 @@
       <p>{{ currentTerm }}</p>
     </template>
     <template #modal-footer>
-      <AppButton :danger="true" @click="removeTerm">
+      <AppButton danger @click="removeTerm">
         {{ ui.removeterm }}!
       </AppButton>
       <AppButton @click="close">

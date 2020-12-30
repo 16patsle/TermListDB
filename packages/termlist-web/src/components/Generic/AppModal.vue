@@ -16,7 +16,7 @@
       </section>
       <footer class="modal-card-foot">
         <slot name="modal-footer">
-          <AppButton v-if="okText !== null" :primary="true" @click="callback">
+          <AppButton v-if="okText !== null" primary @click="callback">
             {{ okText }}
           </AppButton>
           <AppButton v-if="cancelText !== null" @click="close">

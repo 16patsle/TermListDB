@@ -35,7 +35,7 @@
       </div>
     </template>
     <template #modal-footer>
-      <AppButton :primary="true" @click="importTerm">
+      <AppButton primary @click="importTerm">
         {{ ui.importTerms }}!
       </AppButton>
       <AppButton @click="close">

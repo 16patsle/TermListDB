@@ -12,7 +12,7 @@
         <AppNavbarItem v-if="storeModule.auth.authenticated">
           <div class="field is-grouped">
             <div class="control">
-              <AppButton :primary="true" @click="addTerm">
+              <AppButton primary @click="addTerm">
                 {{ ui.add }}
               </AppButton>
             </div>
