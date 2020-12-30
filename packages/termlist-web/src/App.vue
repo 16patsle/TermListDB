@@ -42,7 +42,6 @@
         </AppNavbarItem>
       </template>
     </AppNavbar>
-    <ModalAdd ref="addModal" :current="currentTerm" @save="saveTerm" />
     <ModalEdit ref="editModal" :current="currentTerm" @save="saveTerm" />
     <ModalRemove
       ref="removeModal"
@@ -77,7 +76,6 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import debounce from 'lodash.debounce'
-import ModalAdd from './components/Modal/ModalAdd.vue'
 import ModalEdit from './components/Modal/ModalEdit.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
 import ModalImport from './components/Modal/ModalImport.vue'
@@ -101,7 +99,6 @@ import type { TermQueryType } from './types/TermQueryType'
 @Component({
   name: 'App',
   components: {
-    ModalAdd,
     ModalEdit,
     ModalRemove,
     ModalImport,
@@ -116,7 +113,6 @@ import type { TermQueryType } from './types/TermQueryType'
 })
 export default class App extends Vue {
   $refs!: {
-    addModal: ModalAdd
     editModal: ModalEdit
     removeModal: ModalRemove
     importModal: ModalImport
@@ -158,7 +154,7 @@ export default class App extends Vue {
   }
 
   addTerm(): void {
-    this.$refs.addModal.addTerm()
+    this.$refs.editModal.addTerm()
   }
 
   editTerm(term: TermType): void {

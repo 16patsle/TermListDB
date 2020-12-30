@@ -72,6 +72,7 @@ export default class ModalEdit extends Vue {
   ui = ui
   fields = fields
   current: TermType | null = null
+  mode: 'add' | 'edit' = 'edit'
 
   get mutableFields(): FieldType[] {
     return (this.fields as FieldType[]).filter(field => {
@@ -83,33 +84,53 @@ export default class ModalEdit extends Vue {
     this.$refs.modal.toggleModal(bool)
   }
 
-  editTerm(current: TermType): void {
+  editTerm(current: TermType | null, mode: 'add' | 'edit' = 'edit'): void {
     this.current = current
+    this.mode = mode
 
-    for (const field of this.fields) {
-      if (!field.immutable && this.$refs[field.name + 'field']) {
-        this.$refs[field.name + 'field'][0].value =
-          this.current[field.name] || ''
+    if (this.mode === 'edit' && this.current) {
+      for (const field of this.fields) {
+        if (!field.immutable && this.$refs[field.name + 'field']) {
+          this.$refs[field.name + 'field'][0].value =
+            this.current[field.name] || ''
+        }
       }
     }
+
     this.toggleModal(true)
     this.$refs.modal.$el
       .querySelector('.field input, .field textarea, .field select')
       .focus()
   }
 
-  saveTerm(): void {
-    if (this.current === null) {
-      return
-    }
+  addTerm(): void {
+    this.editTerm(null, 'add')
+  }
 
-    let termObject: TermType = {
-      _id: this.current._id,
-      date: this.current._id,
+  saveTerm(): void {
+    let termObject: TermType
+    if (this.mode === 'add') {
+      const date = new Date().toJSON()
+      termObject = {
+        _id: date,
+        date,
+      }
+    } else {
+      if (this.current === null) {
+        return
+      }
+      termObject = {
+        _id: this.current._id,
+        date: this.current._id,
+      }
     }
 
     for (const field of this.fields) {
-      if (!field.immutable && this.$refs[field.name + 'field']) {
+      if (
+        !field.immutable &&
+        field.name !== '_id' &&
+        this.$refs[field.name + 'field']
+      ) {
         termObject[field.name] = this.$refs[field.name + 'field'][0].value
         this.$refs[field.name + 'field'][0].value = ''
       }
