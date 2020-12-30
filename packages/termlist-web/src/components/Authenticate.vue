@@ -14,7 +14,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import * as firebaseui from 'termlist-auth-ui'
+import * as firebaseui from '../auth-ui/esm'
 
 import ui from '../assets/ui'
 

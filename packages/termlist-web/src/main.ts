@@ -3,7 +3,7 @@ import Vue from 'vue'
 import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
 import firebase from 'firebase/app'
-import 'termlist-auth-ui/dist/firebaseui.css'
+import './auth-ui/firebaseui.css'
 import App from './App.vue'
 
 import database from './utils/firebase'
