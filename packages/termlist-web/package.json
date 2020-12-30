@@ -13,7 +13,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "termlist-auth-ui": "^1.0.1",
+    "termlist-auth-ui": "file:../termlist-auth-ui",
     "bulma": "^0.9.1",
     "deepmerge": "^4.2.2",
     "firebase": "^8.2.1",
