@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import type { Store, StoreOptions } from 'vuex'
-import 'termlist-auth-ui/dist/firebaseui.css'
 
 import StoreModule from './storeModule'
 
