@@ -1,5 +1,5 @@
-export type TermType = {
-  _id: string
+export type TermDefType = {
+  _id?: string
   date: string
   desc?: string
   term?: string
@@ -11,6 +11,10 @@ export type TermType = {
     | 'preposition'
     | 'conjunction'
     | 'pronounciation'
+}
+
+export type TermType = TermDefType & {
+  _id: string
   _deleted?: boolean
   /**
    * Slices of the term name used for searching

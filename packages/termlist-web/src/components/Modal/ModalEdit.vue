@@ -51,7 +51,7 @@ import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
 
 import type { FieldType } from '../../types/FieldType'
-import type { TermType } from '../../types/TermType'
+import type { TermDefType, TermType } from '../../types/TermType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
 import type { FieldNameType } from '../../types/FieldNameType'
 
@@ -117,12 +117,10 @@ export default class ModalEdit extends Vue {
   }
 
   saveTerm(): void {
-    let termObject: TermType
+    let termObject: TermDefType
     if (this.mode === 'add') {
-      const date = new Date().toJSON()
       termObject = {
-        _id: date,
-        date,
+        date: new Date().toJSON(),
       }
     } else {
       if (this.current === null) {

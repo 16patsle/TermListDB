@@ -90,7 +90,7 @@ import TermList from './components/TermList.vue'
 import ui from './assets/ui'
 import storeModule from './utils/storeModule'
 
-import type { TermType } from './types/TermType'
+import type { TermDefType, TermType } from './types/TermType'
 import type { StateType } from './types/StateType'
 import type { Store } from 'vuex'
 import type { FieldNameType } from './types/FieldNameType'
@@ -165,13 +165,14 @@ export default class App extends Vue {
     this.$refs.removeModal.confirmRemoveTerm(term)
   }
 
-  saveTerm(term: TermType): void {
-    if (term.term) {
+  saveTerm(term: TermDefType): void {
+    if (term._id) {
       // Update existing term
-      this.storeModule.save(term)
+      this.storeModule.save(term as TermType)
     } else {
+      term._id = term.date
       // Add new term
-      this.storeModule.add(term)
+      this.storeModule.add(term as TermType)
     }
   }
 
