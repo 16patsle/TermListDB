@@ -10,7 +10,9 @@
       "@babel/preset-env",
       {
         "modules": false,
-        "shippedProposals": true
+        "shippedProposals": true,
+        "useBuiltIns": "usage",
+        "corejs": "3.16"
       }
     ]
   ],

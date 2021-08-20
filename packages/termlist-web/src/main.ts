@@ -1,4 +1,3 @@
-import '@babel/polyfill'
 import Vue from 'vue'
 import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
