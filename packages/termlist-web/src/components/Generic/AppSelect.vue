@@ -16,11 +16,10 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import type { SelectOptionType } from '../../types/SelectOptionType'
 
-const AppSelectProps = Vue.extend({
+@Options({
   props: {
     defaultOption: { type: Boolean, default: true },
     defaultOptionName: { type: String, default: '' },
@@ -32,9 +31,7 @@ const AppSelectProps = Vue.extend({
     value: { type: String, default: '' },
   },
 })
-
-@Component
-export default class AppSelect extends AppSelectProps {
+export default class AppSelect extends Vue {
   options!: SelectOptionType[]
   value!: string
 

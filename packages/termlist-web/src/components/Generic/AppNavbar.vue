@@ -21,27 +21,17 @@
     </div>
   </nav>
 </template>
-<script>
-export default {
-  props: {
-    fixed: {
-      type: String,
-      default: null,
-      validator: function (value) {
-        // The value must match one of these strings
-        return ['top', 'bottom'].indexOf(value) !== -1
-      },
-    },
-    bodyPadding: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  mounted() {
-    if (this.bodyPadding && this.fixed) {
-      this.$root.$el.classList.add(`has-navbar-fixed-${this.fixed}`)
-    }
-  },
-  methods: {},
-}
+<script lang="ts" setup>
+import { onMounted } from 'vue'
+
+const props = defineProps<{
+  fixed: 'top' | 'bottom'
+  bodyPadding?: boolean
+}>()
+
+onMounted(() => {
+  if (props.bodyPadding && props.fixed) {
+    //this.$root.$el.classList.add(`has-navbar-fixed-${this.fixed}`)
+  }
+})
 </script>

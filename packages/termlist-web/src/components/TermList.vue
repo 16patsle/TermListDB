@@ -46,8 +46,7 @@
   </span>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Options, Vue, prop } from 'vue-class-component'
 import TermSearchBar from './TermList/TermSearchBar.vue'
 import TermSortSelect from './TermList/TermSortSelect.vue'
 import TermRow from './TermList/TermRow.vue'
@@ -60,17 +59,15 @@ import type { TermQueryType } from '../types/TermQueryType'
 import ui from '../assets/ui'
 import fields from '../assets/fields'
 
-const TermListProps = Vue.extend({
-  props: {
-    loading: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
-})
+class TermListProps {
+  loading = prop({
+    type: Boolean,
+    required: false,
+    default: false,
+  })
+}
 
-@Component({
+@Options({
   components: {
     TermSearchBar,
     TermSortSelect,
@@ -79,7 +76,7 @@ const TermListProps = Vue.extend({
     AppLoading,
   },
 })
-export default class TermList extends TermListProps {
+export default class TermList extends Vue.with(TermListProps) {
   ui = ui
   fields = fields
   currentPage = 1

@@ -71,11 +71,10 @@
   </nav>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import ui from '../../assets/ui'
 
-const AppPaginationProps = Vue.extend({
+@Options({
   props: {
     currentpage: {
       type: Number,
@@ -91,9 +90,7 @@ const AppPaginationProps = Vue.extend({
     },
   },
 })
-
-@Component
-export default class AppPagination extends AppPaginationProps {
+export default class AppPagination extends Vue {
   ui = ui
 
   get lastpageNumber(): string {

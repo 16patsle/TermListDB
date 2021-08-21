@@ -10,15 +10,13 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import {Vue} from 'vue-class-component'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import * as firebaseui from '../auth-ui/esm'
 
 import ui from '../assets/ui'
 
-@Component
 export default class Aunthenticate extends Vue {
   ui = ui
   uiConfig: firebaseui.auth.Config = {

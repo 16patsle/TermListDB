@@ -68,8 +68,7 @@
   </form>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import {Options, Vue} from 'vue-class-component'
 import debounce from 'lodash.debounce'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
@@ -90,7 +89,7 @@ const emptyTerm: TermDefType = {
   type: undefined,
 }
 
-@Component({
+@Options({
   components: {
     AppModal,
     AppButton,

@@ -1,7 +1,7 @@
 /* eslint-env node */
 const path = require('path')
 const webpack = require('webpack')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 require('dotenv').config()
 
 module.exports = {
@@ -22,6 +22,11 @@ module.exports = {
             sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax', // <style lang="sass">
           },
           // other vue-loader options go here
+          compilerOptions: {
+            compatConfig: {
+              MODE: 3,
+            },
+          },
         },
       },
       {
@@ -123,12 +128,14 @@ module.exports = {
   ],
   resolve: {
     alias: {
-      vue$: 'vue/dist/vue.esm.js',
+      vue: '@vue/compat',
     },
     extensions: ['.ts', '.js'],
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
     historyApiFallback: true,
   },
   performance: {

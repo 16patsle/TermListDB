@@ -44,8 +44,7 @@
   </AppModal>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import {Options, Vue} from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 
 import type { Store } from 'vuex'
@@ -53,7 +52,7 @@ import type { StateType } from '../../types/StateType'
 
 import ui from '../../assets/ui'
 
-@Component({
+@Options({
   components: {
     AppModal,
   },

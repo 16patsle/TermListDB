@@ -23,8 +23,7 @@
   </AppModal>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import {Options, Vue} from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 
@@ -32,7 +31,7 @@ import type { TermType } from '../../types/TermType'
 
 import ui from '../../assets/ui'
 
-@Component({
+@Options({
   components: {
     AppModal,
     AppButton,

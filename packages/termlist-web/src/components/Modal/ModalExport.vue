@@ -23,13 +23,15 @@
   </AppModal>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 
 import ui from '../../assets/ui'
 
-const ModalExportProps = Vue.extend({
+@Options({
+  components: {
+    AppModal,
+  },
   props: {
     exportUri: {
       type: String,
@@ -37,13 +39,7 @@ const ModalExportProps = Vue.extend({
     },
   },
 })
-
-@Component({
-  components: {
-    AppModal,
-  },
-})
-export default class ModalExport extends ModalExportProps {
+export default class ModalExport extends Vue {
   $refs!: {
     modal: AppModal
   }

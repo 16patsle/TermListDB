@@ -30,11 +30,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import AppButton from './AppButton.vue'
 
-const AppModalProps = Vue.extend({
+@Options({
+  components: {
+    AppButton,
+  },
   props: {
     okText: {
       type: String,
@@ -58,13 +60,7 @@ const AppModalProps = Vue.extend({
     },
   },
 })
-
-@Component({
-  components: {
-    AppButton,
-  },
-})
-export default class AppModal extends AppModalProps {
+export default class AppModal extends Vue {
   show = false
 
   $refs!: {

@@ -9,30 +9,39 @@
         @keyup="search"
       />
       <span class="icon is-small is-left">
-        <i class="fa fa-search" />
+        <!--<i class="fa fa-search" />-->
       </span>
     </div>
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import { defineComponent, ref } from 'vue'
 
 import ui from '../../assets/ui'
 
-@Component
-export default class TermSearchBar extends Vue {
-  $refs!: {
-    searchBar: HTMLInputElement
-  }
+import type { TermQueryType } from '../../types/TermQueryType'
 
-  ui = ui
+export default defineComponent({
+  emits: {
+    search(payload: TermQueryType) {
+      return typeof payload.search === 'string'
+    },
+  },
+  setup() {
+    const searchBar = ref<InstanceType<typeof HTMLInputElement>>()
 
-  search(): void {
-    // Search
-    this.$emit('search', {
-      search: this.$refs.searchBar.value,
-    })
-  }
-}
+    return {
+      ui,
+      searchBar,
+    }
+  },
+  methods: {
+    search(): void {
+      // Search
+      this.$emit('search', {
+        search: this.searchBar?.value,
+      })
+    },
+  },
+})
 </script>

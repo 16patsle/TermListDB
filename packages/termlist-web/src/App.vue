@@ -43,12 +43,9 @@
       </template>
     </AppNavbar>
     <ModalEdit ref="editModal" @save="saveTerm" />
-    <ModalRemove
-      ref="removeModal"
-      @remove="removeTerm"
-    />
+    <ModalRemove ref="removeModal" @remove="removeTerm" />
     <ModalImport ref="importModal" @import="importTerms" />
-    <ModalImporting ref="importingModal" />
+    <ModalImporting />
     <ModalExport
       ref="exportModal"
       :export-uri="exportURI"
@@ -59,7 +56,6 @@
     <div class="container">
       <TermList
         v-if="storeModule.auth.authenticated"
-        ref="list"
         :loading="loading"
         @edit="editTerm"
         @remove="confirmRemoveTerm"
@@ -71,9 +67,9 @@
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+<script lang="ts" setup>
+import { defineComponent, ref } from 'vue'
+import { useStore } from 'vuex'
 import debounce from 'lodash.debounce'
 import ModalEdit from './components/Modal/ModalEdit.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
@@ -85,254 +81,231 @@ import AppNavbar from './components/Generic/AppNavbar.vue'
 import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
 import Authenticate from './components/Authenticate.vue'
 import TermList from './components/TermList.vue'
-
 import ui from './assets/ui'
 import storeModule from './utils/storeModule'
-
 import type { TermDefType, TermType } from './types/TermType'
-import type { StateType } from './types/StateType'
-import type { Store } from 'vuex'
 import type { FieldNameType } from './types/FieldNameType'
 import type { TermQueryType } from './types/TermQueryType'
 
-@Component({
-  name: 'App',
-  components: {
-    ModalEdit,
-    ModalRemove,
-    ModalImport,
-    ModalImporting,
-    ModalExport,
-    AppButton,
-    AppNavbar,
-    AppNavbarItem,
-    Authenticate,
-    TermList,
-  },
-})
-export default class App extends Vue {
-  $refs!: {
-    editModal: ModalEdit
-    removeModal: ModalRemove
-    importModal: ModalImport
-    exportModal: ModalExport
-    auth: Authenticate
-  }
-  $store!: Store<StateType>
-  storeModule = storeModule
+const $store = useStore()
+const exportURI = ref('')
+const sortedBy = ref<FieldNameType>('term')
+const loading = ref(true)
 
-  ui = ui
-  exportURI = ''
-  sortedBy: FieldNameType = 'term'
-  loading = false
-  debouncedSearch = debounce(this.search, 400)
+const editModal = ref<InstanceType<typeof ModalEdit>>()
+const removeModal = ref<InstanceType<typeof ModalRemove>>()
+const importModal = ref<InstanceType<typeof ModalImport>>()
+const exportModal = ref<InstanceType<typeof ModalExport>>()
+const auth = ref<InstanceType<typeof Authenticate>>()
 
-  created(): void {
-    this.loading = true
+storeModule.fetchTotal()
+storeModule
+  .getTerms({
+    field: sortedBy.value,
+  })
+  .then(() => (loading.value = false))
 
-    this.storeModule.fetchTotal()
-    this.storeModule
+$store.subscribe(mutation => {
+  if (mutation.type === 'setAuthenticated') {
+    storeModule.fetchTotal()
+    storeModule
       .getTerms({
-        field: this.sortedBy,
+        field: sortedBy.value,
       })
-      .then(() => (this.loading = false))
+      .then(() => (loading.value = false))
+  }
+})
 
-    this.$store.subscribe(mutation => {
-      if (mutation.type === 'setAuthenticated') {
-        this.storeModule.fetchTotal()
-        this.storeModule
-          .getTerms({
-            field: this.sortedBy,
-          })
-          .then(() => (this.loading = false))
-      }
+const addTerm = (): void => {
+  editModal.value?.addTerm()
+}
+
+const editTerm = (term: TermType): void => {
+  editModal.value?.editTerm(term)
+}
+
+const confirmRemoveTerm = (term: TermType): void => {
+  removeModal.value?.confirmRemoveTerm(term)
+}
+
+const saveTerm = (term: TermDefType): void => {
+  if (term._id) {
+    // Update existing term
+    storeModule.save(term as TermType)
+  } else {
+    term._id = term.date
+    // Add new term
+    storeModule.add(term as TermType)
+
+    // Reload from first page
+    storeModule.getTerms({
+      field: sortedBy.value,
     })
-
-    document.addEventListener('keyup', this.shortcutUp, false)
-  }
-
-  addTerm(): void {
-    this.$refs.editModal.addTerm()
-  }
-
-  editTerm(term: TermType): void {
-    this.$refs.editModal.editTerm(term)
-  }
-
-  confirmRemoveTerm(term: TermType): void {
-    this.$refs.removeModal.confirmRemoveTerm(term)
-  }
-
-  saveTerm(term: TermDefType): void {
-    if (term._id) {
-      // Update existing term
-      this.storeModule.save(term as TermType)
-    } else {
-      term._id = term.date
-      // Add new term
-      this.storeModule.add(term as TermType)
-
-      // Reload from first page
-      this.storeModule.getTerms({
-      field: this.sortedBy,
-    })
-    }
-  }
-
-  removeTerm(term: TermType): void {
-    this.storeModule.remove(term)
-  }
-
-  async gotoPage(pageNumber: number, currentPage: number): Promise<void> {
-    const terms = this.storeModule.terms
-    const pageNumberOffset = pageNumber - currentPage
-    const isBefore = pageNumber < currentPage
-
-    this.loading = true
-
-    if (Math.abs(pageNumberOffset) === 1) {
-      if (isBefore) {
-        await this.storeModule.getTerms({
-          field: this.sortedBy,
-          endBefore: Object.entries(terms)[0][1][this.sortedBy],
-        })
-
-        this.loading = false
-      } else {
-        await this.storeModule.getTerms({
-          field: this.sortedBy,
-          startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
-            this.sortedBy
-          ],
-        })
-
-        this.loading = false
-      }
-    } else {
-      if (isBefore) {
-        const limit = pageNumber * 20
-
-        await this.storeModule.getTerms({
-          field: this.sortedBy,
-          limit,
-          showLimit: 20,
-        })
-
-        this.loading = false
-      } else {
-        const termsLeft = this.storeModule.totalRows - 20 * currentPage
-        // Amount of terms on x pages
-        const limit = termsLeft
-        let showLimit = 20
-
-        // If the amount of terms won't fill the last page completely,
-        // find out how many are on the last page and add them instead
-        if (termsLeft % 20 !== 0) {
-          showLimit = termsLeft % 20
-        }
-
-        await this.storeModule.getTerms({
-          field: this.sortedBy,
-          startAfter: Object.entries(terms)[Object.keys(terms).length - 1][1][
-            this.sortedBy
-          ],
-          limit,
-          showLimit,
-        })
-
-        this.loading = false
-      }
-    }
-  }
-
-  async search(search: TermQueryType): Promise<void> {
-    this.loading = true
-
-    await this.storeModule.getTerms({
-      field: this.sortedBy,
-      search: search.search,
-    })
-
-    this.loading = false
-  }
-
-  async sort(field: FieldNameType): Promise<void> {
-    this.loading = true
-    await this.storeModule.getTerms({
-      field: field,
-    })
-    this.loading = false
-
-    this.sortedBy = field
-  }
-
-  shortcutUp(e: KeyboardEvent): void {
-    if (
-      e.target &&
-      ['input', 'textarea'].indexOf(
-        (e.target as Element).tagName.toLowerCase()
-      ) === -1 &&
-      e.key.toLowerCase() === 'n'
-    ) {
-      this.addTerm()
-    }
-  }
-
-  confirmImportTerms(): void {
-    this.$refs.importModal.confirmImportTerm()
-  }
-
-  async importTerms(terms: TermType[]): Promise<void> {
-    this.storeModule.prepareImport(terms.length)
-
-    let imports = []
-
-    for (let term of terms) {
-      if (this.storeModule.imports.cancel === false) {
-        imports.push(
-          this.$store.dispatch(
-            'importTerms',
-            Object.assign(
-              {
-                _id: term.date,
-              },
-              term
-            )
-          )
-        )
-      }
-    }
-
-    await Promise.all(imports)
-
-    await this.storeModule.fetchTotal()
-    await this.storeModule.getTerms({
-      field: this.sortedBy,
-    })
-  }
-
-  confirmExportTerms(): void {
-    this.$refs.exportModal.confirmExportTerm()
-  }
-
-  async exportTerms(): Promise<void> {
-    let exported = (await this.storeModule.exportTerms()).map(term => ({
-      _id: term._id,
-      term: term.term,
-      desc: term.desc,
-      date: term.date,
-      type: term.type,
-    }))
-
-    this.exportURI =
-      'data:application/json;charset=utf-8, ' +
-      encodeURIComponent(JSON.stringify(exported))
-  }
-
-  logOut(): void {
-    this.$refs.auth.logOut()
   }
 }
+
+const removeTerm = (term: TermType): void => {
+  storeModule.remove(term)
+}
+
+const gotoPage = async (
+  pageNumber: number,
+  currentPage: number
+): Promise<void> => {
+  const terms = storeModule.terms
+  const pageNumberOffset = pageNumber - currentPage
+  const isBefore = pageNumber < currentPage
+
+  loading.value = true
+
+  if (Math.abs(pageNumberOffset) === 1) {
+    if (isBefore) {
+      await storeModule.getTerms({
+        field: sortedBy.value,
+        endBefore: Object.entries(terms)[0][1][sortedBy.value],
+      })
+
+      loading.value = false
+    } else {
+      await storeModule.getTerms({
+        field: sortedBy.value,
+        startAfter:
+          Object.entries(terms)[Object.keys(terms).length - 1][1][
+            sortedBy.value
+          ],
+      })
+
+      loading.value = false
+    }
+  } else {
+    if (isBefore) {
+      const limit = pageNumber * 20
+
+      await storeModule.getTerms({
+        field: sortedBy.value,
+        limit,
+        showLimit: 20,
+      })
+
+      loading.value = false
+    } else {
+      const termsLeft = storeModule.totalRows - 20 * currentPage
+      // Amount of terms on x pages
+      const limit = termsLeft
+      let showLimit = 20
+
+      // If the amount of terms won't fill the last page completely,
+      // find out how many are on the last page and add them instead
+      if (termsLeft % 20 !== 0) {
+        showLimit = termsLeft % 20
+      }
+
+      await storeModule.getTerms({
+        field: sortedBy.value,
+        startAfter:
+          Object.entries(terms)[Object.keys(terms).length - 1][1][
+            sortedBy.value
+          ],
+        limit,
+        showLimit,
+      })
+
+      loading.value = false
+    }
+  }
+}
+
+const search = async (search: TermQueryType): Promise<void> => {
+  loading.value = true
+
+  await storeModule.getTerms({
+    field: sortedBy.value,
+    search: search,
+  })
+
+  loading.value = false
+}
+
+const debouncedSearch = debounce(search, 400)
+
+const sort = async (field: FieldNameType): Promise<void> => {
+  loading.value = true
+  await storeModule.getTerms({
+    field: field,
+  })
+  loading.value = false
+
+  sortedBy.value = field
+}
+
+const shortcutUp = (e: KeyboardEvent): void => {
+  if (
+    e.target &&
+    ['input', 'textarea'].indexOf(
+      (e.target as Element).tagName.toLowerCase()
+    ) === -1 &&
+    e.key.toLowerCase() === 'n'
+  ) {
+    addTerm()
+  }
+}
+
+const confirmImportTerms = (): void => {
+  importModal.value?.confirmImportTerm()
+}
+
+const importTerms = async (terms: TermType[]): Promise<void> => {
+  storeModule.prepareImport(terms.length)
+
+  let imports = []
+
+  for (let term of terms) {
+    if (storeModule.imports.cancel === false) {
+      imports.push(
+        $store.dispatch(
+          'importTerms',
+          Object.assign(
+            {
+              _id: term.date,
+            },
+            term
+          )
+        )
+      )
+    }
+  }
+
+  await Promise.all(imports)
+
+  await storeModule.fetchTotal()
+  await storeModule.getTerms({
+    field: sortedBy.value,
+  })
+}
+
+const confirmExportTerms = (): void => {
+  exportModal.value?.confirmExportTerm()
+}
+
+const exportTerms = async (): Promise<void> => {
+  let exported = (await storeModule.exportTerms()).map(term => ({
+    _id: term._id,
+    term: term.term,
+    desc: term.desc,
+    date: term.date,
+    type: term.type,
+  }))
+
+  exportURI.value =
+    'data:application/json;charset=utf-8, ' +
+    encodeURIComponent(JSON.stringify(exported))
+}
+
+const logOut = (): void => {
+  auth.value?.logOut()
+}
+
+document.addEventListener('keyup', shortcutUp, false)
 </script>
 
 <style>

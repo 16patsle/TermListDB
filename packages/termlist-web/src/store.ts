@@ -1,12 +1,9 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createStore } from 'vuex'
 import type { Store, StoreOptions } from 'vuex'
 
 import StoreModule from './storeModule'
 
 import type { StateType } from './types/StateType'
-
-Vue.use(Vuex)
 
 const storeOptions: StoreOptions<StateType> = {
   modules: {
@@ -14,6 +11,6 @@ const storeOptions: StoreOptions<StateType> = {
   },
 }
 
-const store: Store<StateType> = new Vuex.Store(storeOptions)
+const store: Store<StateType> = createStore(storeOptions)
 
 export default store

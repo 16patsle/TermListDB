@@ -12,8 +12,8 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+//import Vue from 'vue'
+import { Options, Vue } from 'vue-class-component'
 import AppSelect from '../Generic/AppSelect.vue'
 
 import type { SelectOptionType } from '../../types/SelectOptionType'
@@ -22,7 +22,7 @@ import type { FieldNameType } from '../../types/FieldNameType'
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 
-@Component({ components: { AppSelect } })
+@Options({ components: { AppSelect } })
 export default class TermSortSelect extends Vue {
   ui = ui
   fields = fields

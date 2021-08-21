@@ -13,8 +13,7 @@
   </tr>
 </template>
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import {Options, Vue} from 'vue-class-component'
 import TermRowButton from './TermRowButton.vue'
 
 import type { FieldType } from '../../types/FieldType'
@@ -24,17 +23,13 @@ import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 import md from '../../utils/markdown'
 
-const TermRowProps = Vue.extend({
-  props: {
+@Options({ components: { TermRowButton },props: {
     term: {
       type: Object,
       required: true,
     },
-  },
-})
-
-@Component({ components: { TermRowButton } })
-export default class TermRow extends TermRowProps {
+  }, })
+export default class TermRow extends Vue {
   term!: TermType
 
   ui = ui

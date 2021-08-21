@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { createApp, configureCompat } from 'vue'
 import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
 import firebase from 'firebase/app'
@@ -11,23 +11,24 @@ import store from './store'
 const start = async () => {
   await database.start()
 
-  new Vue({
-    el: '#app',
-    created() {
-      firebase.auth().onAuthStateChanged(user => {
-        store.commit('setAuthenticated', user)
-        if (database.userInfoReference) {
-          database.userInfoReference.onSnapshot(doc => {
-            const data = doc.data()
-            if (data) {
-              this.$store.commit('setTotal', data.termlists_total)
-            }
-          })
+  configureCompat({ RENDER_FUNCTION: false, ATTR_FALSE_VALUE: false })
+
+  const app = createApp(App)
+
+  app.use(store)
+
+  app.mount('#app')
+
+  firebase.auth().onAuthStateChanged(user => {
+    store.commit('setAuthenticated', user)
+    if (database.userInfoReference) {
+      database.userInfoReference.onSnapshot(doc => {
+        const data = doc.data()
+        if (data) {
+          store.commit('setTotal', data.termlists_total)
         }
       })
-    },
-    store,
-    render: h => h(App),
+    }
   })
 }
 start()
