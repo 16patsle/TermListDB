@@ -46,7 +46,9 @@
     {
       "files": ["*.vue"],
       "globals": {
-        "defineProps": true
+        "defineProps": true,
+        "defineEmits": true,
+        "withDefaults": true
       }
     }
   ]

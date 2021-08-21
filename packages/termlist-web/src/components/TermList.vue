@@ -45,81 +45,78 @@
     />
   </span>
 </template>
-<script lang="ts">
-import { Options, Vue, prop } from 'vue-class-component'
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
+import { useStore } from 'vuex'
 import TermSearchBar from './TermList/TermSearchBar.vue'
 import TermSortSelect from './TermList/TermSortSelect.vue'
 import TermRow from './TermList/TermRow.vue'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
-
 import type { TermType } from '../types/TermType'
 import type { TermQueryType } from '../types/TermQueryType'
-
 import ui from '../assets/ui'
 import fields from '../assets/fields'
 
-class TermListProps {
-  loading = prop({
-    type: Boolean,
-    required: false,
-    default: false,
-  })
+const props = withDefaults(
+  defineProps<{
+    loading?: boolean
+  }>(),
+  { loading: false }
+)
+
+const emit = defineEmits<{
+  (e: 'search', search: TermQueryType): void
+  (e: 'edit', term: TermType): void
+  (e: 'remove', term: TermType): void
+  (e: 'gotopage', pageNumber: number, currentPage: number): void
+  (e: 'sort', field: string): void
+}>()
+
+const store = useStore()
+const currentPage = ref(1)
+
+const terms = computed(
+  (): {
+    [key: string]: TermType
+  } => {
+    return store.state.storeModule.terms
+  }
+)
+
+const termCount = computed((): number => {
+  return Object.keys(terms.value).length
+})
+
+const lastPage = computed((): number => {
+  if (termCount.value < 20) {
+    return currentPage.value
+  } else {
+    return Math.ceil(store.state.storeModule.totalRows / 20)
+  }
+})
+
+const search = (search: TermQueryType): void => {
+  emit('search', search)
 }
 
-@Options({
-  components: {
-    TermSearchBar,
-    TermSortSelect,
-    TermRow,
-    AppPagination,
-    AppLoading,
-  },
-})
-export default class TermList extends Vue.with(TermListProps) {
-  ui = ui
-  fields = fields
-  currentPage = 1
+const edit = (term: TermType): void => {
+  emit('edit', term)
+}
 
-  get terms(): {
-    [key: string]: TermType
-  } {
-    return this.$store.state.storeModule.terms
-  }
+const remove = (term: TermType): void => {
+  emit('remove', term)
+}
 
-  get termCount(): number {
-    return Object.keys(this.terms).length
-  }
+const gotoPage = (pageNumber: number): void => {
+  emit('gotopage', pageNumber, currentPage.value)
+  currentPage.value = pageNumber
+}
 
-  get lastPage(): number {
-    if (this.termCount < 20) {
-      return this.currentPage
-    } else {
-      return Math.ceil(this.$store.state.storeModule.totalRows / 20)
-    }
-  }
-
-  search(search: TermQueryType): void {
-    this.$emit('search', search)
-  }
-
-  edit(term: TermType): void {
-    this.$emit('edit', term)
-  }
-
-  remove(term: TermType): void {
-    this.$emit('remove', term)
-  }
-
-  gotoPage(pageNumber: number): void {
-    this.$emit('gotopage', pageNumber, this.currentPage)
-    this.currentPage = pageNumber
-  }
-
-  sort(field: string): void {
-    this.$emit('sort', field)
-    this.currentPage = 1
-  }
+const sort = (field: string): void => {
+  emit('sort', field)
+  currentPage.value = 1
 }
 </script>
 
