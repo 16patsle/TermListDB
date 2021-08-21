@@ -1,4 +1,5 @@
-import { createStore } from 'vuex'
+import { createStore, useStore as baseUseStore } from 'vuex'
+import type { InjectionKey } from 'vue'
 import type { Store, StoreOptions } from 'vuex'
 
 import StoreModule from './storeModule'
@@ -11,6 +12,12 @@ const storeOptions: StoreOptions<StateType> = {
   },
 }
 
-const store: Store<StateType> = createStore(storeOptions)
+export const key: InjectionKey<Store<StateType>> = Symbol()
+
+export const store = createStore<StateType>(storeOptions)
 
 export default store
+
+export const useStore = (): Store<StateType> => {
+  return baseUseStore(key)
+}

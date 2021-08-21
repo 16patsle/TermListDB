@@ -68,9 +68,9 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent, ref } from 'vue'
-import { useStore } from 'vuex'
+import { ref } from 'vue'
 import debounce from 'lodash.debounce'
+import { useStore } from './store'
 import ModalEdit from './components/Modal/ModalEdit.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
 import ModalImport from './components/Modal/ModalImport.vue'

@@ -48,7 +48,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { useStore } from 'vuex'
+import { useStore } from '../store'
 import TermSearchBar from './TermList/TermSearchBar.vue'
 import TermSortSelect from './TermList/TermSortSelect.vue'
 import TermRow from './TermList/TermRow.vue'

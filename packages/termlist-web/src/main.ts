@@ -6,7 +6,7 @@ import './auth-ui/firebaseui.css'
 import App from './App.vue'
 
 import database from './utils/firebase'
-import store from './store'
+import store, { key } from './store'
 
 const start = async () => {
   await database.start()
@@ -15,7 +15,7 @@ const start = async () => {
 
   const app = createApp(App)
 
-  app.use(store)
+  app.use(store, key)
 
   app.mount('#app')
 
