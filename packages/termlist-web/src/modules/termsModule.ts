@@ -13,6 +13,8 @@ export type State = {
   }
 
   totalRows: number
+  askingForRemoveConfirmation: boolean
+  currentRemove?: TermType
 }
 
 export type Mutations = {
@@ -26,12 +28,16 @@ export type Mutations = {
     }
   ): void
   setTotal(state: State, size: number): void
+  askingForRemoveConfirmation(state: State, term: TermType): void
+  cancelRemove(state: State): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
   remove(state: State, term: TermType): void {
-    state.terms[term._id]
-    state.totalRows++
+    delete state.terms[term._id]
+    state.totalRows--
+    state.askingForRemoveConfirmation = false
+    state.currentRemove = undefined
   },
 
   add(state: State, term: TermType): boolean {
@@ -82,6 +88,16 @@ export const mutations: MutationTree<State> & Mutations = {
 
   setTotal(state: State, size: number): void {
     state.totalRows = size
+  },
+
+  askingForRemoveConfirmation(state: State, term: TermType): void {
+    state.askingForRemoveConfirmation = true
+    state.currentRemove = term
+  },
+
+  cancelRemove(state: State): void {
+    state.askingForRemoveConfirmation = false
+    state.currentRemove = undefined
   },
 }
 
@@ -168,6 +184,8 @@ export const termsModule: Module<State, StateType> = {
     },
 
     totalRows: 0,
+    askingForRemoveConfirmation: false,
+    currentRemove: undefined,
   }),
   mutations,
   actions,

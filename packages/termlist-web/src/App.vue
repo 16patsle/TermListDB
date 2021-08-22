@@ -47,7 +47,7 @@
       </template>
     </AppNavbar>
     <ModalEdit ref="editModal" @save="saveTerm" />
-    <ModalRemove ref="removeModal" @remove="removeTerm" />
+    <ModalRemove />
     <ModalImport />
     <ModalImporting />
     <ModalExport />
@@ -71,9 +71,7 @@ import { ref, watch } from 'vue'
 import debounce from 'lodash.debounce'
 import { useStore } from './store'
 import ModalEdit, { ModalEditMethods } from './components/Modal/ModalEdit.vue'
-import ModalRemove, {
-  ModalRemoveMethods,
-} from './components/Modal/ModalRemove.vue'
+import ModalRemove from './components/Modal/ModalRemove.vue'
 import ModalImport from './components/Modal/ModalImport.vue'
 import ModalImporting from './components/Modal/ModalImporting.vue'
 import ModalExport from './components/Modal/ModalExport.vue'
@@ -92,7 +90,6 @@ const sortedBy = ref<FieldNameType>('term')
 const loading = ref(true)
 
 const editModal = ref<InstanceType<typeof ModalEdit> & ModalEditMethods>()
-const removeModal = ref<InstanceType<typeof ModalRemove> & ModalRemoveMethods>()
 const auth = ref<InstanceType<typeof Authenticate>>()
 
 store.dispatch('terms/fetchTotal')
@@ -134,7 +131,7 @@ const editTerm = (term: TermType): void => {
 }
 
 const confirmRemoveTerm = (term: TermType): void => {
-  removeModal.value?.confirmRemoveTerm(term)
+  store.commit('terms/askingForRemoveConfirmation', term)
 }
 
 const saveTerm = (term: TermDefType): void => {
@@ -151,10 +148,6 @@ const saveTerm = (term: TermDefType): void => {
       field: sortedBy.value,
     })
   }
-}
-
-const removeTerm = (term: TermType): void => {
-  store.dispatch('terms/remove', term)
 }
 
 const gotoPage = async (

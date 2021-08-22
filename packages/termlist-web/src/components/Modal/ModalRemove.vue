@@ -10,7 +10,7 @@
       <p class="subtitle">
         {{ ui.wanttoremove }}
       </p>
-      <p>{{ currentTerm }}</p>
+      <p>{{ current?.term || '' }}</p>
     </template>
     <template #modal-footer>
       <AppButton danger @click="removeTerm"> {{ ui.removeterm }}! </AppButton>
@@ -21,52 +21,35 @@
   </AppModal>
 </template>
 
-<script lang="ts">
-export type ModalRemoveMethods = {
-  confirmRemoveTerm(term: TermType): void
-}
-</script>
-
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import type { TermType } from '../../types/TermType'
+import { useStore } from '../../store'
 
 import ui from '../../assets/ui'
 
-const emit = defineEmits<{
-  (e: 'remove', current: TermType): void
-}>()
-
-const current = ref<TermType | null>(null)
+const store = useStore()
 
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 
-const currentTerm = computed((): string => {
-  return current.value && current.value.term ? current.value.term : ''
-})
+const current = computed(() => store.state.terms.currentRemove)
 
-const toggleModal = (bool: boolean): void => {
-  modal.value?.toggleModal(bool)
-}
-
-const confirmRemoveTerm = (term: TermType): void => {
-  current.value = term
-  toggleModal(true)
-}
+watch(
+  () => store.state.terms.askingForRemoveConfirmation,
+  (bool: boolean): void => {
+    modal.value?.toggleModal(bool)
+  }
+)
 
 const removeTerm = (): void => {
   if (current.value) {
-    emit('remove', current.value)
+    store.dispatch('terms/remove', current.value)
   }
-  toggleModal(false)
 }
 
 const close = (): void => {
-  toggleModal(false)
+  store.commit('terms/cancelRemove')
 }
-
-defineExpose({ confirmRemoveTerm })
 </script>
 <style></style>
