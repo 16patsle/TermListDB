@@ -82,12 +82,11 @@ import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
 import Authenticate from './components/Authenticate.vue'
 import TermList from './components/TermList.vue'
 import ui from './assets/ui'
-import storeModule from './utils/storeModule'
 import type { TermDefType, TermType } from './types/TermType'
 import type { FieldNameType } from './types/FieldNameType'
 import type { TermQueryType } from './types/TermQueryType'
 
-const $store = useStore()
+const store = useStore()
 const exportURI = ref('')
 const sortedBy = ref<FieldNameType>('term')
 const loading = ref(true)
@@ -98,18 +97,18 @@ const importModal = ref<InstanceType<typeof ModalImport>>()
 const exportModal = ref<InstanceType<typeof ModalExport>>()
 const auth = ref<InstanceType<typeof Authenticate>>()
 
-storeModule.fetchTotal()
-storeModule
-  .getTerms({
+store.dispatch('terms/fetchTotal')
+store
+  .dispatch('terms/getTerms', {
     field: sortedBy.value,
   })
   .then(() => (loading.value = false))
 
-$store.subscribe(mutation => {
-  if (mutation.type === 'setAuthenticated') {
-    storeModule.fetchTotal()
-    storeModule
-      .getTerms({
+store.subscribe(mutation => {
+  if (mutation.type === 'auth/setAuthenticated') {
+    store.dispatch('terms/fetchTotal')
+    store
+      .dispatch('terms/getTerms', {
         field: sortedBy.value,
       })
       .then(() => (loading.value = false))
@@ -131,28 +130,28 @@ const confirmRemoveTerm = (term: TermType): void => {
 const saveTerm = (term: TermDefType): void => {
   if (term._id) {
     // Update existing term
-    storeModule.save(term as TermType)
+    store.dispatch('terms/save', term as TermType)
   } else {
     term._id = term.date
     // Add new term
-    storeModule.add(term as TermType)
+    store.dispatch('terms/add', term as TermType)
 
     // Reload from first page
-    storeModule.getTerms({
+    store.dispatch('terms/getTerms', {
       field: sortedBy.value,
     })
   }
 }
 
 const removeTerm = (term: TermType): void => {
-  storeModule.remove(term)
+  store.dispatch('terms/remove', term)
 }
 
 const gotoPage = async (
   pageNumber: number,
   currentPage: number
 ): Promise<void> => {
-  const terms = storeModule.terms
+  const terms = store.state.terms.terms
   const pageNumberOffset = pageNumber - currentPage
   const isBefore = pageNumber < currentPage
 
@@ -160,14 +159,14 @@ const gotoPage = async (
 
   if (Math.abs(pageNumberOffset) === 1) {
     if (isBefore) {
-      await storeModule.getTerms({
+      await store.dispatch('terms/getTerms', {
         field: sortedBy.value,
         endBefore: Object.entries(terms)[0][1][sortedBy.value],
       })
 
       loading.value = false
     } else {
-      await storeModule.getTerms({
+      await store.dispatch('terms/getTerms', {
         field: sortedBy.value,
         startAfter:
           Object.entries(terms)[Object.keys(terms).length - 1][1][
@@ -181,7 +180,7 @@ const gotoPage = async (
     if (isBefore) {
       const limit = pageNumber * 20
 
-      await storeModule.getTerms({
+      await store.dispatch('terms/getTerms', {
         field: sortedBy.value,
         limit,
         showLimit: 20,
@@ -189,7 +188,7 @@ const gotoPage = async (
 
       loading.value = false
     } else {
-      const termsLeft = storeModule.totalRows - 20 * currentPage
+      const termsLeft = store.state.terms.totalRows - 20 * currentPage
       // Amount of terms on x pages
       const limit = termsLeft
       let showLimit = 20
@@ -200,7 +199,7 @@ const gotoPage = async (
         showLimit = termsLeft % 20
       }
 
-      await storeModule.getTerms({
+      await store.dispatch('terms/getTerms', {
         field: sortedBy.value,
         startAfter:
           Object.entries(terms)[Object.keys(terms).length - 1][1][
@@ -218,7 +217,7 @@ const gotoPage = async (
 const search = async (search: TermQueryType): Promise<void> => {
   loading.value = true
 
-  await storeModule.getTerms({
+  await store.dispatch('terms/getTerms', {
     field: sortedBy.value,
     search: search,
   })
@@ -230,7 +229,7 @@ const debouncedSearch = debounce(search, 400)
 
 const sort = async (field: FieldNameType): Promise<void> => {
   loading.value = true
-  await storeModule.getTerms({
+  await store.dispatch('terms/getTerms', {
     field: field,
   })
   loading.value = false
@@ -255,15 +254,15 @@ const confirmImportTerms = (): void => {
 }
 
 const importTerms = async (terms: TermType[]): Promise<void> => {
-  storeModule.prepareImport(terms.length)
+  store.commit('import/prepare', terms.length)
 
   let imports = []
 
   for (let term of terms) {
-    if (storeModule.imports.cancel === false) {
+    if (store.state.import.cancel === false) {
       imports.push(
-        $store.dispatch(
-          'importTerms',
+        store.dispatch(
+          'import/import',
           Object.assign(
             {
               _id: term.date,
@@ -277,8 +276,8 @@ const importTerms = async (terms: TermType[]): Promise<void> => {
 
   await Promise.all(imports)
 
-  await storeModule.fetchTotal()
-  await storeModule.getTerms({
+  await store.dispatch('terms/fetchTotal')
+  await store.dispatch('terms/getTerms', {
     field: sortedBy.value,
   })
 }
@@ -288,7 +287,7 @@ const confirmExportTerms = (): void => {
 }
 
 const exportTerms = async (): Promise<void> => {
-  let exported = (await storeModule.exportTerms()).map(term => ({
+  let exported = (await store.dispatch('import/export')).map(term => ({
     _id: term._id,
     term: term.term,
     desc: term.desc,
