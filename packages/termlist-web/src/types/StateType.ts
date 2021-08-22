@@ -1,5 +1,5 @@
-import type StoreModule from '../storeModule'
+import type { State } from '../storeModule'
 
 export type StateType = {
-  storeModule: StoreModule
+  storeModule: State
 }
