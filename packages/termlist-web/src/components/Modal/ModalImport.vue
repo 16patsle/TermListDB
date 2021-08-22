@@ -48,7 +48,6 @@ import { computed, ref, watch } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { useStore } from '../../store'
-import type { TermType } from '../../types/TermType'
 
 import ui from '../../assets/ui'
 
@@ -68,11 +67,12 @@ const fileInfo = computed((): string | null => {
   }
 })
 
-const toggleModal = (bool: boolean): void => {
-  modal.value?.toggleModal(bool)
-}
-
-watch(() => store.state.import.askingForImportConfirmation, toggleModal)
+watch(
+  () => store.state.import.askingForImportConfirmation,
+  (bool: boolean): void => {
+    modal.value?.toggleModal(bool)
+  }
+)
 
 const importTerm = (): void => {
   if (
@@ -85,26 +85,18 @@ const importTerm = (): void => {
       if (fileReader && fileReader.result) {
         let file = JSON.parse(fileReader.result.toString())
 
-        prepareFileImport(file)
+        close()
+        store.dispatch('import/import', [...file])
       }
     }
     fileReader.readAsText(selectedFile.value)
   }
 }
 
-const prepareFileImport = (file: TermType[]): void => {
-  close()
-  store.dispatch('import/import', [...file])
-}
-
 const close = (): void => {
-  if (!importFile.value) {
-    return
+  if (importFile.value) {
+    importFile.value.value = ''
   }
-
-  toggleModal(false)
-
-  importFile.value.value = ''
   selectedFile.value = null
 
   store.commit('import/cancel')

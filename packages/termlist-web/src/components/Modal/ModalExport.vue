@@ -23,35 +23,24 @@ import ui from '../../assets/ui'
 
 const store = useStore()
 
-const exportInstructions = computed(() => {
-  if (exportURI.value) {
-    return ui.downloadExportInstructions
-  } else {
-    return ui.processingExport
-  }
-})
-
+const exportInstructions = computed(() =>
+  exportURI.value ? ui.downloadExportInstructions : ui.processingExport
+)
 const exportURI = computed(() => store.state.import.exportURI)
 
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 
-const toggleModal = (bool: boolean): void => {
-  modal.value?.toggleModal(bool)
-}
-
-const confirmExportTerm = (bool: boolean): void => {
-  if (bool) {
-    toggleModal(true)
-
-    store.dispatch('import/export')
+watch(
+  () => store.state.import.askingForExportConfirmation,
+  (bool: boolean): void => {
+    modal.value?.toggleModal(bool)
+    if (bool) {
+      store.dispatch('import/export')
+    }
   }
-}
-
-watch(() => store.state.import.askingForExportConfirmation, confirmExportTerm)
+)
 
 const close = (): void => {
-  toggleModal(false)
-
   store.commit('import/cancelExport')
 }
 

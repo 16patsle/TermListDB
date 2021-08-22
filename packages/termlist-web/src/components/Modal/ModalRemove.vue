@@ -30,9 +30,7 @@ import { useStore } from '../../store'
 import ui from '../../assets/ui'
 
 const store = useStore()
-
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
-
 const current = computed(() => store.state.terms.currentRemove)
 
 watch(
