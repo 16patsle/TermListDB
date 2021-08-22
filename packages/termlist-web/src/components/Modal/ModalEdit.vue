@@ -60,7 +60,7 @@ export type ModalEditMethods = {
 }
 </script>
 <script lang="ts" setup>
-import { computed, ref } from "vue";
+import { computed, ref } from 'vue'
 import debounce from 'lodash.debounce'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
@@ -97,7 +97,9 @@ const dirtyFields: {
 const dirty = ref(false)
 
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
-const modalUnsavedWarning = ref<InstanceType<typeof AppModal> & AppModalMethods>()
+const modalUnsavedWarning = ref<
+  InstanceType<typeof AppModal> & AppModalMethods
+>()
 
 const mutableFields = computed((): FieldType[] => {
   return (fields as FieldType[]).filter(field => {
@@ -133,7 +135,10 @@ const toggleModalUnsavedWarning = (bool: boolean): void => {
   modalUnsavedWarning.value?.toggleModal(bool)
 }
 
-const editTerm = (originalEditTerm: TermType | null, editMode: 'add' | 'edit' = 'edit'): void => {
+const editTerm = (
+  originalEditTerm: TermType | null,
+  editMode: 'add' | 'edit' = 'edit'
+): void => {
   originalTerm.value = originalEditTerm
   mode.value = editMode
 
@@ -145,14 +150,14 @@ const editTerm = (originalEditTerm: TermType | null, editMode: 'add' | 'edit' = 
     if (!field.immutable) {
       if (mode.value === 'edit' && originalEditTerm) {
         // Populate fields with term values
-        if(field.name === 'type') {
+        if (field.name === 'type') {
           currentTerm.value[field.name] = originalEditTerm[field.name]
         } else {
           currentTerm.value[field.name] = originalEditTerm[field.name] || ''
         }
       } else {
         // Reset fields
-        if(field.name === 'type') {
+        if (field.name === 'type') {
           currentTerm.value[field.name] = undefined
         } else {
           currentTerm.value[field.name] = ''
@@ -192,7 +197,7 @@ const saveTerm = (): void => {
 
   for (const field of fields) {
     if (!field.immutable && currentTerm.value[field.name]) {
-      if(field.name === 'type') {
+      if (field.name === 'type') {
         termObject[field.name] = currentTerm.value[field.name]
         currentTerm.value[field.name] = undefined
       } else {
@@ -250,5 +255,4 @@ defineExpose({
   editTerm,
 })
 </script>
-<style>
-</style>
+<style></style>

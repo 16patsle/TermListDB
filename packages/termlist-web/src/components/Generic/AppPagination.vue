@@ -1,14 +1,19 @@
 <template>
   <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-    <a :disabled="cannotGoBack" class="pagination-previous" @click="previous">{{ ui.previous }}</a>
-    <a :disabled="cannotGoForward" class="pagination-next" @click="next">{{ ui.next }}</a>
+    <a :disabled="cannotGoBack" class="pagination-previous" @click="previous">{{
+      ui.previous
+    }}</a>
+    <a :disabled="cannotGoForward" class="pagination-next" @click="next">{{
+      ui.next
+    }}</a>
     <ul class="pagination-list">
       <li v-if="!(currentpage < firstpage + 1)">
         <a
           :aria-label="ui.gotopage + ' ' + firstpage"
           class="pagination-link"
           @click="clickPage"
-        >{{ firstpage }}</a>
+          >{{ firstpage }}</a
+        >
       </li>
       <li v-if="!(currentpage - 2 <= firstpage)">
         <span class="pagination-ellipsis">&hellip;</span>
@@ -18,7 +23,8 @@
           :aria-label="ui.gotopage + ' ' + (currentpage - 1)"
           class="pagination-link"
           @click="clickPage"
-        >{{ currentpage - 1 }}</a>
+          >{{ currentpage - 1 }}</a
+        >
       </li>
       <li>
         <a
@@ -26,14 +32,16 @@
           :disabled="onlyOnePage"
           class="pagination-link is-current"
           aria-current="page"
-        >{{ currentpage }}</a>
+          >{{ currentpage }}</a
+        >
       </li>
       <li v-if="!(currentpage > lastpage - 2)">
         <a
           :aria-label="ui.gotopage + ' ' + (currentpage + 1)"
           class="pagination-link"
           @click="clickPage"
-        >{{ currentpage + 1 }}</a>
+          >{{ currentpage + 1 }}</a
+        >
       </li>
       <li v-if="!(currentpage + 2 >= lastpage)">
         <span class="pagination-ellipsis">&hellip;</span>
@@ -43,23 +51,27 @@
           :aria-label="ui.gotopage + ' ' + lastpage"
           class="pagination-link"
           @click="clickPage"
-        >{{ lastpageNumber }}</a>
+          >{{ lastpageNumber }}</a
+        >
       </li>
     </ul>
   </nav>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed } from 'vue'
 import ui from '../../assets/ui'
 
-const props = withDefaults(defineProps<{
-  currentpage: number,
-  firstpage?: number,
-  lastpage: number,
-}>(), {
-  firstpage: 1,
-});
+const props = withDefaults(
+  defineProps<{
+    currentpage: number
+    firstpage?: number
+    lastpage: number
+  }>(),
+  {
+    firstpage: 1,
+  }
+)
 
 const emit = defineEmits<{
   (e: 'goto', event: MouseEvent): void
@@ -74,9 +86,17 @@ const lastpageNumber = computed((): string => {
   }
 })
 
-const cannotGoBack = computed(() => props.currentpage == props.firstpage ? true : null)
-const cannotGoForward = computed(() => props.currentpage == props.lastpage ? true : null)
-const onlyOnePage = computed(() => props.currentpage == props.firstpage && props.currentpage == props.lastpage ? true : null)
+const cannotGoBack = computed(() =>
+  props.currentpage == props.firstpage ? true : null
+)
+const cannotGoForward = computed(() =>
+  props.currentpage == props.lastpage ? true : null
+)
+const onlyOnePage = computed(() =>
+  props.currentpage == props.firstpage && props.currentpage == props.lastpage
+    ? true
+    : null
+)
 
 const previous = (e: MouseEvent): void => {
   emit('goto', e)
