@@ -1,5 +1,9 @@
-import type { State } from '../storeModule'
+import type { State as TermState } from '../modules/termsModule'
+import type { State as ImportState } from '../modules/importModule'
+import type { State as AuthState } from '../modules/authModule'
 
 export type StateType = {
-  storeModule: State
+  terms: TermState
+  import: ImportState
+  auth: AuthState
 }

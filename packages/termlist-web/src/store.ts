@@ -8,18 +8,23 @@ import type { InjectionKey } from 'vue'
 import type { Store as VuexStore, StoreOptions } from 'vuex'
 
 import {
-  Actions as ModuleActions,
-  Getters as ModuleGetters,
-  Mutations as ModuleMutations,
-  storeModule,
-} from './storeModule'
+  TermActions,
+  TermGetters,
+  TermMutations,
+  termsModule,
+} from './modules/termsModule'
+import {
+  ImportActions,
+  ImportMutations,
+  importModule,
+} from './modules/importModule'
+import { AuthMutations, authModule } from './modules/authModule'
 
 import type { StateType } from './types/StateType'
-import type { Namespaced } from './types/Namespaced'
 
-type Mutations = Namespaced<ModuleMutations, 'storeModule'>
-type Actions = Namespaced<ModuleActions, 'storeModule'>
-type Getters = Namespaced<ModuleGetters, 'storeModule'>
+export type Mutations = TermMutations & ImportMutations & AuthMutations
+export type Actions = TermActions & ImportActions
+type Getters = TermGetters
 
 export type Store = Omit<
   VuexStore<StateType>,
@@ -44,7 +49,9 @@ export type Store = Omit<
 
 const storeOptions: StoreOptions<StateType> = {
   modules: {
-    storeModule,
+    terms: termsModule,
+    import: importModule,
+    auth: authModule,
   },
 }
 
