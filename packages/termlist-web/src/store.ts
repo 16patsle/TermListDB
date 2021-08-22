@@ -2,6 +2,7 @@ import {
   CommitOptions,
   createStore,
   DispatchOptions,
+  SubscribeOptions,
   useStore as baseUseStore,
 } from 'vuex'
 import type { InjectionKey } from 'vue'
@@ -28,23 +29,25 @@ type Getters = TermGetters
 
 export type Store = Omit<
   VuexStore<StateType>,
-  'getters' | 'commit' | 'dispatch'
+  'getters' | 'commit' | 'dispatch' | 'subscribe'
 > & {
   commit<K extends keyof Mutations, P extends Parameters<Mutations[K]>[1]>(
     key: K,
     payload: P,
     options?: CommitOptions
   ): ReturnType<Mutations[K]>
-} & {
   dispatch<K extends keyof Actions>(
     key: K,
     payload?: Parameters<Actions[K]>[1],
     options?: DispatchOptions
   ): ReturnType<Actions[K]>
-} & {
   getters: {
     [K in keyof Getters]: ReturnType<Getters[K]>
   }
+  subscribe<K extends keyof Mutations, P extends Parameters<Mutations[K]>[1]>(
+    fn: (mutation: { type: K; payload: P }, state: StateType) => any,
+    options?: SubscribeOptions
+  ): () => void
 }
 
 const storeOptions: StoreOptions<StateType> = {
