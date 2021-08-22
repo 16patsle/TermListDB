@@ -35,94 +35,97 @@
       </div>
     </template>
     <template #modal-footer>
-      <AppButton primary @click="importTerm">
-        {{ ui.importTerms }}!
-      </AppButton>
+      <AppButton primary @click="importTerm"> {{ ui.importTerms }}! </AppButton>
       <AppButton @click="close">
         {{ ui.cancel }}
       </AppButton>
     </template>
   </AppModal>
 </template>
-<script lang="ts">
-import {Options, Vue} from 'vue-class-component'
-import AppModal from '../Generic/AppModal.vue'
-import AppButton from '../Generic/AppButton.vue'
 
+<script lang="ts">
+export type ModalImportMethods = {
+  confirmImportTerm(): void
+}
+</script>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
+import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppButton from '../Generic/AppButton.vue'
 import type { TermType } from '../../types/TermType'
 
 import ui from '../../assets/ui'
 
-@Options({
-  components: {
-    AppModal,
-    AppButton,
-  },
+const emit = defineEmits<{
+  (e: 'import', importedTerms: TermType[]): void
+}>()
+
+const selectedFile = ref<File | null>(null)
+const importedTerms = ref<TermType[]>([])
+let fileReader: FileReader
+
+const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
+const importFile = ref<InstanceType<typeof HTMLInputElement>>()
+
+const fileInfo = computed((): string | null => {
+  if (selectedFile.value && selectedFile.value.name) {
+    return selectedFile.value.name
+  } else {
+    return null
+  }
 })
-export default class ModalImport extends Vue {
-  $refs!: {
-    modal: AppModal
-    importFile: HTMLInputElement
-  }
 
-  ui = ui
-  selectedFile: File | null = null
-  fileReader?: FileReader
-  importedTerms: TermType[] = []
+const toggleModal = (bool: boolean): void => {
+  modal.value?.toggleModal(bool)
+}
 
-  get fileInfo(): string | null {
-    if (this.selectedFile && this.selectedFile.name) {
-      return this.selectedFile.name
-    } else {
-      return null
-    }
-  }
+const confirmImportTerm = (): void => {
+  toggleModal(true)
+}
 
-  toggleModal(bool: boolean): void {
-    this.$refs.modal.toggleModal(bool)
-  }
+const importTerm = (): void => {
+  if (
+    selectedFile.value &&
+    selectedFile.value.type === 'application/json' &&
+    selectedFile.value.size > 0
+  ) {
+    fileReader = new FileReader()
+    fileReader.onload = () => {
+      if (fileReader && fileReader.result) {
+        let file = JSON.parse(fileReader.result.toString())
 
-  confirmImportTerm(): void {
-    this.toggleModal(true)
-  }
-
-  importTerm(): void {
-    if (
-      this.selectedFile &&
-      this.selectedFile.type === 'application/json' &&
-      this.selectedFile.size > 0
-    ) {
-      this.fileReader = new FileReader()
-      this.fileReader.onload = () => {
-        if (this.fileReader && this.fileReader.result) {
-          let file = JSON.parse(this.fileReader.result.toString())
-
-          this.prepareFileImport(file)
-        }
+        prepareFileImport(file)
       }
-      this.fileReader.readAsText(this.selectedFile)
     }
-  }
-
-  prepareFileImport(file: TermType[]): void {
-    this.importedTerms = [...file]
-
-    this.$emit('import', this.importedTerms)
-
-    this.close()
-  }
-
-  close(): void {
-    this.toggleModal(false)
-
-    this.$refs.importFile.value = ''
-    this.selectedFile = null
-  }
-
-  handleFiles(e: Event): void {
-    const files = (e.target as HTMLInputElement).files
-    this.selectedFile = files ? files[0] : null
+    fileReader.readAsText(selectedFile.value)
   }
 }
+
+const prepareFileImport = (file: TermType[]): void => {
+  importedTerms.value = [...file]
+
+  emit('import', importedTerms.value)
+
+  close()
+}
+
+const close = (): void => {
+  if (!importFile.value) {
+    return
+  }
+
+  toggleModal(false)
+
+  importFile.value.value = ''
+  selectedFile.value = null
+}
+
+const handleFiles = (e: Event): void => {
+  const files = (e.target as HTMLInputElement).files
+  selectedFile.value = files ? files[0] : null
+}
+
+defineExpose({ confirmImportTerm })
 </script>
 <style></style>

@@ -72,10 +72,16 @@ import { ref } from 'vue'
 import debounce from 'lodash.debounce'
 import { useStore } from './store'
 import ModalEdit, { ModalEditMethods } from './components/Modal/ModalEdit.vue'
-import ModalRemove from './components/Modal/ModalRemove.vue'
-import ModalImport from './components/Modal/ModalImport.vue'
+import ModalRemove, {
+  ModalRemoveMethods,
+} from './components/Modal/ModalRemove.vue'
+import ModalImport, {
+  ModalImportMethods,
+} from './components/Modal/ModalImport.vue'
 import ModalImporting from './components/Modal/ModalImporting.vue'
-import ModalExport from './components/Modal/ModalExport.vue'
+import ModalExport, {
+  ModalExportMethods,
+} from './components/Modal/ModalExport.vue'
 import AppButton from './components/Generic/AppButton.vue'
 import AppNavbar from './components/Generic/AppNavbar.vue'
 import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
@@ -92,9 +98,9 @@ const sortedBy = ref<FieldNameType>('term')
 const loading = ref(true)
 
 const editModal = ref<InstanceType<typeof ModalEdit> & ModalEditMethods>()
-const removeModal = ref<InstanceType<typeof ModalRemove>>()
-const importModal = ref<InstanceType<typeof ModalImport>>()
-const exportModal = ref<InstanceType<typeof ModalExport>>()
+const removeModal = ref<InstanceType<typeof ModalRemove> & ModalRemoveMethods>()
+const importModal = ref<InstanceType<typeof ModalImport> & ModalImportMethods>()
+const exportModal = ref<InstanceType<typeof ModalExport> & ModalExportMethods>()
 const auth = ref<InstanceType<typeof Authenticate>>()
 
 store.dispatch('terms/fetchTotal')

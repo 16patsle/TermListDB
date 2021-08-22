@@ -13,59 +13,60 @@
       <p>{{ currentTerm }}</p>
     </template>
     <template #modal-footer>
-      <AppButton danger @click="removeTerm">
-        {{ ui.removeterm }}!
-      </AppButton>
+      <AppButton danger @click="removeTerm"> {{ ui.removeterm }}! </AppButton>
       <AppButton @click="close">
         {{ ui.cancel }}
       </AppButton>
     </template>
   </AppModal>
 </template>
-<script lang="ts">
-import {Options, Vue} from 'vue-class-component'
-import AppModal from '../Generic/AppModal.vue'
-import AppButton from '../Generic/AppButton.vue'
 
+<script lang="ts">
+export type ModalRemoveMethods = {
+  confirmRemoveTerm(term: TermType): void
+}
+</script>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
+import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppButton from '../Generic/AppButton.vue'
 import type { TermType } from '../../types/TermType'
 
 import ui from '../../assets/ui'
 
-@Options({
-  components: {
-    AppModal,
-    AppButton,
-  },
+const emit = defineEmits<{
+  (e: 'remove', current: TermType): void
+}>()
+
+const current = ref<TermType | null>(null)
+
+const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
+
+const currentTerm = computed((): string => {
+  return current.value && current.value.term ? current.value.term : ''
 })
-export default class ModalRemove extends Vue {
-  $refs!: {
-    modal: AppModal
-  }
 
-  ui = ui
-  current: TermType | null = null
-
-  get currentTerm(): string {
-    return this.current && this.current.term ? this.current.term : ''
-  }
-
-  toggleModal(bool: boolean): void {
-    this.$refs.modal.toggleModal(bool)
-  }
-
-  confirmRemoveTerm(current: TermType): void {
-    this.current = current
-    this.toggleModal(true)
-  }
-
-  removeTerm(): void {
-    this.$emit('remove', this.current)
-    this.toggleModal(false)
-  }
-
-  close(): void {
-    this.toggleModal(false)
-  }
+const toggleModal = (bool: boolean): void => {
+  modal.value?.toggleModal(bool)
 }
+
+const confirmRemoveTerm = (term: TermType): void => {
+  current.value = term
+  toggleModal(true)
+}
+
+const removeTerm = (): void => {
+  if (current.value) {
+    emit('remove', current.value)
+  }
+  toggleModal(false)
+}
+
+const close = (): void => {
+  toggleModal(false)
+}
+
+defineExpose({ confirmRemoveTerm })
 </script>
 <style></style>

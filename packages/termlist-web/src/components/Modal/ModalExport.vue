@@ -1,88 +1,75 @@
 <template>
-  <AppModal
-    ref="modal"
-    :title="ui.exportTerms"
-    :close-callback="close"
-    :ok-text="null"
-    :cancel-text="null"
-  >
+  <AppModal ref="modal" :title="ui.exportTerms" :close-callback="close">
     <template #modal-body>
-      <p class="subtitle">
-        {{ exportInstructions }}
-      </p>
+      <p class="subtitle">{{ exportInstructions }}</p>
       <a
         :href="exportUri"
         :disabled="!exported"
         class="button is-primary"
         download="terms.json"
         @click="downloadExport"
+        >{{ ui.download }}</a
       >
-        {{ ui.download }}
-      </a>
     </template>
   </AppModal>
 </template>
+
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component'
-import AppModal from '../Generic/AppModal.vue'
+export type ModalExportMethods = {
+  confirmExportTerm(): void
+}
+</script>
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
+import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 
 import ui from '../../assets/ui'
 
-@Options({
-  components: {
-    AppModal,
-  },
-  props: {
-    exportUri: {
-      type: String,
-      required: true,
-    },
-  },
+const props = defineProps<{ exportUri: string }>()
+const emit = defineEmits<{
+  (e: 'close'): void
+  (e: 'export'): void
+}>()
+
+const exportInstructions = computed((): string => {
+  if (exported) {
+    return ui.downloadExportInstructions
+  } else {
+    return ui.processingExport
+  }
 })
-export default class ModalExport extends Vue {
-  $refs!: {
-    modal: AppModal
-  }
 
-  ui = ui
+const exported = computed((): boolean => Boolean(props.exportUri))
 
-  get exportInstructions(): string {
-    if (this.exported) {
-      return this.ui.downloadExportInstructions
-    } else {
-      return this.ui.processingExport
-    }
-  }
+const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 
-  get exported(): boolean {
-    return Boolean(this.exportUri)
-  }
+const toggleModal = (bool: boolean): void => {
+  modal.value?.toggleModal(bool)
+}
 
-  toggleModal(bool: boolean): void {
-    this.$refs.modal.toggleModal(bool)
-  }
+const confirmExportTerm = (): void => {
+  toggleModal(true)
 
-  confirmExportTerm(): void {
-    this.toggleModal(true)
+  exportTerms()
+}
 
-    this.exportTerms()
-  }
+const close = (): void => {
+  toggleModal(false)
 
-  close(): void {
-    this.toggleModal(false)
+  emit('close')
+}
 
-    this.$emit('close')
-  }
+const exportTerms = (): void => {
+  emit('export')
+}
 
-  exportTerms(): void {
-    this.$emit('export')
-  }
-
-  downloadExport(e: MouseEvent): void {
-    if (!this.exported) {
-      e.preventDefault()
-    }
+const downloadExport = (e: MouseEvent): void => {
+  if (!exported) {
+    e.preventDefault()
   }
 }
+
+defineExpose({ confirmExportTerm })
 </script>
 <style></style>
