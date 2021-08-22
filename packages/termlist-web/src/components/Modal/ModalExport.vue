@@ -3,8 +3,8 @@
     <template #modal-body>
       <p class="subtitle">{{ exportInstructions }}</p>
       <a
-        :href="exportUri"
-        :disabled="!exported"
+        :href="exportURI"
+        :disabled="!exportURI ? true : null"
         class="button is-primary"
         download="terms.json"
         @click="downloadExport"
@@ -14,33 +14,24 @@
   </AppModal>
 </template>
 
-<script lang="ts">
-export type ModalExportMethods = {
-  confirmExportTerm(): void
-}
-</script>
-
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import { useStore } from '../../store'
 
 import ui from '../../assets/ui'
 
-const props = defineProps<{ exportUri: string }>()
-const emit = defineEmits<{
-  (e: 'close'): void
-  (e: 'export'): void
-}>()
+const store = useStore()
 
-const exportInstructions = computed((): string => {
-  if (exported) {
+const exportInstructions = computed(() => {
+  if (exportURI.value) {
     return ui.downloadExportInstructions
   } else {
     return ui.processingExport
   }
 })
 
-const exported = computed((): boolean => Boolean(props.exportUri))
+const exportURI = computed(() => store.state.import.exportURI)
 
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 
@@ -48,28 +39,26 @@ const toggleModal = (bool: boolean): void => {
   modal.value?.toggleModal(bool)
 }
 
-const confirmExportTerm = (): void => {
-  toggleModal(true)
+const confirmExportTerm = (bool: boolean): void => {
+  if (bool) {
+    toggleModal(true)
 
-  exportTerms()
+    store.dispatch('import/export')
+  }
 }
+
+watch(() => store.state.import.askingForExportConfirmation, confirmExportTerm)
 
 const close = (): void => {
   toggleModal(false)
 
-  emit('close')
-}
-
-const exportTerms = (): void => {
-  emit('export')
+  store.commit('import/cancelExport')
 }
 
 const downloadExport = (e: MouseEvent): void => {
-  if (!exported) {
+  if (!exportURI.value) {
     e.preventDefault()
   }
 }
-
-defineExpose({ confirmExportTerm })
 </script>
 <style></style>

@@ -11,14 +11,19 @@ export type State = {
   total: number
   finished: boolean
   cancel: boolean
-  askingForConfirmation: boolean
+  askingForImportConfirmation: boolean
+  askingForExportConfirmation: boolean
+  exportURI: string
 }
 
 export type Mutations = {
   prepare(state: State, imports: number): void
   import(state: State): void
   cancel(state: State): void
-  askingForConfirmation(state: State): void
+  askingForImportConfirmation(state: State): void
+  askingForExportConfirmation(state: State): void
+  export(state: State, uri: string): void
+  cancelExport(state: State): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -27,7 +32,7 @@ export const mutations: MutationTree<State> & Mutations = {
     state.imported = 0
     state.finished = false
     state.cancel = false
-    state.askingForConfirmation = false
+    state.askingForImportConfirmation = false
   },
 
   import(state: State): void {
@@ -40,11 +45,24 @@ export const mutations: MutationTree<State> & Mutations = {
   cancel(state: State): void {
     state.finished = true
     state.cancel = true
-    state.askingForConfirmation = false
+    state.askingForImportConfirmation = false
   },
 
-  askingForConfirmation(state: State): void {
-    state.askingForConfirmation = true
+  askingForImportConfirmation(state: State): void {
+    state.askingForImportConfirmation = true
+  },
+
+  askingForExportConfirmation(state: State): void {
+    state.askingForExportConfirmation = true
+  },
+
+  export(state: State, uri: string): void {
+    state.exportURI = uri
+  },
+
+  cancelExport(state: State): void {
+    state.askingForExportConfirmation = false
+    state.exportURI = ''
   },
 }
 
@@ -52,7 +70,7 @@ type Context = AugmentedActionContext<Mutations, Actions, State>
 
 export type Actions = {
   import({ state, commit }: Context, terms: TermType[]): Promise<void>
-  export(): Promise<TermType[]>
+  export({ commit }: Context): Promise<void>
 }
 
 export const actions: ActionTree<State, StateType> & Actions = {
@@ -89,13 +107,26 @@ export const actions: ActionTree<State, StateType> & Actions = {
       console.error('Error:', e, terms)
     }
   },
-  async export(): Promise<TermType[]> {
+  async export({ commit }): Promise<void> {
     try {
-      return database.getTerms({ limit: undefined })
+      const exported = (await database.getTerms({ limit: undefined })).map(
+        term => ({
+          _id: term._id,
+          term: term.term,
+          desc: term.desc,
+          date: term.date,
+          type: term.type,
+        })
+      )
+
+      commit(
+        'export',
+        'data:application/json;charset=utf-8, ' +
+          encodeURIComponent(JSON.stringify(exported))
+      )
     } catch (e) {
       console.error('Error:', e)
     }
-    return []
   },
 }
 
@@ -109,7 +140,9 @@ export const importModule: Module<State, StateType> = {
     total: 0,
     finished: true,
     cancel: false,
-    askingForConfirmation: false,
+    askingForImportConfirmation: false,
+    askingForExportConfirmation: false,
+    exportURI: '',
   }),
   mutations,
   actions,

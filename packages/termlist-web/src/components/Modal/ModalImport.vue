@@ -72,7 +72,7 @@ const toggleModal = (bool: boolean): void => {
   modal.value?.toggleModal(bool)
 }
 
-watch(() => store.state.import.askingForConfirmation, toggleModal)
+watch(() => store.state.import.askingForImportConfirmation, toggleModal)
 
 const importTerm = (): void => {
   if (

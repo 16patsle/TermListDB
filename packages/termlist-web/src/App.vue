@@ -17,12 +17,16 @@
               </AppButton>
             </div>
             <div class="control">
-              <AppButton @click="store.commit('import/askingForConfirmation')">
+              <AppButton
+                @click="store.commit('import/askingForImportConfirmation')"
+              >
                 {{ ui.importTerms }}
               </AppButton>
             </div>
             <div class="control">
-              <AppButton @click="confirmExportTerms">
+              <AppButton
+                @click="store.commit('import/askingForExportConfirmation')"
+              >
                 {{ ui.exportTerms }}
               </AppButton>
             </div>
@@ -44,14 +48,9 @@
     </AppNavbar>
     <ModalEdit ref="editModal" @save="saveTerm" />
     <ModalRemove ref="removeModal" @remove="removeTerm" />
-    <ModalImport ref="importModal" />
+    <ModalImport />
     <ModalImporting />
-    <ModalExport
-      ref="exportModal"
-      :export-uri="exportURI"
-      @export="exportTerms"
-      @close="exportURI = ''"
-    />
+    <ModalExport />
     <Authenticate ref="auth" />
     <div class="container">
       <TermList
@@ -77,9 +76,7 @@ import ModalRemove, {
 } from './components/Modal/ModalRemove.vue'
 import ModalImport from './components/Modal/ModalImport.vue'
 import ModalImporting from './components/Modal/ModalImporting.vue'
-import ModalExport, {
-  ModalExportMethods,
-} from './components/Modal/ModalExport.vue'
+import ModalExport from './components/Modal/ModalExport.vue'
 import AppButton from './components/Generic/AppButton.vue'
 import AppNavbar from './components/Generic/AppNavbar.vue'
 import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
@@ -91,14 +88,11 @@ import type { FieldNameType } from './types/FieldNameType'
 import type { TermQueryType } from './types/TermQueryType'
 
 const store = useStore()
-const exportURI = ref('')
 const sortedBy = ref<FieldNameType>('term')
 const loading = ref(true)
 
 const editModal = ref<InstanceType<typeof ModalEdit> & ModalEditMethods>()
 const removeModal = ref<InstanceType<typeof ModalRemove> & ModalRemoveMethods>()
-const importModal = ref<InstanceType<typeof ModalImport>>()
-const exportModal = ref<InstanceType<typeof ModalExport> & ModalExportMethods>()
 const auth = ref<InstanceType<typeof Authenticate>>()
 
 store.dispatch('terms/fetchTotal')
@@ -263,24 +257,6 @@ const shortcutUp = (e: KeyboardEvent): void => {
   ) {
     addTerm()
   }
-}
-
-const confirmExportTerms = (): void => {
-  exportModal.value?.confirmExportTerm()
-}
-
-const exportTerms = async (): Promise<void> => {
-  let exported = (await store.dispatch('import/export')).map(term => ({
-    _id: term._id,
-    term: term.term,
-    desc: term.desc,
-    date: term.date,
-    type: term.type,
-  }))
-
-  exportURI.value =
-    'data:application/json;charset=utf-8, ' +
-    encodeURIComponent(JSON.stringify(exported))
 }
 
 const logOut = (): void => {
