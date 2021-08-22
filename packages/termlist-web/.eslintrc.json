@@ -49,7 +49,7 @@
         "defineProps": true,
         "defineEmits": true,
         "withDefaults": true,
-        "defineExpose": true,
+        "defineExpose": true
       }
     }
   ]
