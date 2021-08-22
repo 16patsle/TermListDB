@@ -29,6 +29,12 @@
   </div>
 </template>
 
+<script lang="ts">
+export type AppModalMethods = {
+  toggleModal(bool: boolean): void
+}
+</script>
+
 <script lang="ts" setup>
 import { ref } from 'vue'
 import AppButton from './AppButton.vue'
