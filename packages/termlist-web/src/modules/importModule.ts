@@ -84,11 +84,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
         if (state.cancel === false) {
           imports.push(
             (async () => {
-              const added = true
-              await new Promise(resolve => {
-                setTimeout(resolve, 2000)
-              })
-              /* await dispatch(
+              const added = await dispatch(
                 'terms/add',
                 Object.assign(
                   {
@@ -97,7 +93,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
                   term
                 ),
                 { root: true }
-              ) */
+              )
               if (added) {
                 commit('import')
               }
