@@ -11,22 +11,26 @@ export type State = {
   total: number
   finished: boolean
   cancel: boolean
+  exportURI: string
   askingForImportConfirmation: boolean
   askingForExportConfirmation: boolean
-  exportURI: string
 }
 
 export type Mutations = {
+  askingForImportConfirmation(state: State): void
   prepare(state: State, imports: number): void
   import(state: State): void
   cancel(state: State): void
-  askingForImportConfirmation(state: State): void
   askingForExportConfirmation(state: State): void
   export(state: State, uri: string): void
   cancelExport(state: State): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
+  askingForImportConfirmation(state: State): void {
+    state.askingForImportConfirmation = true
+  },
+
   prepare(state: State, imports: number): void {
     state.total = imports
     state.imported = 0
@@ -46,10 +50,6 @@ export const mutations: MutationTree<State> & Mutations = {
     state.finished = true
     state.cancel = true
     state.askingForImportConfirmation = false
-  },
-
-  askingForImportConfirmation(state: State): void {
-    state.askingForImportConfirmation = true
   },
 
   askingForExportConfirmation(state: State): void {
@@ -84,7 +84,11 @@ export const actions: ActionTree<State, StateType> & Actions = {
         if (state.cancel === false) {
           imports.push(
             (async () => {
-              const added = await dispatch(
+              const added = true
+              await new Promise(resolve => {
+                setTimeout(resolve, 2000)
+              })
+              /* await dispatch(
                 'terms/add',
                 Object.assign(
                   {
@@ -93,7 +97,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
                   term
                 ),
                 { root: true }
-              )
+              ) */
               if (added) {
                 commit('import')
               }
@@ -140,9 +144,9 @@ export const importModule: Module<State, StateType> = {
     total: 0,
     finished: true,
     cancel: false,
+    exportURI: '',
     askingForImportConfirmation: false,
     askingForExportConfirmation: false,
-    exportURI: '',
   }),
   mutations,
   actions,
