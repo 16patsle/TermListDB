@@ -43,26 +43,18 @@
   </AppModal>
 </template>
 
-<script lang="ts">
-export type ModalImportMethods = {
-  confirmImportTerm(): void
-}
-</script>
-
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
+import { useStore } from '../../store'
 import type { TermType } from '../../types/TermType'
 
 import ui from '../../assets/ui'
 
-const emit = defineEmits<{
-  (e: 'import', importedTerms: TermType[]): void
-}>()
+const store = useStore()
 
 const selectedFile = ref<File | null>(null)
-const importedTerms = ref<TermType[]>([])
 let fileReader: FileReader
 
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
@@ -80,9 +72,7 @@ const toggleModal = (bool: boolean): void => {
   modal.value?.toggleModal(bool)
 }
 
-const confirmImportTerm = (): void => {
-  toggleModal(true)
-}
+watch(() => store.state.import.askingForConfirmation, toggleModal)
 
 const importTerm = (): void => {
   if (
@@ -103,11 +93,8 @@ const importTerm = (): void => {
 }
 
 const prepareFileImport = (file: TermType[]): void => {
-  importedTerms.value = [...file]
-
-  emit('import', importedTerms.value)
-
   close()
+  store.dispatch('import/import', [...file])
 }
 
 const close = (): void => {
@@ -119,13 +106,13 @@ const close = (): void => {
 
   importFile.value.value = ''
   selectedFile.value = null
+
+  store.commit('import/cancel')
 }
 
 const handleFiles = (e: Event): void => {
   const files = (e.target as HTMLInputElement).files
   selectedFile.value = files ? files[0] : null
 }
-
-defineExpose({ confirmImportTerm })
 </script>
 <style></style>

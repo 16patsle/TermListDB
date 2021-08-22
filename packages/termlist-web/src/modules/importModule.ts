@@ -11,12 +11,14 @@ export type State = {
   total: number
   finished: boolean
   cancel: boolean
+  askingForConfirmation: boolean
 }
 
 export type Mutations = {
   prepare(state: State, imports: number): void
   import(state: State): void
   cancel(state: State): void
+  askingForConfirmation(state: State): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -25,6 +27,7 @@ export const mutations: MutationTree<State> & Mutations = {
     state.imported = 0
     state.finished = false
     state.cancel = false
+    state.askingForConfirmation = false
   },
 
   import(state: State): void {
@@ -37,27 +40,53 @@ export const mutations: MutationTree<State> & Mutations = {
   cancel(state: State): void {
     state.finished = true
     state.cancel = true
+    state.askingForConfirmation = false
+  },
+
+  askingForConfirmation(state: State): void {
+    state.askingForConfirmation = true
   },
 }
 
 type Context = AugmentedActionContext<Mutations, Actions, State>
 
 export type Actions = {
-  import({ state, commit }: Context, term: TermType): Promise<void>
+  import({ state, commit }: Context, terms: TermType[]): Promise<void>
   export(): Promise<TermType[]>
 }
 
 export const actions: ActionTree<State, StateType> & Actions = {
-  async import({ state, commit, dispatch }, term: TermType): Promise<void> {
+  async import({ state, commit, dispatch }, terms: TermType[]): Promise<void> {
     try {
-      if (state.cancel === false) {
-        const added = await dispatch('terms/add', term, { root: true })
-        if (added) {
-          commit('import')
+      commit('prepare', terms.length)
+
+      const imports = []
+
+      for (const term of terms) {
+        if (state.cancel === false) {
+          imports.push(
+            (async () => {
+              const added = await dispatch(
+                'terms/add',
+                Object.assign(
+                  {
+                    _id: term.date,
+                  },
+                  term
+                ),
+                { root: true }
+              )
+              if (added) {
+                commit('import')
+              }
+            })()
+          )
         }
       }
+
+      await Promise.all(imports)
     } catch (e) {
-      console.error('Error:', e, term)
+      console.error('Error:', e, terms)
     }
   },
   async export(): Promise<TermType[]> {
@@ -80,6 +109,7 @@ export const importModule: Module<State, StateType> = {
     total: 0,
     finished: true,
     cancel: false,
+    askingForConfirmation: false,
   }),
   mutations,
   actions,

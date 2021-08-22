@@ -17,7 +17,7 @@
               </AppButton>
             </div>
             <div class="control">
-              <AppButton @click="confirmImportTerms">
+              <AppButton @click="store.commit('import/askingForConfirmation')">
                 {{ ui.importTerms }}
               </AppButton>
             </div>
@@ -44,7 +44,7 @@
     </AppNavbar>
     <ModalEdit ref="editModal" @save="saveTerm" />
     <ModalRemove ref="removeModal" @remove="removeTerm" />
-    <ModalImport ref="importModal" @import="importTerms" />
+    <ModalImport ref="importModal" />
     <ModalImporting />
     <ModalExport
       ref="exportModal"
@@ -68,16 +68,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import debounce from 'lodash.debounce'
 import { useStore } from './store'
 import ModalEdit, { ModalEditMethods } from './components/Modal/ModalEdit.vue'
 import ModalRemove, {
   ModalRemoveMethods,
 } from './components/Modal/ModalRemove.vue'
-import ModalImport, {
-  ModalImportMethods,
-} from './components/Modal/ModalImport.vue'
+import ModalImport from './components/Modal/ModalImport.vue'
 import ModalImporting from './components/Modal/ModalImporting.vue'
 import ModalExport, {
   ModalExportMethods,
@@ -99,7 +97,7 @@ const loading = ref(true)
 
 const editModal = ref<InstanceType<typeof ModalEdit> & ModalEditMethods>()
 const removeModal = ref<InstanceType<typeof ModalRemove> & ModalRemoveMethods>()
-const importModal = ref<InstanceType<typeof ModalImport> & ModalImportMethods>()
+const importModal = ref<InstanceType<typeof ModalImport>>()
 const exportModal = ref<InstanceType<typeof ModalExport> & ModalExportMethods>()
 const auth = ref<InstanceType<typeof Authenticate>>()
 
@@ -120,6 +118,18 @@ store.subscribe(mutation => {
       .then(() => (loading.value = false))
   }
 })
+
+watch(
+  () => store.state.import.finished,
+  async (finished: boolean) => {
+    if (finished) {
+      await store.dispatch('terms/fetchTotal')
+      await store.dispatch('terms/getTerms', {
+        field: sortedBy.value,
+      })
+    }
+  }
+)
 
 const addTerm = (): void => {
   editModal.value?.addTerm()
@@ -253,39 +263,6 @@ const shortcutUp = (e: KeyboardEvent): void => {
   ) {
     addTerm()
   }
-}
-
-const confirmImportTerms = (): void => {
-  importModal.value?.confirmImportTerm()
-}
-
-const importTerms = async (terms: TermType[]): Promise<void> => {
-  store.commit('import/prepare', terms.length)
-
-  let imports = []
-
-  for (let term of terms) {
-    if (store.state.import.cancel === false) {
-      imports.push(
-        store.dispatch(
-          'import/import',
-          Object.assign(
-            {
-              _id: term.date,
-            },
-            term
-          )
-        )
-      )
-    }
-  }
-
-  await Promise.all(imports)
-
-  await store.dispatch('terms/fetchTotal')
-  await store.dispatch('terms/getTerms', {
-    field: sortedBy.value,
-  })
 }
 
 const confirmExportTerms = (): void => {
