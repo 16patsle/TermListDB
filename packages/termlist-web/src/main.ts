@@ -20,12 +20,12 @@ const start = async () => {
   app.mount('#app')
 
   firebase.auth().onAuthStateChanged(user => {
-    store.commit('setAuthenticated', user)
+    store.commit('auth/setAuthenticated', user)
     if (database.userInfoReference) {
       database.userInfoReference.onSnapshot(doc => {
         const data = doc.data()
         if (data) {
-          store.commit('setTotal', data.termlists_total)
+          store.commit('terms/setTotal', data.termlists_total)
         }
       })
     }
