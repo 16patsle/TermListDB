@@ -3,14 +3,14 @@
     id="firebaseui-auth-container"
     :class="{
       modal: true,
-      'is-active': !$store.state.storeModule.auth.authenticated,
+      'is-active': !$store.state.auth.authenticated,
     }"
   >
     <div class="modal-background" />
   </div>
 </template>
 <script lang="ts">
-import {Vue} from 'vue-class-component'
+import { Vue } from 'vue-class-component'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import * as firebaseui from '../auth-ui/esm'

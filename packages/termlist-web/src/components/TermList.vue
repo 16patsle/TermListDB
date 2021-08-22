@@ -81,7 +81,7 @@ const terms = computed(
   (): {
     [key: string]: TermType
   } => {
-    return store.state.storeModule.terms
+    return store.state.terms.terms
   }
 )
 
@@ -93,7 +93,7 @@ const lastPage = computed((): number => {
   if (termCount.value < 20) {
     return currentPage.value
   } else {
-    return Math.ceil(store.state.storeModule.totalRows / 20)
+    return Math.ceil(store.state.terms.totalRows / 20)
   }
 })
 

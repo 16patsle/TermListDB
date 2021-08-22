@@ -13,28 +13,24 @@
       <div class="field">
         <div class="control">
           <progress
-            :value="$store.state.storeModule.imports.imported"
-            :max="$store.state.storeModule.imports.total"
+            :value="$store.state.import.imported"
+            :max="$store.state.import.total"
             class="progress is-primary"
           >
             {{
               Math.round(
-                ($store.state.storeModule.imports.imported /
-                  $store.state.storeModule.imports.total) *
-                  100
+                ($store.state.import.imported / $store.state.import.total) * 100
               )
             }}%
           </progress>
           <p class="has-text-centered">
-            {{ $store.state.storeModule.imports.imported }} /
-            {{ $store.state.storeModule.imports.total }}
+            {{ $store.state.import.imported }} /
+            {{ $store.state.import.total }}
           </p>
           <p class="has-text-centered">
             {{
               Math.round(
-                ($store.state.storeModule.imports.imported /
-                  $store.state.storeModule.imports.total) *
-                  100
+                ($store.state.import.imported / $store.state.import.total) * 100
               )
             }}%
           </p>
@@ -44,7 +40,7 @@
   </AppModal>
 </template>
 <script lang="ts">
-import {Options, Vue} from 'vue-class-component'
+import { Options, Vue } from 'vue-class-component'
 import AppModal from '../Generic/AppModal.vue'
 
 import type { Store } from 'vuex'
@@ -67,7 +63,7 @@ export default class ModalImporting extends Vue {
 
   mounted(): void {
     this.$watch(
-      () => this.$store.state.storeModule.imports.finished,
+      () => this.$store.state.import.finished,
       value => {
         if (!value) {
           this.toggleModal(true)

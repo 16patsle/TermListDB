@@ -9,7 +9,7 @@
         @keyup="search"
       />
       <span class="icon is-small is-left">
-        <!--<i class="fa fa-search" />-->
+        <i class="fa fa-search" />
       </span>
     </div>
   </div>
