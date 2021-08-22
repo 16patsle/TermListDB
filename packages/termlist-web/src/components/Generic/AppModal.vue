@@ -29,63 +29,49 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from 'vue-class-component'
+<script lang="ts" setup>
+import { ref } from 'vue'
 import AppButton from './AppButton.vue'
 
-@Options({
-  components: {
-    AppButton,
-  },
-  props: {
-    okText: {
-      type: String,
-      default: 'OK',
-    },
-    cancelText: {
-      type: String,
-      default: 'Cancel',
-    },
-    title: {
-      type: String,
-      default: '',
-    },
-    callback: {
-      type: Function,
-      default: null,
-    },
-    closeCallback: {
-      type: Function,
-      default: null,
-    },
-  },
-})
-export default class AppModal extends Vue {
-  show = false
+const props = withDefaults(
+  defineProps<{
+    okText?: string
+    cancelText?: string
+    title: string
+    callback?: (event: MouseEvent) => void
+    closeCallback?: (event: MouseEvent) => void
+  }>(),
+  {
+    okText: 'OK',
+    cancelText: 'Cancel',
+    title: '',
+    callback: undefined,
+    closeCallback: undefined,
+  }
+)
 
-  $refs!: {
-    modal: Element
-  }
+const show = ref(false)
+const modal = ref<InstanceType<typeof Element>>()
 
-  close(): void {
-    if (this.closeCallback) {
-      this.closeCallback()
-    } else {
-      this.toggleModal(false)
-    }
-  }
-  toggleModal(bool: boolean): void {
-    this.show = bool
-    if (bool) {
-      this.$refs.modal.classList.add('is-active')
-    } else {
-      this.$refs.modal.classList.remove('is-active')
-    }
-    //this.$emit('toggle', bool);
-  }
-  isShown(): boolean {
-    return this.show
+const close = (e: MouseEvent): void => {
+  if (props.closeCallback) {
+    props.closeCallback(e)
+  } else {
+    toggleModal(false)
   }
 }
+
+const toggleModal = (bool: boolean): void => {
+  show.value = bool
+  if (bool) {
+    modal.value?.classList.add('is-active')
+  } else {
+    modal.value?.classList.remove('is-active')
+  }
+}
+
+defineExpose({
+  toggleModal,
+})
 </script>
 <style></style>

@@ -11,7 +11,7 @@ import store, { key } from './store'
 const start = async () => {
   await database.start()
 
-  configureCompat({ RENDER_FUNCTION: false, ATTR_FALSE_VALUE: false })
+  configureCompat({ MODE: 3, RENDER_FUNCTION: false, ATTR_FALSE_VALUE: true })
 
   const app = createApp(App)
 

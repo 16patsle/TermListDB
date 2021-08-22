@@ -7,16 +7,20 @@
     <slot>OK</slot>
   </button>
 </template>
-<script>
-export default {
-  props: {
-    primary: { type: Boolean, default: false },
-    danger: { type: Boolean, default: false },
-  },
-  methods: {
-    click(e) {
-      this.$emit('click', e)
-    },
-  },
+<script lang="ts" setup>
+withDefaults(
+  defineProps<{
+    primary?: boolean
+    danger?: boolean
+  }>(),
+  { primary: false, danger: false }
+)
+
+const emit = defineEmits<{
+  (e: 'click', event: MouseEvent): void
+}>()
+
+const click = (e: MouseEvent) => {
+  emit('click', e)
 }
 </script>
