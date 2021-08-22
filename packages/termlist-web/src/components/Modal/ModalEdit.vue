@@ -9,18 +9,16 @@
             <input
               v-if="field.type === 'short'"
               v-model="currentTerm[field.name]"
-              :data-field="field.name"
               class="input"
               type="text"
-              @keyup="handleKeyUp"
+              @keyup="debouncedChangeHandlers[field.name]()"
             />
             <textarea
               v-else-if="field.type === 'long'"
               v-model="currentTerm[field.name]"
-              :data-field="field.name"
               class="textarea"
               rows="8"
-              @keyup="handleKeyUp"
+              @keyup="debouncedChangeHandlers[field.name]()"
             />
             <AppSelect
               v-else-if="
@@ -29,7 +27,6 @@
               v-model="currentTerm[field.name]"
               :default-option-name="ui.selectTermType"
               :options="reduce(field.options)"
-              :data-field="field.name"
               fullwidth
               @update:modelValue="debouncedChangeHandlers[field.name]()"
             />
@@ -107,12 +104,6 @@ const mutableFields = computed((): FieldType[] => {
     return !field.immutable
   })
 })
-
-const handleKeyUp = (e: KeyboardEvent): void => {
-  debouncedChangeHandlers[
-    (e.target as HTMLElement).dataset.field as FieldNameType
-  ]()
-}
 
 const handleDirty = (fieldName: FieldNameType): void => {
   if (mode.value === 'add' && currentTerm.value[fieldName] === '') {
