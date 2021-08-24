@@ -46,7 +46,7 @@
         </AppNavbarItem>
       </template>
     </AppNavbar>
-    <ModalEdit ref="editModal" @save="saveTerm" />
+    <ModalEdit />
     <ModalRemove />
     <ModalImport />
     <ModalImporting />
@@ -70,7 +70,7 @@
 import { ref, watch } from 'vue'
 import debounce from 'lodash.debounce'
 import { useStore } from './store'
-import ModalEdit, { ModalEditMethods } from './components/Modal/ModalEdit.vue'
+import ModalEdit from './components/Modal/ModalEdit.vue'
 import ModalRemove from './components/Modal/ModalRemove.vue'
 import ModalImport from './components/Modal/ModalImport.vue'
 import ModalImporting from './components/Modal/ModalImporting.vue'
@@ -81,7 +81,7 @@ import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
 import Authenticate from './components/Authenticate.vue'
 import TermList from './components/TermList.vue'
 import ui from './assets/ui'
-import type { TermDefType, TermType } from './types/TermType'
+import type { TermType } from './types/TermType'
 import type { FieldNameType } from './types/FieldNameType'
 import type { TermQueryType } from './types/TermQueryType'
 
@@ -89,7 +89,6 @@ const store = useStore()
 const sortedBy = ref<FieldNameType>('term')
 const loading = ref(true)
 
-const editModal = ref<InstanceType<typeof ModalEdit> & ModalEditMethods>()
 const auth = ref<InstanceType<typeof Authenticate>>()
 
 store.dispatch('terms/fetchTotal')
@@ -122,32 +121,25 @@ watch(
   }
 )
 
+watch(
+  () => store.state.terms.termsAdded,
+  async () =>
+    // Reload from first page
+    await store.dispatch('terms/getTerms', {
+      field: sortedBy.value,
+    })
+)
+
 const addTerm = (): void => {
-  editModal.value?.addTerm()
+  store.commit('terms/startEditing')
 }
 
 const editTerm = (term: TermType): void => {
-  editModal.value?.editTerm(term)
+  store.commit('terms/startEditing', term)
 }
 
 const confirmRemoveTerm = (term: TermType): void => {
   store.commit('terms/askingForRemoveConfirmation', term)
-}
-
-const saveTerm = (term: TermDefType): void => {
-  if (term._id) {
-    // Update existing term
-    store.dispatch('terms/save', term as TermType)
-  } else {
-    term._id = term.date
-    // Add new term
-    store.dispatch('terms/add', term as TermType)
-
-    // Reload from first page
-    store.dispatch('terms/getTerms', {
-      field: sortedBy.value,
-    })
-  }
 }
 
 const gotoPage = async (

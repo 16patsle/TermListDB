@@ -15,6 +15,9 @@ export type State = {
   totalRows: number
   askingForRemoveConfirmation: boolean
   currentRemove?: TermType
+  currentlyEditing: boolean
+  currentTerm?: TermType
+  termsAdded: number
 }
 
 export type Mutations = {
@@ -30,6 +33,8 @@ export type Mutations = {
   setTotal(state: State, size: number): void
   askingForRemoveConfirmation(state: State, term: TermType): void
   cancelRemove(state: State): void
+  startEditing(state: State, term?: TermType): void
+  cancelEditing(state: State): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -44,6 +49,9 @@ export const mutations: MutationTree<State> & Mutations = {
     if (!state.terms[term._id]) {
       state.terms[term._id] = term
       state.totalRows++
+      state.termsAdded++
+      state.currentlyEditing = false
+      state.currentTerm = undefined
       return true
     } else {
       console.error('Already exists!', term)
@@ -59,6 +67,8 @@ export const mutations: MutationTree<State> & Mutations = {
       } else {
         state.terms[term._id] = term
       }
+      state.currentlyEditing = false
+      state.currentTerm = undefined
     } else {
       console.error('Could not save! Term might not exist!', term)
     }
@@ -98,6 +108,16 @@ export const mutations: MutationTree<State> & Mutations = {
   cancelRemove(state: State): void {
     state.askingForRemoveConfirmation = false
     state.currentRemove = undefined
+  },
+
+  startEditing(state: State, term?: TermType): void {
+    state.currentlyEditing = true
+    state.currentTerm = term
+  },
+
+  cancelEditing(state: State): void {
+    state.currentlyEditing = false
+    state.currentTerm = undefined
   },
 }
 
@@ -186,6 +206,9 @@ export const termsModule: Module<State, StateType> = {
     totalRows: 0,
     askingForRemoveConfirmation: false,
     currentRemove: undefined,
+    currentlyEditing: false,
+    currentTerm: undefined,
+    termsAdded: 0,
   }),
   mutations,
   actions,

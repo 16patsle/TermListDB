@@ -53,24 +53,22 @@
     </AppModal>
   </form>
 </template>
-<script lang="ts">
-export type ModalEditMethods = {
-  addTerm(): void
-  editTerm(originalEditTerm: TermType | null, editMode?: 'add' | 'edit'): void
-}
-</script>
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import debounce from 'lodash.debounce'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
+import { useStore } from '../../store'
 import type { FieldType } from '../../types/FieldType'
 import type { TermDefType, TermType } from '../../types/TermType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
 import type { FieldNameType } from '../../types/FieldNameType'
+
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
+
+const store = useStore()
 
 const makeEmptyTerm = (): TermDefType => ({
   date: new Date().toJSON(),
@@ -78,10 +76,6 @@ const makeEmptyTerm = (): TermDefType => ({
   term: undefined,
   type: undefined,
 })
-
-const emit = defineEmits<{
-  (e: 'save', term: TermDefType): void
-}>()
 
 const currentTerm = ref<TermDefType>(makeEmptyTerm())
 const originalTerm = ref<TermType | null>(null)
@@ -107,6 +101,19 @@ const mutableFields = computed((): FieldType[] => {
   })
 })
 
+watch(
+  () => store.state.terms.currentlyEditing,
+  (bool: boolean): void => {
+    if (bool) {
+      editTerm(store.state.terms.currentTerm)
+      dirty.value = false
+    } else {
+      modalUnsavedWarning.value?.toggleModal(false)
+    }
+    modal.value?.toggleModal(bool)
+  }
+)
+
 const handleDirty = (fieldName: FieldNameType): void => {
   if (mode.value === 'add' && currentTerm.value[fieldName] === '') {
     // When adding a term and the field is empty
@@ -127,22 +134,11 @@ const handleDirty = (fieldName: FieldNameType): void => {
   }, false)
 }
 
-const toggleModal = (bool: boolean): void => {
-  modal.value?.toggleModal(bool)
-}
-
-const toggleModalUnsavedWarning = (bool: boolean): void => {
-  modalUnsavedWarning.value?.toggleModal(bool)
-}
-
-const editTerm = (
-  originalEditTerm: TermType | null,
-  editMode: 'add' | 'edit' = 'edit'
-): void => {
-  originalTerm.value = originalEditTerm
-  mode.value = editMode
+const editTerm = (originalEditTerm?: TermType): void => {
+  mode.value = originalEditTerm ? 'edit' : 'add'
 
   if (originalEditTerm) {
+    originalTerm.value = originalEditTerm
     currentTerm.value.date = originalEditTerm.date
   }
 
@@ -166,17 +162,12 @@ const editTerm = (
     }
   }
 
-  toggleModal(true)
   const focus = modal.value?.$el.querySelector(
     '.field input, .field textarea, .field select'
   ) as HTMLElement
   if (focus) {
     focus.focus()
   }
-}
-
-const addTerm = (): void => {
-  editTerm(null, 'add')
 }
 
 const saveTerm = (): void => {
@@ -207,10 +198,14 @@ const saveTerm = (): void => {
     }
   }
 
-  emit('save', termObject)
-
-  toggleModal(false)
-  toggleModalUnsavedWarning(false)
+  if (termObject._id) {
+    // Update existing term
+    store.dispatch('terms/save', termObject as TermType)
+  } else {
+    termObject._id = termObject.date
+    // Add new term
+    store.dispatch('terms/add', termObject as TermType)
+  }
 
   originalTerm.value = null
   dirty.value = false
@@ -218,10 +213,9 @@ const saveTerm = (): void => {
 
 const close = (): void => {
   if (dirty.value) {
-    toggleModalUnsavedWarning(true)
+    modalUnsavedWarning.value?.toggleModal(true)
   } else {
-    toggleModal(false)
-    toggleModalUnsavedWarning(false)
+    store.commit('terms/cancelEditing')
   }
 }
 
@@ -249,10 +243,5 @@ for (const field of fields) {
     dirtyFields[field.name] = false
   }
 }
-
-defineExpose({
-  addTerm,
-  editTerm,
-})
 </script>
 <style></style>
