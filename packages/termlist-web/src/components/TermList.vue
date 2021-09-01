@@ -55,6 +55,7 @@ import TermRow from './TermList/TermRow.vue'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
 import type { TermType } from '../types/TermType'
+import type { FieldNameType } from '../types/FieldNameType'
 import type { TermQueryType } from '../types/TermQueryType'
 import ui from '../assets/ui'
 import fields from '../assets/fields'
@@ -71,7 +72,7 @@ const emit = defineEmits<{
   (e: 'edit', term: TermType): void
   (e: 'remove', term: TermType): void
   (e: 'gotopage', pageNumber: number, currentPage: number): void
-  (e: 'sort', field: string): void
+  (e: 'sort', field: FieldNameType): void
 }>()
 
 const store = useStore()
@@ -97,8 +98,10 @@ const lastPage = computed((): number => {
   }
 })
 
-const search = (search: string): void => {
-  emit('search', search)
+const search = ({ search }: TermQueryType): void => {
+  if (typeof search === 'string') {
+    emit('search', search)
+  }
 }
 
 const edit = (term: TermType): void => {
@@ -114,7 +117,7 @@ const gotoPage = (pageNumber: number): void => {
   currentPage.value = pageNumber
 }
 
-const sort = (field: string): void => {
+const sort = (field: FieldNameType): void => {
   emit('sort', field)
   currentPage.value = 1
 }
