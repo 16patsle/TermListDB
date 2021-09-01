@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app-container">
     <AppNavbar fixed="top">
       <template #brand>
         <AppNavbarItem>
@@ -252,12 +252,13 @@ document.addEventListener('keyup', shortcutUp, false)
 </script>
 
 <style>
-#app {
+#app-container {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   height: 100vh;
+  margin-top: 4rem;
 }
 </style>
