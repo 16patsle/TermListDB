@@ -20,6 +20,7 @@ export type State = {
   currentTerm?: TermType
   termsAdded: number
   loading: boolean
+  sortedBy: FieldNameType
 }
 
 export type Mutations = {
@@ -38,6 +39,7 @@ export type Mutations = {
   startEditing(state: State, term?: TermType): void
   cancelEditing(state: State): void
   setLoading(state: State, loading: boolean): void
+  setSortedBy(state: State, sortedBy: FieldNameType): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -126,6 +128,10 @@ export const mutations: MutationTree<State> & Mutations = {
   setLoading(state: State, loading: boolean): void {
     state.loading = loading
   },
+
+  setSortedBy(state: State, sortedBy: FieldNameType): void {
+    state.sortedBy = sortedBy
+  },
 }
 
 type Context = AugmentedActionContext<Mutations, Actions, State>
@@ -138,9 +144,9 @@ export type Actions = {
   fetchTotal({ commit }: Context): Promise<void>
   gotoPage(
     { state, commit, dispatch }: Context,
-    data: { pageNumber: number; currentPage: number; sortedBy: FieldNameType }
+    data: { pageNumber: number; currentPage: number }
   ): Promise<void>
-  search({ commit }: Context, data: TermQueryType): Promise<void>
+  search({ commit }: Context, search: string): Promise<void>
   sort({ commit }: Context, field: FieldNameType): Promise<void>
 }
 
@@ -201,11 +207,12 @@ export const actions: ActionTree<State, StateType> & Actions = {
   },
   async gotoPage(
     { state, commit, dispatch },
-    { pageNumber, currentPage, sortedBy }
+    { pageNumber, currentPage }
   ): Promise<void> {
     const terms = state.terms
     const pageNumberOffset = pageNumber - currentPage
     const isBefore = pageNumber < currentPage
+    const sortedBy = state.sortedBy
 
     commit('setLoading', true)
 
@@ -261,10 +268,13 @@ export const actions: ActionTree<State, StateType> & Actions = {
       }
     }
   },
-  async search({ commit, dispatch }, data): Promise<void> {
+  async search({ state, commit, dispatch }, search): Promise<void> {
     commit('setLoading', true)
 
-    await dispatch('getTerms', data)
+    await dispatch('getTerms', {
+      field: state.sortedBy,
+      search,
+    })
 
     commit('setLoading', false)
   },
@@ -277,6 +287,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
       field,
     })
     commit('setLoading', false)
+    commit('setSortedBy', field)
   },
 }
 
@@ -302,6 +313,7 @@ export const termsModule: Module<State, StateType> = {
     currentTerm: undefined,
     termsAdded: 0,
     loading: true,
+    sortedBy: 'term',
   }),
   mutations,
   actions,

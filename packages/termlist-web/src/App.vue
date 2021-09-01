@@ -85,7 +85,7 @@ import type { TermType } from './types/TermType'
 import type { FieldNameType } from './types/FieldNameType'
 
 const store = useStore()
-const sortedBy = ref<FieldNameType>('term')
+const sortedBy = computed(() => store.state.terms.sortedBy)
 const loading = computed(() => store.state.terms.loading)
 
 const auth = ref<InstanceType<typeof Authenticate>>()
@@ -148,23 +148,17 @@ const gotoPage = async (
   await store.dispatch('terms/gotoPage', {
     pageNumber,
     currentPage,
-    sortedBy: sortedBy.value,
   })
 }
 
 const search = async (search: string): Promise<void> => {
-  await store.dispatch('terms/search', {
-    field: sortedBy.value,
-    search,
-  })
+  await store.dispatch('terms/search', search)
 }
 
 const debouncedSearch = debounce(search, 400)
 
 const sort = async (field: FieldNameType): Promise<void> => {
   await store.dispatch('terms/sort', field)
-
-  sortedBy.value = field
 }
 
 const shortcutUp = (e: KeyboardEvent): void => {
