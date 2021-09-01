@@ -129,37 +129,25 @@ watch(
     })
 )
 
-const addTerm = (): void => {
-  store.commit('terms/startEditing')
-}
+const addTerm = () => store.commit('terms/startEditing')
 
-const editTerm = (term: TermType): void => {
-  store.commit('terms/startEditing', term)
-}
+const editTerm = (term: TermType) => store.commit('terms/startEditing', term)
 
-const confirmRemoveTerm = (term: TermType): void => {
+const confirmRemoveTerm = (term: TermType) =>
   store.commit('terms/askingForRemoveConfirmation', term)
-}
 
-const gotoPage = async (
-  pageNumber: number,
-  currentPage: number
-): Promise<void> => {
-  await store.dispatch('terms/gotoPage', {
+const gotoPage = (pageNumber: number, currentPage: number) =>
+  store.dispatch('terms/gotoPage', {
     pageNumber,
     currentPage,
   })
-}
 
-const search = async (search: string): Promise<void> => {
-  await store.dispatch('terms/search', search)
-}
+const debouncedSearch = debounce(
+  (search: string) => store.dispatch('terms/search', search),
+  400
+)
 
-const debouncedSearch = debounce(search, 400)
-
-const sort = async (field: FieldNameType): Promise<void> => {
-  await store.dispatch('terms/sort', field)
-}
+const sort = (field: FieldNameType) => store.dispatch('terms/sort', field)
 
 const shortcutUp = (e: KeyboardEvent): void => {
   if (
@@ -173,9 +161,7 @@ const shortcutUp = (e: KeyboardEvent): void => {
   }
 }
 
-const logOut = (): void => {
-  auth.value?.logOut()
-}
+const logOut = () => auth.value?.logOut()
 
 document.addEventListener('keyup', shortcutUp, false)
 </script>

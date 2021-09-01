@@ -27,11 +27,11 @@ export type Mutations = {
 }
 
 export const mutations: MutationTree<State> & Mutations = {
-  askingForImportConfirmation(state: State): void {
+  askingForImportConfirmation(state) {
     state.askingForImportConfirmation = true
   },
 
-  prepare(state: State, imports: number): void {
+  prepare(state, imports) {
     state.total = imports
     state.imported = 0
     state.finished = false
@@ -39,28 +39,28 @@ export const mutations: MutationTree<State> & Mutations = {
     state.askingForImportConfirmation = false
   },
 
-  import(state: State): void {
+  import(state) {
     state.imported += 1
     if (state.imported === state.total) {
       state.finished = true
     }
   },
 
-  cancel(state: State): void {
+  cancel(state) {
     state.finished = true
     state.cancel = true
     state.askingForImportConfirmation = false
   },
 
-  askingForExportConfirmation(state: State): void {
+  askingForExportConfirmation(state) {
     state.askingForExportConfirmation = true
   },
 
-  export(state: State, uri: string): void {
+  export(state, uri) {
     state.exportURI = uri
   },
 
-  cancelExport(state: State): void {
+  cancelExport(state) {
     state.askingForExportConfirmation = false
     state.exportURI = ''
   },
@@ -69,12 +69,12 @@ export const mutations: MutationTree<State> & Mutations = {
 type Context = AugmentedActionContext<Mutations, Actions, State>
 
 export type Actions = {
-  import({ state, commit }: Context, terms: TermType[]): Promise<void>
-  export({ commit }: Context): Promise<void>
+  import(c: Context, terms: TermType[]): Promise<void>
+  export(c: Context): Promise<void>
 }
 
 export const actions: ActionTree<State, StateType> & Actions = {
-  async import({ state, commit, dispatch }, terms: TermType[]): Promise<void> {
+  async import({ state, commit, dispatch }, terms) {
     try {
       commit('prepare', terms.length)
 
@@ -107,7 +107,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
       console.error('Error:', e, terms)
     }
   },
-  async export({ commit }): Promise<void> {
+  async export({ commit }) {
     try {
       const exported = (await database.getTerms({ limit: undefined })).map(
         term => ({

@@ -15,7 +15,7 @@ export type Mutations = {
 }
 
 export const mutations: MutationTree<State> & Mutations = {
-  setAuthenticated(state: State, user: firebase.User | null): void {
+  setAuthenticated(state, user) {
     console.log('Auth update')
     if (user) {
       state.authenticated = true

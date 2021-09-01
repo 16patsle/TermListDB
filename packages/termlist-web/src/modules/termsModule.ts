@@ -43,14 +43,14 @@ export type Mutations = {
 }
 
 export const mutations: MutationTree<State> & Mutations = {
-  remove(state: State, term: TermType): void {
+  remove(state, term) {
     delete state.terms[term._id]
     state.totalRows--
     state.askingForRemoveConfirmation = false
     state.currentRemove = undefined
   },
 
-  add(state: State, term: TermType): boolean {
+  add(state, term) {
     if (!state.terms[term._id]) {
       state.terms[term._id] = term
       state.totalRows++
@@ -64,7 +64,7 @@ export const mutations: MutationTree<State> & Mutations = {
     }
   },
 
-  save(state: State, term: TermType): void {
+  save(state, term) {
     if (state.terms[term._id]) {
       if (term._deleted) {
         // TODO: Is this still used?
@@ -79,12 +79,7 @@ export const mutations: MutationTree<State> & Mutations = {
     }
   },
 
-  getTerms(
-    state: State,
-    data: TermQueryType & {
-      terms: TermType[]
-    }
-  ): void {
+  getTerms(state, data) {
     const termsObject: {
       [key: string]: TermType
     } = {}
@@ -101,35 +96,35 @@ export const mutations: MutationTree<State> & Mutations = {
     state.terms = termsObject
   },
 
-  setTotal(state: State, size: number): void {
+  setTotal(state, size) {
     state.totalRows = size
   },
 
-  askingForRemoveConfirmation(state: State, term: TermType): void {
+  askingForRemoveConfirmation(state, term) {
     state.askingForRemoveConfirmation = true
     state.currentRemove = term
   },
 
-  cancelRemove(state: State): void {
+  cancelRemove(state) {
     state.askingForRemoveConfirmation = false
     state.currentRemove = undefined
   },
 
-  startEditing(state: State, term?: TermType): void {
+  startEditing(state, term) {
     state.currentlyEditing = true
     state.currentTerm = term
   },
 
-  cancelEditing(state: State): void {
+  cancelEditing(state) {
     state.currentlyEditing = false
     state.currentTerm = undefined
   },
 
-  setLoading(state: State, loading: boolean): void {
+  setLoading(state, loading) {
     state.loading = loading
   },
 
-  setSortedBy(state: State, sortedBy: FieldNameType): void {
+  setSortedBy(state, sortedBy) {
     state.sortedBy = sortedBy
   },
 }
@@ -137,21 +132,21 @@ export const mutations: MutationTree<State> & Mutations = {
 type Context = AugmentedActionContext<Mutations, Actions, State>
 
 export type Actions = {
-  remove({ commit }: Context, term: TermType): Promise<void>
-  add({ commit }: Context, term: TermType): Promise<boolean>
-  save({ state, commit }: Context, term: TermType): Promise<void>
-  getTerms({ commit }: Context, data: TermQueryType): Promise<void>
-  fetchTotal({ commit }: Context): Promise<void>
+  remove(c: Context, term: TermType): Promise<void>
+  add(c: Context, term: TermType): Promise<boolean>
+  save(c: Context, term: TermType): Promise<void>
+  getTerms(c: Context, data: TermQueryType): Promise<void>
+  fetchTotal(c: Context): Promise<void>
   gotoPage(
-    { state, commit, dispatch }: Context,
+    c: Context,
     data: { pageNumber: number; currentPage: number }
   ): Promise<void>
-  search({ commit }: Context, search: string): Promise<void>
-  sort({ commit }: Context, field: FieldNameType): Promise<void>
+  search(c: Context, search: string): Promise<void>
+  sort(c: Context, field: FieldNameType): Promise<void>
 }
 
 export const actions: ActionTree<State, StateType> & Actions = {
-  async remove({ commit }, term: TermType): Promise<void> {
+  async remove({ commit }, term) {
     try {
       await database.remove(term._id)
       commit('remove', term)
@@ -159,7 +154,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
       console.error('Error:', e, term)
     }
   },
-  async add({ commit }, term: TermType): Promise<boolean> {
+  async add({ commit }, term) {
     try {
       term._charSlices = term.term
         ? [term.term.substr(0, 1), term.term.substr(0, 3)]
@@ -172,7 +167,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
       return false
     }
   },
-  async save({ state, commit }, term: TermType): Promise<void> {
+  async save({ state, commit }, term) {
     try {
       if (state.terms[term._id] !== term) {
         term._charSlices = term.term
@@ -188,7 +183,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
       console.error('Error:', e, term)
     }
   },
-  async getTerms({ commit }, data: TermQueryType): Promise<void> {
+  async getTerms({ commit }, data) {
     try {
       commit('getTerms', {
         terms: await database.getTerms(data),
@@ -198,17 +193,14 @@ export const actions: ActionTree<State, StateType> & Actions = {
       console.error('Error:', e, data)
     }
   },
-  async fetchTotal({ commit }): Promise<void> {
+  async fetchTotal({ commit }) {
     try {
       commit('setTotal', await database.getTotalTerms())
     } catch (e) {
       console.error('Error:', e)
     }
   },
-  async gotoPage(
-    { state, commit, dispatch },
-    { pageNumber, currentPage }
-  ): Promise<void> {
+  async gotoPage({ state, commit, dispatch }, { pageNumber, currentPage }) {
     const terms = state.terms
     const pageNumberOffset = pageNumber - currentPage
     const isBefore = pageNumber < currentPage
@@ -268,7 +260,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
       }
     }
   },
-  async search({ state, commit, dispatch }, search): Promise<void> {
+  async search({ state, commit, dispatch }, search) {
     commit('setLoading', true)
 
     await dispatch('getTerms', {
@@ -278,14 +270,9 @@ export const actions: ActionTree<State, StateType> & Actions = {
 
     commit('setLoading', false)
   },
-  async sort(
-    { commit, dispatch }: Context,
-    field: FieldNameType
-  ): Promise<void> {
+  async sort({ commit, dispatch }, field) {
     commit('setLoading', true)
-    await dispatch('getTerms', {
-      field,
-    })
+    await dispatch('getTerms', { field })
     commit('setLoading', false)
     commit('setSortedBy', field)
   },
