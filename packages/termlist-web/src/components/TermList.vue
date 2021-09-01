@@ -67,7 +67,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'search', search: TermQueryType): void
+  (e: 'search', search: string): void
   (e: 'edit', term: TermType): void
   (e: 'remove', term: TermType): void
   (e: 'gotopage', pageNumber: number, currentPage: number): void
@@ -97,7 +97,7 @@ const lastPage = computed((): number => {
   }
 })
 
-const search = (search: TermQueryType): void => {
+const search = (search: string): void => {
   emit('search', search)
 }
 

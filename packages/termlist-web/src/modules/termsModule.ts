@@ -6,6 +6,7 @@ import type { TermType } from '../types/TermType'
 import type { StateType } from '../types/StateType'
 import type { AugmentedActionContext } from '../types/AugmentedActionContext'
 import type { Namespaced } from '../types/Namespaced'
+import type { FieldNameType } from '../types/FieldNameType'
 
 export type State = {
   terms: {
@@ -135,6 +136,11 @@ export type Actions = {
   save({ state, commit }: Context, term: TermType): Promise<void>
   getTerms({ commit }: Context, data: TermQueryType): Promise<void>
   fetchTotal({ commit }: Context): Promise<void>
+  gotoPage(
+    { state, commit, dispatch }: Context,
+    data: { pageNumber: number; currentPage: number; sortedBy: FieldNameType }
+  ): Promise<void>
+  search({ commit }: Context, data: TermQueryType): Promise<void>
 }
 
 export const actions: ActionTree<State, StateType> & Actions = {
@@ -191,6 +197,75 @@ export const actions: ActionTree<State, StateType> & Actions = {
     } catch (e) {
       console.error('Error:', e)
     }
+  },
+  async gotoPage(
+    { state, commit, dispatch },
+    { pageNumber, currentPage, sortedBy }
+  ): Promise<void> {
+    const terms = state.terms
+    const pageNumberOffset = pageNumber - currentPage
+    const isBefore = pageNumber < currentPage
+
+    commit('setLoading', true)
+
+    if (Math.abs(pageNumberOffset) === 1) {
+      if (isBefore) {
+        await dispatch('getTerms', {
+          field: sortedBy,
+          endBefore: Object.entries(terms)[0][1][sortedBy],
+        })
+
+        commit('setLoading', false)
+      } else {
+        await dispatch('getTerms', {
+          field: sortedBy,
+          startAfter:
+            Object.entries(terms)[Object.keys(terms).length - 1][1][sortedBy],
+        })
+
+        commit('setLoading', false)
+      }
+    } else {
+      if (isBefore) {
+        const limit = pageNumber * 20
+
+        await dispatch('getTerms', {
+          field: sortedBy,
+          limit,
+          showLimit: 20,
+        })
+
+        commit('setLoading', false)
+      } else {
+        const termsLeft = state.totalRows - 20 * currentPage
+        // Amount of terms on x pages
+        const limit = termsLeft
+        let showLimit = 20
+
+        // If the amount of terms won't fill the last page completely,
+        // find out how many are on the last page and add them instead
+        if (termsLeft % 20 !== 0) {
+          showLimit = termsLeft % 20
+        }
+
+        await dispatch('getTerms', {
+          field: sortedBy,
+          startAfter:
+            Object.entries(terms)[Object.keys(terms).length - 1][1][sortedBy],
+          limit,
+          showLimit,
+        })
+
+        commit('setLoading', false)
+      }
+    }
+  },
+  async search({ commit, dispatch }, data): Promise<void> {
+    commit('setLoading', true)
+
+    await dispatch('getTerms', data)
+
+    commit('setLoading', false)
   },
 }
 

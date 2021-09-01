@@ -83,7 +83,6 @@ import TermList from './components/TermList.vue'
 import ui from './assets/ui'
 import type { TermType } from './types/TermType'
 import type { FieldNameType } from './types/FieldNameType'
-import type { TermQueryType } from './types/TermQueryType'
 
 const store = useStore()
 const sortedBy = ref<FieldNameType>('term')
@@ -146,78 +145,18 @@ const gotoPage = async (
   pageNumber: number,
   currentPage: number
 ): Promise<void> => {
-  const terms = store.state.terms.terms
-  const pageNumberOffset = pageNumber - currentPage
-  const isBefore = pageNumber < currentPage
-
-  loading.value = true
-
-  if (Math.abs(pageNumberOffset) === 1) {
-    if (isBefore) {
-      await store.dispatch('terms/getTerms', {
-        field: sortedBy.value,
-        endBefore: Object.entries(terms)[0][1][sortedBy.value],
-      })
-
-      loading.value = false
-    } else {
-      await store.dispatch('terms/getTerms', {
-        field: sortedBy.value,
-        startAfter:
-          Object.entries(terms)[Object.keys(terms).length - 1][1][
-            sortedBy.value
-          ],
-      })
-
-      loading.value = false
-    }
-  } else {
-    if (isBefore) {
-      const limit = pageNumber * 20
-
-      await store.dispatch('terms/getTerms', {
-        field: sortedBy.value,
-        limit,
-        showLimit: 20,
-      })
-
-      loading.value = false
-    } else {
-      const termsLeft = store.state.terms.totalRows - 20 * currentPage
-      // Amount of terms on x pages
-      const limit = termsLeft
-      let showLimit = 20
-
-      // If the amount of terms won't fill the last page completely,
-      // find out how many are on the last page and add them instead
-      if (termsLeft % 20 !== 0) {
-        showLimit = termsLeft % 20
-      }
-
-      await store.dispatch('terms/getTerms', {
-        field: sortedBy.value,
-        startAfter:
-          Object.entries(terms)[Object.keys(terms).length - 1][1][
-            sortedBy.value
-          ],
-        limit,
-        showLimit,
-      })
-
-      loading.value = false
-    }
-  }
+  await store.dispatch('terms/gotoPage', {
+    pageNumber,
+    currentPage,
+    sortedBy: sortedBy.value,
+  })
 }
 
-const search = async (search: TermQueryType): Promise<void> => {
-  loading.value = true
-
-  await store.dispatch('terms/getTerms', {
+const search = async (search: string): Promise<void> => {
+  await store.dispatch('terms/search', {
     field: sortedBy.value,
-    search: search,
+    search,
   })
-
-  loading.value = false
 }
 
 const debouncedSearch = debounce(search, 400)
