@@ -141,6 +141,7 @@ export type Actions = {
     data: { pageNumber: number; currentPage: number; sortedBy: FieldNameType }
   ): Promise<void>
   search({ commit }: Context, data: TermQueryType): Promise<void>
+  sort({ commit }: Context, field: FieldNameType): Promise<void>
 }
 
 export const actions: ActionTree<State, StateType> & Actions = {
@@ -265,6 +266,16 @@ export const actions: ActionTree<State, StateType> & Actions = {
 
     await dispatch('getTerms', data)
 
+    commit('setLoading', false)
+  },
+  async sort(
+    { commit, dispatch }: Context,
+    field: FieldNameType
+  ): Promise<void> {
+    commit('setLoading', true)
+    await dispatch('getTerms', {
+      field,
+    })
     commit('setLoading', false)
   },
 }

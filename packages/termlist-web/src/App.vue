@@ -162,11 +162,7 @@ const search = async (search: string): Promise<void> => {
 const debouncedSearch = debounce(search, 400)
 
 const sort = async (field: FieldNameType): Promise<void> => {
-  store.commit('terms/setLoading', true)
-  await store.dispatch('terms/getTerms', {
-    field: field,
-  })
-  store.commit('terms/setLoading', false)
+  await store.dispatch('terms/sort', field)
 
   sortedBy.value = field
 }
