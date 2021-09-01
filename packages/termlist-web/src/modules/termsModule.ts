@@ -18,6 +18,7 @@ export type State = {
   currentlyEditing: boolean
   currentTerm?: TermType
   termsAdded: number
+  loading: boolean
 }
 
 export type Mutations = {
@@ -35,6 +36,7 @@ export type Mutations = {
   cancelRemove(state: State): void
   startEditing(state: State, term?: TermType): void
   cancelEditing(state: State): void
+  setLoading(state: State, loading: boolean): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -118,6 +120,10 @@ export const mutations: MutationTree<State> & Mutations = {
   cancelEditing(state: State): void {
     state.currentlyEditing = false
     state.currentTerm = undefined
+  },
+
+  setLoading(state: State, loading: boolean): void {
+    state.loading = loading
   },
 }
 
@@ -209,6 +215,7 @@ export const termsModule: Module<State, StateType> = {
     currentlyEditing: false,
     currentTerm: undefined,
     termsAdded: 0,
+    loading: true,
   }),
   mutations,
   actions,

@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import debounce from 'lodash.debounce'
 import { useStore } from './store'
 import ModalEdit from './components/Modal/ModalEdit.vue'
@@ -87,7 +87,7 @@ import type { TermQueryType } from './types/TermQueryType'
 
 const store = useStore()
 const sortedBy = ref<FieldNameType>('term')
-const loading = ref(true)
+const loading = computed(() => store.state.terms.loading)
 
 const auth = ref<InstanceType<typeof Authenticate>>()
 
@@ -96,7 +96,7 @@ store
   .dispatch('terms/getTerms', {
     field: sortedBy.value,
   })
-  .then(() => (loading.value = false))
+  .then(() => store.commit('terms/setLoading', false))
 
 store.subscribe(mutation => {
   if (mutation.type === 'auth/setAuthenticated') {
@@ -105,7 +105,7 @@ store.subscribe(mutation => {
       .dispatch('terms/getTerms', {
         field: sortedBy.value,
       })
-      .then(() => (loading.value = false))
+      .then(() => store.commit('terms/setLoading', false))
   }
 })
 
@@ -223,11 +223,11 @@ const search = async (search: TermQueryType): Promise<void> => {
 const debouncedSearch = debounce(search, 400)
 
 const sort = async (field: FieldNameType): Promise<void> => {
-  loading.value = true
+  store.commit('terms/setLoading', true)
   await store.dispatch('terms/getTerms', {
     field: field,
   })
-  loading.value = false
+  store.commit('terms/setLoading', false)
 
   sortedBy.value = field
 }
