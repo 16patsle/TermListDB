@@ -120,15 +120,6 @@ watch(
   }
 )
 
-watch(
-  () => store.state.terms.termsAdded,
-  async () =>
-    // Reload from first page
-    await store.dispatch('terms/getTerms', {
-      field: sortedBy.value,
-    })
-)
-
 const addTerm = () => store.commit('terms/startEditing')
 
 const editTerm = (term: TermType) => store.commit('terms/startEditing', term)

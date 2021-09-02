@@ -18,7 +18,6 @@ export type State = {
   currentRemove?: TermType
   currentlyEditing: boolean
   currentTerm?: TermType
-  termsAdded: number
   loading: boolean
   sortedBy: FieldNameType
 }
@@ -54,7 +53,6 @@ export const mutations: MutationTree<State> & Mutations = {
     if (!state.terms[term._id]) {
       state.terms[term._id] = term
       state.totalRows++
-      state.termsAdded++
       state.currentlyEditing = false
       state.currentTerm = undefined
       return true
@@ -154,14 +152,21 @@ export const actions: ActionTree<State, StateType> & Actions = {
       console.error('Error:', e, term)
     }
   },
-  async add({ commit }, term) {
+  async add({ state, commit, dispatch }, term) {
     try {
       term._charSlices = term.term
         ? [term.term.substr(0, 1), term.term.substr(0, 3)]
         : []
 
       await database.add(term)
-      return commit('add', term)
+      const success = commit('add', term)
+      if (success) {
+        // Reload from first page
+        await dispatch('getTerms', {
+          field: state.sortedBy,
+        })
+      }
+      return success
     } catch (e) {
       console.error('Error:', e, term)
       return false
@@ -298,7 +303,6 @@ export const termsModule: Module<State, StateType> = {
     currentRemove: undefined,
     currentlyEditing: false,
     currentTerm: undefined,
-    termsAdded: 0,
     loading: true,
     sortedBy: 'term',
   }),
