@@ -138,7 +138,7 @@ const debouncedSearch = debounce(
   400
 )
 
-const sort = (field: FieldNameType) => store.dispatch('terms/sort', field)
+const sort = (field?: FieldNameType) => store.dispatch('terms/sort', field)
 
 const shortcutUp = (e: KeyboardEvent): void => {
   if (

@@ -140,7 +140,7 @@ export type Actions = {
     data: { pageNumber: number; currentPage: number }
   ): Promise<void>
   search(c: Context, search: string): Promise<void>
-  sort(c: Context, field: FieldNameType): Promise<void>
+  sort(c: Context, field?: FieldNameType): Promise<void>
 }
 
 export const actions: ActionTree<State, StateType> & Actions = {
