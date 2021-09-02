@@ -1,0 +1,52 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "path": "packages/termlist-web/",
+			// Problem Matcher based on https://gist.github.com/johnhamm/d8256fc9ce1561b62af35b90341fb44e
+      "problemMatcher": {
+        "owner": "webpack",
+        "severity": "error",
+        "fileLocation": ["relative", "${workspaceFolder}/packages/termlist-web"],
+        "pattern": [
+					// ERROR in ([^ ?]*).*\\nModule Error.*\\n(.*)\\((.*):(.*)\\)
+          {
+            "regexp": "^ERROR in ([^ ?]*)",
+            "file": 1,
+          },
+					{
+            "regexp": ".*"
+          },
+          {
+            "regexp": "^(.*)\\((.*):(.*)\\)",
+            "message": 1,
+						"line": 2,
+						"column": 3
+          }
+        ],
+        "background": {
+					"activeOnStart": true,
+          "beginsPattern": "assets by status",
+          "endsPattern": "webpack [\\d\\.]+ compiled (with|successfully)"
+        }
+      },
+      "label": "npm: start - termlist-web",
+      "detail": "npm run dev",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "isBackground": true,
+      "presentation": {
+        "echo": false,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": false,
+        "clear": false
+      }
+    }
+  ]
+}
