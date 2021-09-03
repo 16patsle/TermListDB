@@ -54,12 +54,13 @@
   </form>
 </template>
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import debounce from 'lodash.debounce'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
 import { useStore } from '../../store'
+import { globalService } from '../../machines/globalService'
 import type { FieldType } from '../../types/FieldType'
 import type { TermDefType, TermType } from '../../types/TermType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
@@ -101,18 +102,16 @@ const mutableFields = computed((): FieldType[] => {
   })
 })
 
-watch(
-  () => store.state.terms.currentlyEditing,
-  (bool: boolean): void => {
-    if (bool) {
-      editTerm(store.state.terms.currentTerm)
-      dirty.value = false
-    } else {
-      modalUnsavedWarning.value?.toggleModal(false)
-    }
-    modal.value?.toggleModal(bool)
+globalService.onTransition(state => {
+  if (state.value === 'editing' && state.history?.value !== 'editing') {
+    editTerm(state.context.currentTerm)
+    dirty.value = false
+    modal.value?.toggleModal(true)
+  } else if (state.value !== 'editing' && state.history?.value === 'editing') {
+    modalUnsavedWarning.value?.toggleModal(false)
+    modal.value?.toggleModal(false)
   }
-)
+})
 
 const handleDirty = (fieldName: FieldNameType): void => {
   if (mode.value === 'add' && currentTerm.value[fieldName] === '') {
@@ -215,7 +214,7 @@ const close = (): void => {
   if (dirty.value) {
     modalUnsavedWarning.value?.toggleModal(true)
   } else {
-    store.commit('terms/cancelEditing')
+    globalService.send('CANCEL')
   }
 }
 

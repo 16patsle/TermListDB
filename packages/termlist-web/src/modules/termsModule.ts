@@ -17,8 +17,6 @@ export type State = {
   totalRows: number
   askingForRemoveConfirmation: boolean
   currentRemove?: TermType
-  currentlyEditing: boolean
-  currentTerm?: TermType
   sortedBy: FieldNameType
 }
 
@@ -35,8 +33,6 @@ export type Mutations = {
   setTotal(state: State, size: number): void
   askingForRemoveConfirmation(state: State, term: TermType): void
   cancelRemove(state: State): void
-  startEditing(state: State, term?: TermType): void
-  cancelEditing(state: State): void
   setSortedBy(state: State, sortedBy: FieldNameType): void
 }
 
@@ -52,8 +48,6 @@ export const mutations: MutationTree<State> & Mutations = {
     if (!state.terms[term._id]) {
       state.terms[term._id] = term
       state.totalRows++
-      state.currentlyEditing = false
-      state.currentTerm = undefined
       return true
     } else {
       console.error('Already exists!', term)
@@ -69,8 +63,6 @@ export const mutations: MutationTree<State> & Mutations = {
       } else {
         state.terms[term._id] = term
       }
-      state.currentlyEditing = false
-      state.currentTerm = undefined
     } else {
       console.error('Could not save! Term might not exist!', term)
     }
@@ -105,16 +97,6 @@ export const mutations: MutationTree<State> & Mutations = {
   cancelRemove(state) {
     state.askingForRemoveConfirmation = false
     state.currentRemove = undefined
-  },
-
-  startEditing(state, term) {
-    state.currentlyEditing = true
-    state.currentTerm = term
-  },
-
-  cancelEditing(state) {
-    state.currentlyEditing = false
-    state.currentTerm = undefined
   },
 
   setSortedBy(state, sortedBy) {
@@ -161,6 +143,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
           field: state.sortedBy,
         })
       }
+      globalService.send('SAVE')
       return success
     } catch (e) {
       console.error('Error:', e, term)
@@ -176,6 +159,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
 
         await database.save(term)
         commit('save', term)
+        globalService.send('SAVE')
       } else {
         throw 'Term not changed!'
       }
@@ -302,8 +286,6 @@ export const termsModule: Module<State, StateType> = {
     totalRows: 0,
     askingForRemoveConfirmation: false,
     currentRemove: undefined,
-    currentlyEditing: false,
-    currentTerm: undefined,
     sortedBy: 'term',
   }),
   mutations,

@@ -122,9 +122,9 @@ watch(
   }
 )
 
-const addTerm = () => store.commit('terms/startEditing')
+const addTerm = () => globalService.send('EDIT')
 
-const editTerm = (term: TermType) => store.commit('terms/startEditing', term)
+const editTerm = (term: TermType) => globalService.send({ type: 'EDIT', term })
 
 const confirmRemoveTerm = (term: TermType) =>
   store.commit('terms/askingForRemoveConfirmation', term)
