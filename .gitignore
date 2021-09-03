@@ -14,3 +14,5 @@ packages/termlist-web/.env
 *.ntvs*
 *.njsproj
 *.sln
+
+*.tsbuildinfo

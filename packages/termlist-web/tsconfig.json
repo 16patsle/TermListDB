@@ -9,9 +9,13 @@
     "checkJs": true,
     "noEmit": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "incremental": true
   },
   "include": [
     "./src/**/*"
+  ],
+  "exclude": [
+    "./src/auth-ui/esm.js"
   ]
 }
