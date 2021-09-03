@@ -44,10 +44,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { useStore } from '../../store'
+import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
 
@@ -67,12 +68,9 @@ const fileInfo = computed((): string | null => {
   }
 })
 
-watch(
-  () => store.state.import.askingForImportConfirmation,
-  (bool: boolean): void => {
-    modal.value?.toggleModal(bool)
-  }
-)
+globalService.onTransition(state => {
+  modal.value?.toggleModal(state.value === 'confirmImport')
+})
 
 const importTerm = (): void => {
   if (
@@ -85,7 +83,8 @@ const importTerm = (): void => {
       if (fileReader && fileReader.result) {
         let file = JSON.parse(fileReader.result.toString())
 
-        close()
+        globalService.send('IMPORT')
+        clear()
         store.dispatch('import/import', [...file])
       }
     }
@@ -93,13 +92,16 @@ const importTerm = (): void => {
   }
 }
 
-const close = (): void => {
+const clear = (): void => {
   if (importFile.value) {
     importFile.value.value = ''
   }
   selectedFile.value = null
+}
 
-  store.commit('import/cancel')
+const close = (): void => {
+  clear()
+  globalService.send('CANCEL')
 }
 
 const handleFiles = (e: Event): void => {

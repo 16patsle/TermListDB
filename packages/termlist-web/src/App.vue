@@ -17,16 +17,12 @@
               </AppButton>
             </div>
             <div class="control">
-              <AppButton
-                @click="store.commit('import/askingForImportConfirmation')"
-              >
+              <AppButton @click="globalService.send('IMPORT')">
                 {{ ui.importTerms }}
               </AppButton>
             </div>
             <div class="control">
-              <AppButton
-                @click="store.commit('import/askingForExportConfirmation')"
-              >
+              <AppButton @click="globalService.send('EXPORT')">
                 {{ ui.exportTerms }}
               </AppButton>
             </div>
@@ -67,7 +63,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import debounce from 'lodash.debounce'
 import { useStore } from './store'
 import ModalEdit from './components/Modal/ModalEdit.vue'
@@ -110,17 +106,14 @@ store.subscribe(mutation => {
   }
 })
 
-watch(
-  () => store.state.import.finished,
-  async (finished: boolean) => {
-    if (finished) {
-      await store.dispatch('terms/fetchTotal')
-      await store.dispatch('terms/getTerms', {
-        field: sortedBy.value,
-      })
-    }
+globalService.onTransition(async state => {
+  if (state.value === 'idle' && state.history?.value === 'importing') {
+    await store.dispatch('terms/fetchTotal')
+    await store.dispatch('terms/getTerms', {
+      field: sortedBy.value,
+    })
   }
-)
+})
 
 const addTerm = () => globalService.send('EDIT')
 

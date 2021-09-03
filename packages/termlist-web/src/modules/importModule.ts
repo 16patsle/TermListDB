@@ -1,4 +1,5 @@
 import database from '../utils/firebase'
+import { globalService } from '../machines/globalService'
 
 import type { ActionTree, Module, MutationTree } from 'vuex'
 import type { TermType } from '../types/TermType'
@@ -9,60 +10,24 @@ import type { Namespaced } from '../types/Namespaced'
 export type State = {
   imported: number
   total: number
-  finished: boolean
-  cancel: boolean
-  exportURI: string
-  askingForImportConfirmation: boolean
-  askingForExportConfirmation: boolean
 }
 
 export type Mutations = {
-  askingForImportConfirmation(state: State): void
   prepare(state: State, imports: number): void
   import(state: State): void
-  cancel(state: State): void
-  askingForExportConfirmation(state: State): void
-  export(state: State, uri: string): void
-  cancelExport(state: State): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
-  askingForImportConfirmation(state) {
-    state.askingForImportConfirmation = true
-  },
-
   prepare(state, imports) {
     state.total = imports
     state.imported = 0
-    state.finished = false
-    state.cancel = false
-    state.askingForImportConfirmation = false
   },
 
   import(state) {
     state.imported += 1
     if (state.imported === state.total) {
-      state.finished = true
+      globalService.send('COMPLETE')
     }
-  },
-
-  cancel(state) {
-    state.finished = true
-    state.cancel = true
-    state.askingForImportConfirmation = false
-  },
-
-  askingForExportConfirmation(state) {
-    state.askingForExportConfirmation = true
-  },
-
-  export(state, uri) {
-    state.exportURI = uri
-  },
-
-  cancelExport(state) {
-    state.askingForExportConfirmation = false
-    state.exportURI = ''
   },
 }
 
@@ -70,18 +35,18 @@ type Context = AugmentedActionContext<Mutations, Actions, State>
 
 export type Actions = {
   import(c: Context, terms: TermType[]): Promise<void>
-  export(c: Context): Promise<void>
+  export(c: Context): Promise<string | undefined>
 }
 
 export const actions: ActionTree<State, StateType> & Actions = {
-  async import({ state, commit, dispatch }, terms) {
+  async import({ commit, dispatch }, terms) {
     try {
       commit('prepare', terms.length)
 
       const imports = []
 
       for (const term of terms) {
-        if (state.cancel === false) {
+        if (globalService.state.value === 'importing') {
           imports.push(
             (async () => {
               const added = await dispatch(
@@ -107,7 +72,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
       console.error('Error:', e, terms)
     }
   },
-  async export({ commit }) {
+  async export() {
     try {
       const exported = (await database.getTerms({ limit: undefined })).map(
         term => ({
@@ -119,10 +84,9 @@ export const actions: ActionTree<State, StateType> & Actions = {
         })
       )
 
-      commit(
-        'export',
+      return (
         'data:application/json;charset=utf-8, ' +
-          encodeURIComponent(JSON.stringify(exported))
+        encodeURIComponent(JSON.stringify(exported))
       )
     } catch (e) {
       console.error('Error:', e)
@@ -138,11 +102,6 @@ export const importModule: Module<State, StateType> = {
   state: (): State => ({
     imported: 0,
     total: 0,
-    finished: true,
-    cancel: false,
-    exportURI: '',
-    askingForImportConfirmation: false,
-    askingForExportConfirmation: false,
   }),
   mutations,
   actions,

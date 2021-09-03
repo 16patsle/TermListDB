@@ -41,9 +41,10 @@
 <script lang="ts"></script>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import { useStore } from '../../store'
+import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
 
@@ -51,28 +52,12 @@ const store = useStore()
 
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 
-const toggleModal = (bool: boolean): void => {
-  modal.value?.toggleModal(bool)
-}
-
-watch(
-  () => store.state.import.finished,
-  value => {
-    if (!value) {
-      toggleModal(true)
-    } else {
-      toggleModal(false)
-    }
-  },
-  {
-    immediate: true,
-  }
-)
+globalService.onTransition(state => {
+  modal.value?.toggleModal(state.value === 'importing')
+})
 
 const close = (): void => {
-  toggleModal(false)
-
-  store.commit('import/cancel')
+  globalService.send('CANCEL')
 }
 </script>
 <style></style>

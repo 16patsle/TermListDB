@@ -15,33 +15,36 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import { useStore } from '../../store'
+import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
 
 const store = useStore()
 
+const exportURI = ref<string | undefined>(undefined)
 const exportInstructions = computed(() =>
   exportURI.value ? ui.downloadExportInstructions : ui.processingExport
 )
-const exportURI = computed(() => store.state.import.exportURI)
 
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 
-watch(
-  () => store.state.import.askingForExportConfirmation,
-  (bool: boolean): void => {
-    modal.value?.toggleModal(bool)
-    if (bool) {
-      store.dispatch('import/export')
-    }
+globalService.onTransition(state => {
+  if (state.value === 'exporting' && state.history?.value !== 'exporting') {
+    modal.value?.toggleModal(true)
+    store.dispatch('import/export').then(uri => (exportURI.value = uri))
+  } else if (
+    state.value !== 'exporting' &&
+    state.history?.value === 'exporting'
+  ) {
+    modal.value?.toggleModal(false)
   }
-)
+})
 
 const close = (): void => {
-  store.commit('import/cancelExport')
+  globalService.send('CANCEL')
 }
 
 const downloadExport = (e: MouseEvent): void => {

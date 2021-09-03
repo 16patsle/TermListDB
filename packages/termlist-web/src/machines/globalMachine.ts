@@ -9,6 +9,9 @@ export type GlobalEvent =
   | { type: 'SAVE' }
   | { type: 'CANCEL' }
   | { type: 'REMOVE' }
+  | { type: 'IMPORT' }
+  | { type: 'EXPORT' }
+  | { type: 'COMPLETE' }
 
 export type GlobalContext = {
   currentTerm?: TermType
@@ -32,6 +35,8 @@ export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
           LOAD_START: { target: 'loading' },
           EDIT: { target: 'editing', actions: 'setCurrentTerm' },
           PROMPT_REMOVE: { target: 'removing', actions: 'setCurrentTerm' },
+          IMPORT: { target: 'confirmImport' },
+          EXPORT: { target: 'exporting' },
         },
       },
       editing: {
@@ -44,6 +49,24 @@ export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
         on: {
           REMOVE: { target: 'idle', actions: 'setCurrentTerm' },
           CANCEL: { target: 'idle', actions: 'setCurrentTerm' },
+        },
+      },
+      confirmImport: {
+        on: {
+          IMPORT: { target: 'importing' },
+          CANCEL: { target: 'idle' },
+        },
+      },
+      importing: {
+        on: {
+          CANCEL: { target: 'idle' },
+          COMPLETE: { target: 'idle' },
+        },
+      },
+      exporting: {
+        on: {
+          CANCEL: { target: 'idle' },
+          COMPLETE: { target: 'idle' },
         },
       },
     },
