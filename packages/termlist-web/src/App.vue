@@ -127,7 +127,7 @@ const addTerm = () => globalService.send('EDIT')
 const editTerm = (term: TermType) => globalService.send({ type: 'EDIT', term })
 
 const confirmRemoveTerm = (term: TermType) =>
-  store.commit('terms/askingForRemoveConfirmation', term)
+  globalService.send({ type: 'PROMPT_REMOVE', term })
 
 const gotoPage = (pageNumber: number, currentPage: number) =>
   store.dispatch('terms/gotoPage', {

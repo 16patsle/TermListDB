@@ -5,8 +5,10 @@ export type GlobalEvent =
   | { type: 'LOAD_COMPLETE' }
   | { type: 'LOAD_START' }
   | { type: 'EDIT'; term?: TermType }
+  | { type: 'PROMPT_REMOVE'; term?: TermType }
   | { type: 'SAVE' }
   | { type: 'CANCEL' }
+  | { type: 'REMOVE' }
 
 export type GlobalContext = {
   currentTerm?: TermType
@@ -29,11 +31,18 @@ export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
         on: {
           LOAD_START: { target: 'loading' },
           EDIT: { target: 'editing', actions: 'setCurrentTerm' },
+          PROMPT_REMOVE: { target: 'removing', actions: 'setCurrentTerm' },
         },
       },
       editing: {
         on: {
           SAVE: { target: 'idle', actions: 'setCurrentTerm' },
+          CANCEL: { target: 'idle', actions: 'setCurrentTerm' },
+        },
+      },
+      removing: {
+        on: {
+          REMOVE: { target: 'idle', actions: 'setCurrentTerm' },
           CANCEL: { target: 'idle', actions: 'setCurrentTerm' },
         },
       },

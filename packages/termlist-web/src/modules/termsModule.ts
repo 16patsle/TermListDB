@@ -15,8 +15,6 @@ export type State = {
   }
 
   totalRows: number
-  askingForRemoveConfirmation: boolean
-  currentRemove?: TermType
   sortedBy: FieldNameType
 }
 
@@ -31,8 +29,6 @@ export type Mutations = {
     }
   ): void
   setTotal(state: State, size: number): void
-  askingForRemoveConfirmation(state: State, term: TermType): void
-  cancelRemove(state: State): void
   setSortedBy(state: State, sortedBy: FieldNameType): void
 }
 
@@ -40,8 +36,6 @@ export const mutations: MutationTree<State> & Mutations = {
   remove(state, term) {
     delete state.terms[term._id]
     state.totalRows--
-    state.askingForRemoveConfirmation = false
-    state.currentRemove = undefined
   },
 
   add(state, term) {
@@ -89,16 +83,6 @@ export const mutations: MutationTree<State> & Mutations = {
     state.totalRows = size
   },
 
-  askingForRemoveConfirmation(state, term) {
-    state.askingForRemoveConfirmation = true
-    state.currentRemove = term
-  },
-
-  cancelRemove(state) {
-    state.askingForRemoveConfirmation = false
-    state.currentRemove = undefined
-  },
-
   setSortedBy(state, sortedBy) {
     state.sortedBy = sortedBy
   },
@@ -125,6 +109,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
     try {
       await database.remove(term._id)
       commit('remove', term)
+      globalService.send('REMOVE')
     } catch (e) {
       console.error('Error:', e, term)
     }
@@ -284,8 +269,6 @@ export const termsModule: Module<State, StateType> = {
     },
 
     totalRows: 0,
-    askingForRemoveConfirmation: false,
-    currentRemove: undefined,
     sortedBy: 'term',
   }),
   mutations,

@@ -22,23 +22,23 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { ref } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { useStore } from '../../store'
+import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
+import type { TermType } from '../../types/TermType'
 
 const store = useStore()
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
-const current = computed(() => store.state.terms.currentRemove)
+const current = ref<TermType | undefined>(undefined)
 
-watch(
-  () => store.state.terms.askingForRemoveConfirmation,
-  (bool: boolean): void => {
-    modal.value?.toggleModal(bool)
-  }
-)
+globalService.onTransition(state => {
+  modal.value?.toggleModal(state.value === 'removing')
+  current.value = state.context.currentTerm
+})
 
 const removeTerm = (): void => {
   if (current.value) {
@@ -47,7 +47,7 @@ const removeTerm = (): void => {
 }
 
 const close = (): void => {
-  store.commit('terms/cancelRemove')
+  globalService.send('CANCEL')
 }
 </script>
 <style></style>
