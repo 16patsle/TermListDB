@@ -23,8 +23,6 @@ import 'firebase/auth'
 import * as firebaseui from '../auth-ui/esm'
 import { useStore } from '../store'
 
-import ui from '../assets/ui'
-
 const store = useStore()
 const uiConfig: firebaseui.auth.Config = {
   callbacks: {
