@@ -74,7 +74,9 @@ import ModalExport from './components/Modal/ModalExport.vue'
 import AppButton from './components/Generic/AppButton.vue'
 import AppNavbar from './components/Generic/AppNavbar.vue'
 import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
-import Authenticate from './components/Authenticate.vue'
+import Authenticate, {
+  AuthenticateMethods,
+} from './components/Authenticate.vue'
 import TermList from './components/TermList.vue'
 import ui from './assets/ui'
 import { currentState, globalService } from './machines/globalService'
@@ -86,7 +88,7 @@ const store = useStore()
 const sortedBy = computed(() => store.state.terms.sortedBy)
 const loading = computed(() => currentState.value === 'loading')
 
-const auth = ref<InstanceType<typeof Authenticate>>()
+const auth = ref<InstanceType<typeof Authenticate> & AuthenticateMethods>()
 
 store.dispatch('terms/fetchTotal')
 store
