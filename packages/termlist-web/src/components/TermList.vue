@@ -60,7 +60,7 @@ import type { TermQueryType } from '../types/TermQueryType'
 import ui from '../assets/ui'
 import fields from '../assets/fields'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     loading?: boolean
   }>(),
@@ -72,7 +72,7 @@ const emit = defineEmits<{
   (e: 'edit', term: TermType): void
   (e: 'remove', term: TermType): void
   (e: 'gotopage', pageNumber: number, currentPage: number): void
-  (e: 'sort', field: FieldNameType): void
+  (e: 'sort', field?: FieldNameType): void
 }>()
 
 const store = useStore()
@@ -117,7 +117,7 @@ const gotoPage = (pageNumber: number): void => {
   currentPage.value = pageNumber
 }
 
-const sort = (field: FieldNameType): void => {
+const sort = (field?: FieldNameType): void => {
   emit('sort', field)
   currentPage.value = 1
 }
