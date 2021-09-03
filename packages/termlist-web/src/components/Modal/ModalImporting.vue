@@ -36,6 +36,11 @@
         </div>
       </div>
     </template>
+    <template #modal-footer>
+      <AppButton @click="close">
+        {{ ui.cancel }}
+      </AppButton>
+    </template>
   </AppModal>
 </template>
 <script lang="ts"></script>
@@ -43,6 +48,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppButton from '../Generic/AppButton.vue'
 import { useStore } from '../../store'
 import { globalService } from '../../machines/globalService'
 
@@ -56,8 +62,6 @@ globalService.onTransition(state => {
   modal.value?.toggleModal(state.value === 'importing')
 })
 
-const close = (): void => {
-  globalService.send('CANCEL')
-}
+const close = () => globalService.send('CANCEL')
 </script>
 <style></style>

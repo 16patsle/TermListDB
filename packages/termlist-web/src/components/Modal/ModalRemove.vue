@@ -2,7 +2,7 @@
   <AppModal
     ref="modal"
     :title="ui.removeterm"
-    :callback="removeTerm"
+    :close-callback="close"
     :ok-text="ui.save"
     :cancel-text="ui.cancel"
   >
@@ -46,8 +46,6 @@ const removeTerm = (): void => {
   }
 }
 
-const close = (): void => {
-  globalService.send('CANCEL')
-}
+const close = () => globalService.send('CANCEL')
 </script>
 <style></style>

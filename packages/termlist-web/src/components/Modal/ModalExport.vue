@@ -11,12 +11,18 @@
         >{{ ui.download }}</a
       >
     </template>
+    <template #modal-footer>
+      <AppButton @click="close">
+        {{ ui.close }}
+      </AppButton>
+    </template>
   </AppModal>
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppButton from '../Generic/AppButton.vue'
 import { useStore } from '../../store'
 import { globalService } from '../../machines/globalService'
 
@@ -43,9 +49,7 @@ globalService.onTransition(state => {
   }
 })
 
-const close = (): void => {
-  globalService.send('CANCEL')
-}
+const close = () => globalService.send('CANCEL')
 
 const downloadExport = (e: MouseEvent): void => {
   if (!exportURI.value) {
