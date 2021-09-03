@@ -12,8 +12,7 @@
     </td>
   </tr>
 </template>
-<script lang="ts">
-import {Options, Vue} from 'vue-class-component'
+<script lang="ts" setup>
 import TermRowButton from './TermRowButton.vue'
 
 import type { FieldType } from '../../types/FieldType'
@@ -23,45 +22,34 @@ import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 import md from '../../utils/markdown'
 
-@Options({ components: { TermRowButton },props: {
-    term: {
-      type: Object,
-      required: true,
-    },
-  }, })
-export default class TermRow extends Vue {
-  term!: TermType
+const { term } = defineProps<{ term: TermType }>()
 
-  ui = ui
-  fields = fields
+const emit = defineEmits<{
+  (e: 'edit', term: TermType): void
+  (e: 'remove', term: TermType): void
+}>()
 
-  edit(): void {
-    this.$emit('edit', this.term)
-  }
+const edit = () => emit('edit', term)
+const remove = () => emit('remove', term)
 
-  remove(): void {
-    this.$emit('remove', this.term)
-  }
-
-  getFieldValue(field: FieldType): string | undefined {
-    if (!this.term[field.name]) {
-      return ''
-    } else if (field.name === 'desc') {
-      return md.render(String(this.term[field.name]))
-    } else if (field.name === 'type') {
-      return this.term.type ? this.ui.wordClasses[this.term.type] : ''
-    } else if (field.name === 'date') {
-      let date = new Date(this.term.date)
-      return new Intl.DateTimeFormat(undefined, {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(date)
-    } else {
-      return this.term[field.name]
-    }
+const getFieldValue = (field: FieldType): string | undefined => {
+  if (field.type === 'filler' || !term[field.name]) {
+    return ''
+  } else if (field.name === 'desc') {
+    return md.render(String(term[field.name]))
+  } else if (field.name === 'type') {
+    return term.type ? ui.wordClasses[term.type] : ''
+  } else if (field.name === 'date') {
+    let date = new Date(term.date)
+    return new Intl.DateTimeFormat(undefined, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(date)
+  } else {
+    return term[field.name]
   }
 }
 </script>

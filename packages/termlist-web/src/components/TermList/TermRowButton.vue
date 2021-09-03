@@ -5,18 +5,12 @@
     </span>
   </a>
 </template>
-<script>
-export default {
-  props: {
-    icon: {
-      type: String,
-      required: true,
-    },
-  },
-  methods: {
-    click(e) {
-      this.$emit('click', e)
-    },
-  },
-}
+<script lang="ts" setup>
+defineProps<{ icon: string }>()
+
+const emit = defineEmits<{
+  (e: 'click', event: MouseEvent): void
+}>()
+
+const click = (e: MouseEvent) => emit('click', e)
 </script>
