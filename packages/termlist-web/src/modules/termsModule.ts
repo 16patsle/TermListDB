@@ -1,5 +1,5 @@
 import database from '../utils/firebase'
-import { globalService } from '../stateMachine'
+import { globalService } from '../machines/globalService'
 
 import type { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
 import type { TermQueryType } from '../types/TermQueryType'

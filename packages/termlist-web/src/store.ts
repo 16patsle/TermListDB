@@ -20,7 +20,7 @@ import {
   importModule,
 } from './modules/importModule'
 import { AuthMutations, authModule } from './modules/authModule'
-import { globalService } from './stateMachine'
+import { globalService } from './machines/globalService'
 
 import type { StateType } from './types/StateType'
 
