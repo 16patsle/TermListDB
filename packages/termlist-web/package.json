@@ -26,7 +26,8 @@
     "vue": "^3.2.4",
     "vue-class-component": "^8.0.0-rc.1",
     "vue-property-decorator": "^10.0.0-rc.3",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "xstate": "^4.23.3"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",

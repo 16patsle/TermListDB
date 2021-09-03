@@ -81,12 +81,18 @@ import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
 import Authenticate from './components/Authenticate.vue'
 import TermList from './components/TermList.vue'
 import ui from './assets/ui'
+import { globalService } from './stateMachine'
+
 import type { TermType } from './types/TermType'
 import type { FieldNameType } from './types/FieldNameType'
 
 const store = useStore()
 const sortedBy = computed(() => store.state.terms.sortedBy)
-const loading = computed(() => store.state.terms.loading)
+const loading = ref(globalService.state.value === 'loading')
+
+globalService.onTransition(state => {
+  loading.value = state.value === 'loading'
+})
 
 const auth = ref<InstanceType<typeof Authenticate>>()
 
@@ -95,7 +101,7 @@ store
   .dispatch('terms/getTerms', {
     field: sortedBy.value,
   })
-  .then(() => store.commit('terms/setLoading', false))
+  .then(() => globalService.send('LOAD_COMPLETE'))
 
 store.subscribe(mutation => {
   if (mutation.type === 'auth/setAuthenticated') {
@@ -104,7 +110,7 @@ store.subscribe(mutation => {
       .dispatch('terms/getTerms', {
         field: sortedBy.value,
       })
-      .then(() => store.commit('terms/setLoading', false))
+      .then(() => globalService.send('LOAD_COMPLETE'))
   }
 })
 

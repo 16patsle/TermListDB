@@ -20,12 +20,15 @@ import {
   importModule,
 } from './modules/importModule'
 import { AuthMutations, authModule } from './modules/authModule'
+import { globalService } from './stateMachine'
 
 import type { StateType } from './types/StateType'
 
 export type Mutations = TermMutations & ImportMutations & AuthMutations
 export type Actions = TermActions & ImportActions
-type Getters = TermGetters
+type Getters = TermGetters & {
+  loading(state: StateType): boolean
+}
 
 export type Store = Omit<
   VuexStore<StateType>,
@@ -55,6 +58,11 @@ const storeOptions: StoreOptions<StateType> = {
     terms: termsModule,
     import: importModule,
     auth: authModule,
+  },
+  getters: {
+    loading(): boolean {
+      return globalService.state.value === 'loading'
+    },
   },
 }
 

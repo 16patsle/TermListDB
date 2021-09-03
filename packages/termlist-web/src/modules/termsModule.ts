@@ -1,4 +1,5 @@
 import database from '../utils/firebase'
+import { globalService } from '../stateMachine'
 
 import type { ActionTree, GetterTree, Module, MutationTree } from 'vuex'
 import type { TermQueryType } from '../types/TermQueryType'
@@ -18,7 +19,6 @@ export type State = {
   currentRemove?: TermType
   currentlyEditing: boolean
   currentTerm?: TermType
-  loading: boolean
   sortedBy: FieldNameType
 }
 
@@ -37,7 +37,6 @@ export type Mutations = {
   cancelRemove(state: State): void
   startEditing(state: State, term?: TermType): void
   cancelEditing(state: State): void
-  setLoading(state: State, loading: boolean): void
   setSortedBy(state: State, sortedBy: FieldNameType): void
 }
 
@@ -116,10 +115,6 @@ export const mutations: MutationTree<State> & Mutations = {
   cancelEditing(state) {
     state.currentlyEditing = false
     state.currentTerm = undefined
-  },
-
-  setLoading(state, loading) {
-    state.loading = loading
   },
 
   setSortedBy(state, sortedBy) {
@@ -205,13 +200,13 @@ export const actions: ActionTree<State, StateType> & Actions = {
       console.error('Error:', e)
     }
   },
-  async gotoPage({ state, commit, dispatch }, { pageNumber, currentPage }) {
+  async gotoPage({ state, dispatch }, { pageNumber, currentPage }) {
     const terms = state.terms
     const pageNumberOffset = pageNumber - currentPage
     const isBefore = pageNumber < currentPage
     const sortedBy = state.sortedBy
 
-    commit('setLoading', true)
+    globalService.send('LOAD_START')
 
     if (Math.abs(pageNumberOffset) === 1) {
       if (isBefore) {
@@ -220,7 +215,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
           endBefore: Object.entries(terms)[0][1][sortedBy],
         })
 
-        commit('setLoading', false)
+        globalService.send('LOAD_COMPLETE')
       } else {
         await dispatch('getTerms', {
           field: sortedBy,
@@ -228,7 +223,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
             Object.entries(terms)[Object.keys(terms).length - 1][1][sortedBy],
         })
 
-        commit('setLoading', false)
+        globalService.send('LOAD_COMPLETE')
       }
     } else {
       if (isBefore) {
@@ -240,7 +235,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
           showLimit: 20,
         })
 
-        commit('setLoading', false)
+        globalService.send('LOAD_COMPLETE')
       } else {
         const termsLeft = state.totalRows - 20 * currentPage
         // Amount of terms on x pages
@@ -261,31 +256,37 @@ export const actions: ActionTree<State, StateType> & Actions = {
           showLimit,
         })
 
-        commit('setLoading', false)
+        globalService.send('LOAD_COMPLETE')
       }
     }
   },
-  async search({ state, commit, dispatch }, search) {
-    commit('setLoading', true)
+  async search({ state, dispatch }, search) {
+    globalService.send('LOAD_START')
 
     await dispatch('getTerms', {
       field: state.sortedBy,
       search,
     })
 
-    commit('setLoading', false)
+    globalService.send('LOAD_COMPLETE')
   },
   async sort({ commit, dispatch }, field) {
-    commit('setLoading', true)
+    globalService.send('LOAD_START')
     await dispatch('getTerms', { field })
-    commit('setLoading', false)
+    globalService.send('LOAD_COMPLETE')
     commit('setSortedBy', field)
   },
 }
 
-export type Getters = {}
+export type Getters = {
+  loading(state: State, getters: unknown, rootState: StateType): boolean
+}
 
-export const getters: GetterTree<State, StateType> & Getters = {}
+export const getters: GetterTree<State, StateType> & Getters = {
+  loading(): boolean {
+    return globalService.state.value === 'loading'
+  },
+}
 
 export type TermMutations = Namespaced<Mutations, 'terms'>
 export type TermActions = Namespaced<Actions, 'terms'>
@@ -303,7 +304,6 @@ export const termsModule: Module<State, StateType> = {
     currentRemove: undefined,
     currentlyEditing: false,
     currentTerm: undefined,
-    loading: true,
     sortedBy: 'term',
   }),
   mutations,
