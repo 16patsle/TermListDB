@@ -77,11 +77,8 @@ const emit = defineEmits<{
 }>()
 
 const store = useStore()
-const currentPage = ref(1)
-
-const terms = computed(() => {
-  return store.state.terms.terms
-})
+const currentPage = computed(() => store.state.terms.currentPage)
+const terms = computed(() => store.state.terms.terms)
 
 const termCount = computed((): number => {
   return terms.value.size
@@ -101,22 +98,13 @@ const search = ({ search }: TermQueryType): void => {
   }
 }
 
-const edit = (term: TermType): void => {
-  emit('edit', term)
-}
-
-const remove = (term: TermType): void => {
-  emit('remove', term)
-}
-
-const gotoPage = (pageNumber: number): void => {
+const edit = (term: TermType) => emit('edit', term)
+const remove = (term: TermType) => emit('remove', term)
+const gotoPage = (pageNumber: number) =>
   emit('gotopage', pageNumber, currentPage.value)
-  currentPage.value = pageNumber
-}
 
 const sort = (field?: FieldNameType): void => {
   emit('sort', field)
-  currentPage.value = 1
 }
 </script>
 

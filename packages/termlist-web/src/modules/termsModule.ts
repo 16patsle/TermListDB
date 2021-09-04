@@ -13,6 +13,7 @@ export type State = {
   terms: Map<string, TermType>
   totalRows: number
   sortedBy: FieldNameType
+  currentPage: number
 }
 
 export type Mutations = {
@@ -27,6 +28,7 @@ export type Mutations = {
   ): void
   setTotal(state: State, size: number): void
   setSortedBy(state: State, sortedBy: FieldNameType): void
+  setCurrentPage(state: State, page: number): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -78,6 +80,10 @@ export const mutations: MutationTree<State> & Mutations = {
 
   setSortedBy(state, sortedBy) {
     state.sortedBy = sortedBy
+  },
+
+  setCurrentPage(state, page) {
+    state.currentPage = page
   },
 }
 
@@ -162,7 +168,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
       console.error('Error:', e)
     }
   },
-  async gotoPage({ state, dispatch }, { pageNumber, currentPage }) {
+  async gotoPage({ state, commit, dispatch }, { pageNumber, currentPage }) {
     const terms = state.terms
     const pageNumberOffset = pageNumber - currentPage
     const isBefore = pageNumber < currentPage
@@ -213,6 +219,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
     }
 
     globalService.send('LOAD_COMPLETE')
+    commit('setCurrentPage', pageNumber)
   },
   async search({ state, dispatch }, search) {
     globalService.send('LOAD_START')
@@ -229,6 +236,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
     await dispatch('getTerms', { field })
     globalService.send('LOAD_COMPLETE')
     commit('setSortedBy', field)
+    commit('setCurrentPage', 1)
   },
 }
 
@@ -252,6 +260,7 @@ export const termsModule: Module<State, StateType> = {
     terms: new Map(),
     totalRows: 0,
     sortedBy: 'term',
+    currentPage: 1,
   }),
   mutations,
   actions,
