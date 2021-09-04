@@ -22,16 +22,7 @@
   </nav>
 </template>
 <script lang="ts" setup>
-import { onMounted } from 'vue'
-
-const props = defineProps<{
+defineProps<{
   fixed: 'top' | 'bottom'
-  bodyPadding?: boolean
 }>()
-
-onMounted(() => {
-  if (props.bodyPadding && props.fixed) {
-    //this.$root.$el.classList.add(`has-navbar-fixed-${this.fixed}`)
-  }
-})
 </script>
