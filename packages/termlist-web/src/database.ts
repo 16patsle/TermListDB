@@ -16,7 +16,6 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore'
-import DocumentSnapshotStub from './DocumentSnapshotStub'
 
 import type {
   CollectionReference,
@@ -68,12 +67,10 @@ class TermDatabase {
     console.log('Connected to ' + user.uid + ' as ' + user.displayName)
   }
 
-  get(
-    id: string
-  ): Promise<DocumentSnapshot<DocumentData>> | DocumentSnapshotStub {
+  get(id: string): Promise<DocumentSnapshot<DocumentData>> | undefined {
     if (!this.termsDB) {
       console.warn('Not connected to db')
-      return new DocumentSnapshotStub()
+      return
     }
     return getDoc(doc(this.termsDB, id))
   }
