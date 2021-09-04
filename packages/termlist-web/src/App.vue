@@ -64,7 +64,6 @@ import Authenticate, {
 } from './components/Authenticate.vue'
 import TermSearchBar from './components/TermList/TermSearchBar.vue'
 import TermSortSelect from './components/TermList/TermSortSelect.vue'
-import TermList from './components/TermList.vue'
 import ui from './assets/ui'
 import { globalService } from './machines/globalService'
 
@@ -73,6 +72,7 @@ import type { FieldNameType } from './types/FieldNameType'
 const ModalContainer = defineAsyncComponent(
   () => import('./components/Modal/ModalContainer.vue')
 )
+const TermList = defineAsyncComponent(() => import('./components/TermList.vue'))
 
 const store = useStore()
 const sortedBy = computed(() => store.state.terms.sortedBy)
