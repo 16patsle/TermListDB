@@ -16,7 +16,5 @@
       }
     ]
   ],
-  "plugins": [
-    ["@babel/proposal-decorators", { "legacy": true }]
-  ]
+  "plugins": []
 }
