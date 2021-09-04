@@ -1,4 +1,4 @@
-import { createApp, configureCompat } from 'vue'
+import { createApp } from 'vue'
 import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
 import { onSnapshot } from 'firebase/firestore'
@@ -11,8 +11,6 @@ import store, { key } from './store'
 
 const start = async () => {
   await database.start()
-
-  configureCompat({ MODE: 3, RENDER_FUNCTION: false, ATTR_FALSE_VALUE: true })
 
   const app = createApp(App)
 

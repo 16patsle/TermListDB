@@ -13,7 +13,6 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "@vue/compat": "^3.2.8",
     "bulma": "^0.9.3",
     "core-js": "^3.17.2",
     "deepmerge": "^4.2.2",

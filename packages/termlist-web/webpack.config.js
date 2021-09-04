@@ -24,11 +24,6 @@ module.exports = {
             sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax', // <style lang="sass">
           },
           // other vue-loader options go here
-          compilerOptions: {
-            compatConfig: {
-              MODE: 3,
-            },
-          },
         },
       },
       {
@@ -138,9 +133,6 @@ module.exports = {
     }),
   ],
   resolve: {
-    alias: {
-      vue: '@vue/compat',
-    },
     extensions: ['.ts', '.js'],
   },
   devServer: {
