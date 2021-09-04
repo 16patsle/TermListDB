@@ -64,7 +64,7 @@ class TermDatabase {
     this.termsDB = collection(this.db, 'users', user.uid, 'termlists')
 
     this.userId = user.uid
-    console.log('Connected to ' + user.uid + ' as ' + user.displayName)
+    console.log(`Connected to ${user.uid} as ${user.displayName}`)
   }
 
   get(id: string): Promise<DocumentSnapshot<DocumentData>> | undefined {
@@ -155,7 +155,7 @@ class TermDatabase {
       return 0
     }
     const data = (await getDoc(this.userInfoReference)).data()
-    return data ? data.termlists_total : 0
+    return data ? (data.termlists_total as number) : 0
   }
 }
 

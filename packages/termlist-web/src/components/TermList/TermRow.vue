@@ -22,17 +22,19 @@ import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 import md from '../../utils/markdown'
 
-const { term } = defineProps<{ term: TermType }>()
+const props = defineProps<{ term: TermType }>()
 
 const emit = defineEmits<{
   (e: 'edit', term: TermType): void
   (e: 'remove', term: TermType): void
 }>()
 
-const edit = () => emit('edit', term)
-const remove = () => emit('remove', term)
+const edit = () => emit('edit', props.term)
+const remove = () => emit('remove', props.term)
 
 const getFieldValue = (field: FieldType): string | undefined => {
+  const { term } = props
+
   if (field.type === 'filler' || !term[field.name]) {
     return ''
   } else if (field.name === 'desc') {

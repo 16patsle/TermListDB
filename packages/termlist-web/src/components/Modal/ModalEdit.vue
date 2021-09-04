@@ -97,7 +97,7 @@ const modalUnsavedWarning = ref<
 >()
 
 const mutableFields = computed((): FieldType[] => {
-  return (fields as FieldType[]).filter(field => {
+  return fields.filter(field => {
     return !field.immutable
   })
 })
