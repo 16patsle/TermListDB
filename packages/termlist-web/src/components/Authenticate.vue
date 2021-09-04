@@ -18,8 +18,8 @@ export type AuthenticateMethods = {
 
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
 import * as firebaseui from '../auth-ui/esm'
 import { useStore } from '../store'
 

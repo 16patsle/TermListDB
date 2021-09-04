@@ -1,11 +1,12 @@
 import { createApp, configureCompat } from 'vue'
 import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
-import firebase from 'firebase/app'
+import { onSnapshot } from 'firebase/firestore'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import './auth-ui/firebaseui.css'
 import App from './App.vue'
 
-import database from './utils/firebase'
+import database, { firebaseApp } from './utils/firebase'
 import store, { key } from './store'
 
 const start = async () => {
@@ -19,10 +20,10 @@ const start = async () => {
 
   app.mount('#app')
 
-  firebase.auth().onAuthStateChanged(user => {
+  onAuthStateChanged(getAuth(firebaseApp), user => {
     store.commit('auth/setAuthenticated', user)
     if (database.userInfoReference) {
-      database.userInfoReference.onSnapshot(doc => {
+      onSnapshot(database.userInfoReference, doc => {
         const data = doc.data()
         if (data) {
           store.commit('terms/setTotal', data.termlists_total)
