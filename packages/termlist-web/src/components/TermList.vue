@@ -28,8 +28,8 @@
         </thead>
         <tbody ref="termlist" class="list">
           <TermRow
-            v-for="term in terms"
-            :key="term._id"
+            v-for="[id, term] of terms"
+            :key="id"
             :term="term"
             @edit="edit"
             @remove="remove"
@@ -78,16 +78,12 @@ const emit = defineEmits<{
 const store = useStore()
 const currentPage = ref(1)
 
-const terms = computed(
-  (): {
-    [key: string]: TermType
-  } => {
-    return store.state.terms.terms
-  }
-)
+const terms = computed(() => {
+  return store.state.terms.terms
+})
 
 const termCount = computed((): number => {
-  return Object.keys(terms.value).length
+  return terms.value.size
 })
 
 const lastPage = computed((): number => {

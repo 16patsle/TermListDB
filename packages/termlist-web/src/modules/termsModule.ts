@@ -10,10 +10,7 @@ import type { Namespaced } from '../types/Namespaced'
 import type { FieldNameType } from '../types/FieldNameType'
 
 export type State = {
-  terms: {
-    [key: string]: TermType
-  }
-
+  terms: Map<string, TermType>
   totalRows: number
   sortedBy: FieldNameType
 }
@@ -34,13 +31,13 @@ export type Mutations = {
 
 export const mutations: MutationTree<State> & Mutations = {
   remove(state, term) {
-    delete state.terms[term._id]
+    state.terms.delete(term._id)
     state.totalRows--
   },
 
   add(state, term) {
-    if (!state.terms[term._id]) {
-      state.terms[term._id] = term
+    if (!state.terms.has(term._id)) {
+      state.terms.set(term._id, term)
       state.totalRows++
       return true
     } else {
@@ -50,12 +47,12 @@ export const mutations: MutationTree<State> & Mutations = {
   },
 
   save(state, term) {
-    if (state.terms[term._id]) {
+    if (state.terms.has(term._id)) {
       if (term._deleted) {
         // TODO: Is this still used?
-        delete state.terms[term._id]
+        state.terms.delete(term._id)
       } else {
-        state.terms[term._id] = term
+        state.terms.set(term._id, term)
       }
     } else {
       console.error('Could not save! Term might not exist!', term)
@@ -63,10 +60,7 @@ export const mutations: MutationTree<State> & Mutations = {
   },
 
   getTerms(state, data) {
-    const termsObject: {
-      [key: string]: TermType
-    } = {}
-
+    const termsObject = new Map<string, TermType>()
     let terms = data.terms
 
     if (data.showLimit) {
@@ -74,8 +68,7 @@ export const mutations: MutationTree<State> & Mutations = {
       terms = terms.slice(Math.max(terms.length - data.showLimit, 0))
     }
 
-    terms.forEach(term => (termsObject[term._id] = term))
-
+    terms.forEach(term => termsObject.set(term._id, term))
     state.terms = termsObject
   },
 
@@ -137,7 +130,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
   },
   async save({ state, commit }, term) {
     try {
-      if (state.terms[term._id] !== term) {
+      if (state.terms.get(term._id) !== term) {
         term._charSlices = term.term
           ? [term.term.substr(0, 1), term.term.substr(0, 3)]
           : []
@@ -181,15 +174,14 @@ export const actions: ActionTree<State, StateType> & Actions = {
       if (isBefore) {
         await dispatch('getTerms', {
           field: sortedBy,
-          endBefore: Object.entries(terms)[0][1][sortedBy],
+          endBefore: Array.from(terms.entries())[0][1][sortedBy],
         })
 
         globalService.send('LOAD_COMPLETE')
       } else {
         await dispatch('getTerms', {
           field: sortedBy,
-          startAfter:
-            Object.entries(terms)[Object.keys(terms).length - 1][1][sortedBy],
+          startAfter: Array.from(terms.entries())[terms.size - 1][1][sortedBy],
         })
 
         globalService.send('LOAD_COMPLETE')
@@ -219,8 +211,7 @@ export const actions: ActionTree<State, StateType> & Actions = {
 
         await dispatch('getTerms', {
           field: sortedBy,
-          startAfter:
-            Object.entries(terms)[Object.keys(terms).length - 1][1][sortedBy],
+          startAfter: Array.from(terms.entries())[terms.size - 1][1][sortedBy],
           limit,
           showLimit,
         })
@@ -264,10 +255,7 @@ export type TermGetters = Namespaced<Getters, 'terms'>
 export const termsModule: Module<State, StateType> = {
   namespaced: true,
   state: (): State => ({
-    terms: {
-      0: { _id: '', date: '' },
-    },
-
+    terms: new Map(),
     totalRows: 0,
     sortedBy: 'term',
   }),
