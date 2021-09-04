@@ -128,7 +128,7 @@ module.exports = {
       'FIREBASE_PROJECT_ID',
     ]),
     new BundleAnalyzerPlugin({
-      analyserMode:
+      analyzerMode:
         process.env.NODE_ENV === 'development' ? 'server' : 'static',
       openAnalyzer: false,
       defaultSizes: 'stat',
