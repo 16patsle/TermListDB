@@ -7,7 +7,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "npm run dev",
-    "test": "eslint \"src/**/*.{ts,js,vue}\" --fix",
+    "lint": "eslint \"src/**/*.{ts,js,vue}\" --fix",
+    "lint-types": "eslint \"src/**/*.{ts,js,vue}\" --fix -c .eslintrc-types.json",
     "dev": "webpack serve --hot",
     "build": "cross-env NODE_ENV=production webpack --progress",
     "prepare": "npm run build"
