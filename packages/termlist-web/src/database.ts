@@ -16,6 +16,7 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore'
+import { log } from './utils/log'
 
 import type {
   CollectionReference,
@@ -64,7 +65,7 @@ class TermDatabase {
     this.termsDB = collection(this.db, 'users', user.uid, 'termlists')
 
     this.userId = user.uid
-    console.log(`Connected to ${user.uid} as ${user.displayName}`)
+    log(`Connected to ${user.uid} as ${user.displayName}`)
   }
 
   get(id: string): Promise<DocumentSnapshot<DocumentData>> | undefined {
@@ -89,7 +90,7 @@ class TermDatabase {
       return Promise.reject('Not connected to db')
     }
     if (typeof termObject._id !== 'string') {
-      console.log(termObject)
+      log('Invalid id', termObject)
       throw new Error('Not a string!')
     }
     return setDoc(doc(this.termsDB, termObject._id), termObject)

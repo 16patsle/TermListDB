@@ -1,4 +1,5 @@
 import database from '../utils/firebase'
+import { log } from '../utils/log'
 
 import type { Module, MutationTree } from 'vuex'
 import type firebase from 'firebase/app'
@@ -16,7 +17,7 @@ export type Mutations = {
 
 export const mutations: MutationTree<State> & Mutations = {
   setAuthenticated(state, user) {
-    console.log('Auth update')
+    log('Auth update')
     if (user) {
       state.authenticated = true
       database.connect(user)
