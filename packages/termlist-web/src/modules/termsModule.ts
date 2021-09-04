@@ -176,15 +176,11 @@ export const actions: ActionTree<State, StateType> & Actions = {
           field: sortedBy,
           endBefore: Array.from(terms.entries())[0][1][sortedBy],
         })
-
-        globalService.send('LOAD_COMPLETE')
       } else {
         await dispatch('getTerms', {
           field: sortedBy,
           startAfter: Array.from(terms.entries())[terms.size - 1][1][sortedBy],
         })
-
-        globalService.send('LOAD_COMPLETE')
       }
     } else {
       if (isBefore) {
@@ -195,8 +191,6 @@ export const actions: ActionTree<State, StateType> & Actions = {
           limit,
           showLimit: 20,
         })
-
-        globalService.send('LOAD_COMPLETE')
       } else {
         const termsLeft = state.totalRows - 20 * currentPage
         // Amount of terms on x pages
@@ -215,10 +209,10 @@ export const actions: ActionTree<State, StateType> & Actions = {
           limit,
           showLimit,
         })
-
-        globalService.send('LOAD_COMPLETE')
       }
     }
+
+    globalService.send('LOAD_COMPLETE')
   },
   async search({ state, dispatch }, search) {
     globalService.send('LOAD_START')
