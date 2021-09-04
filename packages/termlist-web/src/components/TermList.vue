@@ -49,26 +49,17 @@ import { computed, defineAsyncComponent } from 'vue'
 import { useStore } from '../store'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
+import { currentState, globalService } from '../machines/globalService'
+
 import type { TermType } from '../types/TermType'
+
 import ui from '../assets/ui'
 import fields from '../assets/fields'
 
 const TermRow = defineAsyncComponent(() => import('./TermList/TermRow.vue'))
 
-withDefaults(
-  defineProps<{
-    loading?: boolean
-  }>(),
-  { loading: false }
-)
-
-const emit = defineEmits<{
-  (e: 'edit', term: TermType): void
-  (e: 'remove', term: TermType): void
-  (e: 'gotopage', pageNumber: number, currentPage: number): void
-}>()
-
 const store = useStore()
+const loading = computed(() => currentState.value === 'loading')
 const currentPage = computed(() => store.state.terms.currentPage)
 const terms = computed(() => store.state.terms.terms)
 
@@ -84,10 +75,14 @@ const lastPage = computed((): number => {
   }
 })
 
-const edit = (term: TermType) => emit('edit', term)
-const remove = (term: TermType) => emit('remove', term)
+const edit = (term: TermType) => globalService.send({ type: 'EDIT', term })
+const remove = (term: TermType) =>
+  globalService.send({ type: 'PROMPT_REMOVE', term })
 const gotoPage = (pageNumber: number) =>
-  emit('gotopage', pageNumber, currentPage.value)
+  store.dispatch('terms/gotoPage', {
+    pageNumber,
+    currentPage: currentPage.value,
+  })
 </script>
 
 <style scoped>

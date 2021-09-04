@@ -47,13 +47,7 @@
     <div class="container">
       <TermSearchBar @search="debouncedSearch" />
       <TermSortSelect @sort="sort" />
-      <TermList
-        v-if="store.state.auth.authenticated"
-        :loading="loading"
-        @edit="editTerm"
-        @remove="confirmRemoveTerm"
-        @gotopage="gotoPage"
-      />
+      <TermList v-if="store.state.auth.authenticated" />
     </div>
   </div>
 </template>
@@ -72,9 +66,8 @@ import TermSearchBar from './components/TermList/TermSearchBar.vue'
 import TermSortSelect from './components/TermList/TermSortSelect.vue'
 import TermList from './components/TermList.vue'
 import ui from './assets/ui'
-import { currentState, globalService } from './machines/globalService'
+import { globalService } from './machines/globalService'
 
-import type { TermType } from './types/TermType'
 import type { FieldNameType } from './types/FieldNameType'
 
 const ModalContainer = defineAsyncComponent(
@@ -83,7 +76,6 @@ const ModalContainer = defineAsyncComponent(
 
 const store = useStore()
 const sortedBy = computed(() => store.state.terms.sortedBy)
-const loading = computed(() => currentState.value === 'loading')
 
 const auth = ref<InstanceType<typeof Authenticate> & AuthenticateMethods>()
 
@@ -115,17 +107,6 @@ globalService.onTransition(async state => {
 })
 
 const addTerm = () => globalService.send('EDIT')
-
-const editTerm = (term: TermType) => globalService.send({ type: 'EDIT', term })
-
-const confirmRemoveTerm = (term: TermType) =>
-  globalService.send({ type: 'PROMPT_REMOVE', term })
-
-const gotoPage = (pageNumber: number, currentPage: number) =>
-  store.dispatch('terms/gotoPage', {
-    pageNumber,
-    currentPage,
-  })
 
 const debouncedSearch = debounce(
   (search: string) => store.dispatch('terms/search', search),
