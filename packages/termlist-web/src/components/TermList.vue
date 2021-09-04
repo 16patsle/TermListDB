@@ -1,7 +1,5 @@
 <template>
   <span>
-    <TermSearchBar @search="search" />
-    <TermSortSelect @sort="sort" />
     <AppPagination
       :firstpage="1"
       :currentpage="currentPage"
@@ -47,15 +45,11 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, ref } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { useStore } from '../store'
-import TermSearchBar from './TermList/TermSearchBar.vue'
-import TermSortSelect from './TermList/TermSortSelect.vue'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
 import type { TermType } from '../types/TermType'
-import type { FieldNameType } from '../types/FieldNameType'
-import type { TermQueryType } from '../types/TermQueryType'
 import ui from '../assets/ui'
 import fields from '../assets/fields'
 
@@ -69,11 +63,9 @@ withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'search', search: string): void
   (e: 'edit', term: TermType): void
   (e: 'remove', term: TermType): void
   (e: 'gotopage', pageNumber: number, currentPage: number): void
-  (e: 'sort', field?: FieldNameType): void
 }>()
 
 const store = useStore()
@@ -92,20 +84,10 @@ const lastPage = computed((): number => {
   }
 })
 
-const search = ({ search }: TermQueryType): void => {
-  if (typeof search === 'string') {
-    emit('search', search)
-  }
-}
-
 const edit = (term: TermType) => emit('edit', term)
 const remove = (term: TermType) => emit('remove', term)
 const gotoPage = (pageNumber: number) =>
   emit('gotopage', pageNumber, currentPage.value)
-
-const sort = (field?: FieldNameType): void => {
-  emit('sort', field)
-}
 </script>
 
 <style scoped>

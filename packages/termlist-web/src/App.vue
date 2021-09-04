@@ -45,14 +45,14 @@
     <ModalContainer />
     <Authenticate ref="auth" />
     <div class="container">
+      <TermSearchBar @search="debouncedSearch" />
+      <TermSortSelect @sort="sort" />
       <TermList
         v-if="store.state.auth.authenticated"
         :loading="loading"
         @edit="editTerm"
         @remove="confirmRemoveTerm"
         @gotopage="gotoPage"
-        @search="debouncedSearch"
-        @sort="sort"
       />
     </div>
   </div>
@@ -68,6 +68,8 @@ import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
 import Authenticate, {
   AuthenticateMethods,
 } from './components/Authenticate.vue'
+import TermSearchBar from './components/TermList/TermSearchBar.vue'
+import TermSortSelect from './components/TermList/TermSortSelect.vue'
 import TermList from './components/TermList.vue'
 import ui from './assets/ui'
 import { currentState, globalService } from './machines/globalService'
