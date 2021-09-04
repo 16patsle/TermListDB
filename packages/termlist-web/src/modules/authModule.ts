@@ -2,17 +2,17 @@ import database from '../utils/firebase'
 import { log } from '../utils/log'
 
 import type { Module, MutationTree } from 'vuex'
-import type firebase from 'firebase/app'
+import type { User } from 'firebase/auth'
 import type { StateType } from '../types/StateType'
 import type { Namespaced } from '../types/Namespaced'
 
 export type State = {
   authenticated: boolean
-  user?: firebase.User
+  user?: User
 }
 
 export type Mutations = {
-  setAuthenticated(state: State, user: firebase.User | null): void
+  setAuthenticated(state: State, user: User | null): void
 }
 
 export const mutations: MutationTree<State> & Mutations = {
