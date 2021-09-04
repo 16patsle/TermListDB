@@ -132,8 +132,7 @@ module.exports = {
       __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
     }),
     new BundleAnalyzerPlugin({
-      analyzerMode:
-        process.env.NODE_ENV === 'development' ? 'server' : 'static',
+      analyzerMode: process.env.NODE_ENV === 'production' ? 'static' : 'server',
       openAnalyzer: false,
       defaultSizes: 'stat',
     }),
