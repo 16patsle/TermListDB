@@ -42,11 +42,7 @@
         </AppNavbarItem>
       </template>
     </AppNavbar>
-    <ModalEdit />
-    <ModalRemove />
-    <ModalImport />
-    <ModalImporting />
-    <ModalExport />
+    <ModalContainer />
     <Authenticate ref="auth" />
     <div class="container">
       <TermList
@@ -63,14 +59,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, defineAsyncComponent, ref } from 'vue'
 import debounce from 'lodash.debounce'
 import { useStore } from './store'
-import ModalEdit from './components/Modal/ModalEdit.vue'
-import ModalRemove from './components/Modal/ModalRemove.vue'
-import ModalImport from './components/Modal/ModalImport.vue'
-import ModalImporting from './components/Modal/ModalImporting.vue'
-import ModalExport from './components/Modal/ModalExport.vue'
 import AppButton from './components/Generic/AppButton.vue'
 import AppNavbar from './components/Generic/AppNavbar.vue'
 import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
@@ -83,6 +74,10 @@ import { currentState, globalService } from './machines/globalService'
 
 import type { TermType } from './types/TermType'
 import type { FieldNameType } from './types/FieldNameType'
+
+const ModalContainer = defineAsyncComponent(
+  () => import('./components/Modal/ModalContainer.vue')
+)
 
 const store = useStore()
 const sortedBy = computed(() => store.state.terms.sortedBy)

@@ -47,11 +47,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, defineAsyncComponent, ref } from 'vue'
 import { useStore } from '../store'
 import TermSearchBar from './TermList/TermSearchBar.vue'
 import TermSortSelect from './TermList/TermSortSelect.vue'
-import TermRow from './TermList/TermRow.vue'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
 import type { TermType } from '../types/TermType'
@@ -59,6 +58,8 @@ import type { FieldNameType } from '../types/FieldNameType'
 import type { TermQueryType } from '../types/TermQueryType'
 import ui from '../assets/ui'
 import fields from '../assets/fields'
+
+const TermRow = defineAsyncComponent(() => import('./TermList/TermRow.vue'))
 
 withDefaults(
   defineProps<{
