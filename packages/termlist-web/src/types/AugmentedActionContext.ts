@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ActionContext } from 'vuex'
 import type { Actions, Mutations } from '../store'
 import type { StateType } from './StateType'

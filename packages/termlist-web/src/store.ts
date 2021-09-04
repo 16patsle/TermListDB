@@ -48,7 +48,7 @@ export type Store = Omit<
     [K in keyof Getters]: ReturnType<Getters[K]>
   }
   subscribe<K extends keyof Mutations, P extends Parameters<Mutations[K]>[1]>(
-    fn: (mutation: { type: K; payload: P }, state: StateType) => any,
+    fn: (mutation: { type: K; payload: P }, state: StateType) => void,
     options?: SubscribeOptions
   ): () => void
 }
