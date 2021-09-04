@@ -1,6 +1,8 @@
 /* eslint-env node */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
 const webpack = require('webpack')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { VueLoaderPlugin } = require('vue-loader')
 require('dotenv').config()
 
@@ -125,6 +127,12 @@ module.exports = {
       'FIREBASE_AUTH_DOMAIN',
       'FIREBASE_PROJECT_ID',
     ]),
+    new BundleAnalyzerPlugin({
+      analyserMode:
+        process.env.NODE_ENV === 'development' ? 'server' : 'static',
+      openAnalyzer: false,
+      defaultSizes: 'stat',
+    }),
   ],
   resolve: {
     alias: {
