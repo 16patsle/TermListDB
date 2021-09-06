@@ -47,7 +47,9 @@
     <AppModal ref="modalUnsavedWarning" :title="ui.unsavedWarningTitle">
       <template #modal-body>{{ ui.unsavedWarningText }}</template>
       <template #modal-footer>
-        <AppButton primary @click="saveTerm">{{ ui.save }}</AppButton>
+        <AppButton primary :loading="loading" @click="saveTerm">{{
+          ui.save
+        }}</AppButton>
         <AppButton danger @click="discard">{{ ui.discard }}</AppButton>
       </template>
     </AppModal>
@@ -90,6 +92,7 @@ const dirtyFields: {
   [K in FieldNameType]: boolean
 } = {}
 const dirty = ref(false)
+const loading = ref(false)
 
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 const modalUnsavedWarning = ref<
@@ -169,7 +172,7 @@ const editTerm = (originalEditTerm?: TermType): void => {
   }
 }
 
-const saveTerm = (): void => {
+const saveTerm = async (): Promise<void> => {
   let termObject: TermDefType
   if (mode.value === 'add') {
     termObject = {
@@ -185,6 +188,17 @@ const saveTerm = (): void => {
     }
   }
 
+  loading.value = true
+
+  if (termObject._id) {
+    // Update existing term
+    await store.dispatch('terms/save', termObject as TermType)
+  } else {
+    termObject._id = termObject.date
+    // Add new term
+    await store.dispatch('terms/add', termObject as TermType)
+  }
+
   for (const field of fields) {
     if (!field.immutable && currentTerm.value[field.name]) {
       if (field.name === 'type') {
@@ -197,15 +211,7 @@ const saveTerm = (): void => {
     }
   }
 
-  if (termObject._id) {
-    // Update existing term
-    store.dispatch('terms/save', termObject as TermType)
-  } else {
-    termObject._id = termObject.date
-    // Add new term
-    store.dispatch('terms/add', termObject as TermType)
-  }
-
+  loading.value = false
   originalTerm.value = null
   dirty.value = false
 }
