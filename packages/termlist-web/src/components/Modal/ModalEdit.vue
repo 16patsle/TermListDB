@@ -63,7 +63,7 @@ import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
 import { useStore } from '../../store'
 import { globalService } from '../../machines/globalService'
-import type { FieldType } from '../../types/FieldType'
+import { FieldType } from '../../types/FieldType'
 import type { TermDefType, TermType } from '../../types/TermType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
 import type { FieldNameType } from '../../types/FieldNameType'
@@ -190,6 +190,17 @@ const saveTerm = async (): Promise<void> => {
 
   loading.value = true
 
+  // Save to the term object
+  for (const field of fields) {
+    if (!field.immutable && currentTerm.value[field.name]) {
+      if (field.name === 'type') {
+        termObject[field.name] = currentTerm.value[field.name]
+      } else {
+        termObject[field.name] = currentTerm.value[field.name] || ''
+      }
+    }
+  }
+
   if (termObject._id) {
     // Update existing term
     await store.dispatch('terms/save', termObject as TermType)
@@ -199,13 +210,12 @@ const saveTerm = async (): Promise<void> => {
     await store.dispatch('terms/add', termObject as TermType)
   }
 
+  // Reset fields
   for (const field of fields) {
-    if (!field.immutable && currentTerm.value[field.name]) {
+    if (!field.immutable) {
       if (field.name === 'type') {
-        termObject[field.name] = currentTerm.value[field.name]
         currentTerm.value[field.name] = undefined
       } else {
-        termObject[field.name] = currentTerm.value[field.name] || ''
         currentTerm.value[field.name] = ''
       }
     }
