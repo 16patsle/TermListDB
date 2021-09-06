@@ -1,6 +1,10 @@
 <template>
   <button
-    :class="{ 'is-primary': primary, 'is-danger': danger }"
+    :class="{
+      'is-primary': primary,
+      'is-danger': danger,
+      'is-loading': loading,
+    }"
     class="button"
     @click="click"
   >
@@ -12,8 +16,9 @@ withDefaults(
   defineProps<{
     primary?: boolean
     danger?: boolean
+    loading?: boolean
   }>(),
-  { primary: false, danger: false }
+  { primary: false, danger: false, loading: false }
 )
 
 const emit = defineEmits<{
