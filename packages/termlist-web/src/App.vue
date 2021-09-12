@@ -54,6 +54,7 @@
 <script lang="ts" setup>
 import { computed, defineAsyncComponent } from 'vue'
 import debounce from 'lodash.debounce'
+import { getAuth, signOut } from 'firebase/auth'
 import { useStore } from './store'
 import AppButton from './components/Generic/AppButton.vue'
 import AppNavbar from './components/Generic/AppNavbar.vue'
@@ -64,6 +65,8 @@ import ui from './assets/ui'
 import { globalService } from './machines/globalService'
 
 import type { FieldNameType } from './types/FieldNameType'
+
+const auth = getAuth()
 
 const ModalContainer = defineAsyncComponent(
   () => import('./components/Modal/ModalContainer.vue')
@@ -114,7 +117,10 @@ const shortcutUp = (e: KeyboardEvent): void => {
   }
 }
 
-const logOut = () => globalService.send('LOG_OUT')
+const logOut = async () => {
+  await signOut(auth)
+  globalService.send('LOG_OUT')
+}
 
 document.addEventListener('keyup', shortcutUp, false)
 </script>
