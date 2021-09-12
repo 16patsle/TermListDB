@@ -58,10 +58,10 @@ class TermDatabase {
     })
   }
 
-  async connect(user: User): Promise<void> {
+  connect(user: User): void {
     this.userInfoReference = doc(collection(this.db, 'users'), user.uid)
 
-    await updateDoc(this.userInfoReference, { name: user.displayName })
+    updateDoc(this.userInfoReference, { name: user.displayName })
     this.termsDB = collection(this.db, 'users', user.uid, 'termlists')
 
     this.userId = user.uid
