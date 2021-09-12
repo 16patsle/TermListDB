@@ -28,6 +28,7 @@ export type Mutations = TermMutations & ImportMutations & AuthMutations
 export type Actions = TermActions & ImportActions
 type Getters = TermGetters & {
   loading(state: StateType): boolean
+  authenticated(): boolean
 }
 
 export type Store = Omit<
@@ -62,6 +63,9 @@ const storeOptions: StoreOptions<StateType> = {
   getters: {
     loading(): boolean {
       return globalService.state.value === 'loading'
+    },
+    authenticated(): boolean {
+      return globalService.state.value !== 'authenticating'
     },
   },
 }

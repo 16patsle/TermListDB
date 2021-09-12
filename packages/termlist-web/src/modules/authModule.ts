@@ -5,9 +5,9 @@ import type { Module, MutationTree } from 'vuex'
 import type { User } from 'firebase/auth'
 import type { StateType } from '../types/StateType'
 import type { Namespaced } from '../types/Namespaced'
+import { globalService } from '../machines/globalService'
 
 export type State = {
-  authenticated: boolean
   user?: User
 }
 
@@ -19,12 +19,12 @@ export const mutations: MutationTree<State> & Mutations = {
   setAuthenticated(state, user) {
     log('Auth update')
     if (user) {
-      state.authenticated = true
       database.connect(user)
       state.user = user
+      globalService.send('LOG_IN')
     } else {
-      state.authenticated = false
       state.user = undefined
+      globalService.send('LOG_OUT')
     }
   },
 }
@@ -34,7 +34,6 @@ export type AuthMutations = Namespaced<Mutations, 'auth'>
 export const authModule: Module<State, StateType> = {
   namespaced: true,
   state: (): State => ({
-    authenticated: false,
     user: undefined,
   }),
   mutations,

@@ -1,6 +1,6 @@
 <template>
   <div ref="modal" class="modal">
-    <div class="modal-background" @click="close" />
+    <div class="modal-background" @click="closeAllowed ? close : null" />
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">
@@ -16,7 +16,7 @@
       </section>
       <footer class="modal-card-foot">
         <slot name="modal-footer">
-          <AppButton v-if="okText !== null" primary @click="callback">
+          <AppButton v-if="okText !== null" primary @click="callback || null">
             {{ okText }}
           </AppButton>
           <AppButton v-if="cancelText !== null" @click="close">
@@ -25,7 +25,12 @@
         </slot>
       </footer>
     </div>
-    <button class="modal-close is-large" aria-label="close" @click="close" />
+    <button
+      v-if="closeAllowed"
+      class="modal-close is-large"
+      aria-label="close"
+      @click="close"
+    />
   </div>
 </template>
 
@@ -46,6 +51,7 @@ const props = withDefaults(
     title: string
     callback?: (event: MouseEvent) => void
     closeCallback?: (event: MouseEvent) => void
+    closeAllowed?: boolean
   }>(),
   {
     okText: 'OK',
@@ -53,6 +59,7 @@ const props = withDefaults(
     title: '',
     callback: undefined,
     closeCallback: undefined,
+    closeAllowed: true,
   }
 )
 

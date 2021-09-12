@@ -18,8 +18,7 @@ const start = async () => {
 
   app.mount('#app')
 
-  onAuthStateChanged(getAuth(firebaseApp), user => {
-    store.commit('auth/setAuthenticated', user)
+  onAuthStateChanged(getAuth(firebaseApp), () => {
     if (database.userInfoReference) {
       onSnapshot(database.userInfoReference, doc => {
         const data = doc.data()

@@ -9,7 +9,7 @@
         </AppNavbarItem>
       </template>
       <template #start>
-        <AppNavbarItem v-if="store.state.auth.authenticated">
+        <AppNavbarItem v-if="store.getters.authenticated">
           <div class="field is-grouped">
             <div class="control">
               <AppButton primary @click="addTerm">
@@ -31,11 +31,11 @@
       </template>
       <template #end>
         <AppNavbarItem
-          v-if="store.state.auth.authenticated && store.state.auth.user"
+          v-if="store.getters.authenticated && store.state.auth.user"
         >
           {{ store.state.auth.user.displayName }}
         </AppNavbarItem>
-        <AppNavbarItem v-if="store.state.auth.authenticated">
+        <AppNavbarItem v-if="store.getters.authenticated">
           <AppButton @click="logOut">
             {{ ui.logOut }}
           </AppButton>
@@ -43,25 +43,21 @@
       </template>
     </AppNavbar>
     <ModalContainer />
-    <Authenticate ref="auth" />
     <div class="container">
       <TermSearchBar @search="debouncedSearch" />
       <TermSortSelect @sort="sort" />
-      <TermList v-if="store.state.auth.authenticated" />
+      <TermList v-if="store.getters.authenticated" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, ref } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import debounce from 'lodash.debounce'
 import { useStore } from './store'
 import AppButton from './components/Generic/AppButton.vue'
 import AppNavbar from './components/Generic/AppNavbar.vue'
 import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
-import Authenticate, {
-  AuthenticateMethods,
-} from './components/Authenticate.vue'
 import TermSearchBar from './components/TermList/TermSearchBar.vue'
 import TermSortSelect from './components/TermList/TermSortSelect.vue'
 import ui from './assets/ui'
@@ -77,34 +73,25 @@ const TermList = defineAsyncComponent(() => import('./components/TermList.vue'))
 const store = useStore()
 const sortedBy = computed(() => store.state.terms.sortedBy)
 
-const auth = ref<InstanceType<typeof Authenticate> & AuthenticateMethods>()
-
-store.dispatch('terms/fetchTotal')
-store
-  .dispatch('terms/getTerms', {
-    field: sortedBy.value,
-  })
-  .then(() => globalService.send('LOAD_COMPLETE'))
-
-store.subscribe(mutation => {
-  if (mutation.type === 'auth/setAuthenticated') {
-    store.dispatch('terms/fetchTotal')
-    store
-      .dispatch('terms/getTerms', {
-        field: sortedBy.value,
-      })
-      .then(() => globalService.send('LOAD_COMPLETE'))
-  }
-})
-
 globalService.onTransition(async state => {
   if (state.value === 'idle' && state.history?.value === 'importing') {
     await store.dispatch('terms/fetchTotal')
     await store.dispatch('terms/getTerms', {
       field: sortedBy.value,
     })
+  } else if (
+    state.value === 'idle' &&
+    state.history?.value === 'authenticating'
+  ) {
+    await store.dispatch('terms/fetchTotal')
+    await store.dispatch('terms/getTerms', {
+      field: sortedBy.value,
+    })
+    globalService.send('LOAD_COMPLETE')
   }
 })
+
+globalService.send('LOG_IN')
 
 const addTerm = () => globalService.send('EDIT')
 
@@ -127,7 +114,7 @@ const shortcutUp = (e: KeyboardEvent): void => {
   }
 }
 
-const logOut = () => auth.value?.logOut()
+const logOut = () => globalService.send('LOG_OUT')
 
 document.addEventListener('keyup', shortcutUp, false)
 </script>

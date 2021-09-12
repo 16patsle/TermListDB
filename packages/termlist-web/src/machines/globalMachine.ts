@@ -11,7 +11,9 @@ export type GlobalEvent =
   | { type: 'REMOVE' }
   | { type: 'IMPORT' }
   | { type: 'EXPORT' }
+  | { type: 'LOG_OUT' }
   | { type: 'COMPLETE' }
+  | { type: 'LOG_IN' }
 
 export type GlobalContext = {
   currentTerm?: TermType
@@ -20,11 +22,16 @@ export type GlobalContext = {
 export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
   {
     id: 'global',
-    initial: 'loading',
+    initial: 'boot',
     context: {
       currentTerm: undefined,
     },
     states: {
+      boot: {
+        on: {
+          LOG_IN: { target: 'authenticating' },
+        },
+      },
       loading: {
         on: {
           LOAD_COMPLETE: { target: 'idle' },
@@ -37,6 +44,7 @@ export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
           PROMPT_REMOVE: { target: 'removing', actions: 'setCurrentTerm' },
           IMPORT: { target: 'confirmImport' },
           EXPORT: { target: 'exporting' },
+          LOG_OUT: { target: 'authenticating' },
         },
       },
       editing: {
@@ -67,6 +75,11 @@ export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
         on: {
           CANCEL: { target: 'idle' },
           COMPLETE: { target: 'idle' },
+        },
+      },
+      authenticating: {
+        on: {
+          LOG_IN: { target: 'idle' },
         },
       },
     },
