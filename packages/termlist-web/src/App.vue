@@ -9,7 +9,7 @@
         </AppNavbarItem>
       </template>
       <template #start>
-        <AppNavbarItem v-if="store.getters.authenticated">
+        <AppNavbarItem v-if="authenticated">
           <div class="field is-grouped">
             <div class="control">
               <AppButton primary @click="addTerm">
@@ -30,12 +30,10 @@
         </AppNavbarItem>
       </template>
       <template #end>
-        <AppNavbarItem
-          v-if="store.getters.authenticated && store.state.auth.user"
-        >
+        <AppNavbarItem v-if="authenticated && store.state.auth.user">
           {{ store.state.auth.user.displayName }}
         </AppNavbarItem>
-        <AppNavbarItem v-if="store.getters.authenticated">
+        <AppNavbarItem v-if="authenticated">
           <AppButton @click="logOut">
             {{ ui.logOut }}
           </AppButton>
@@ -46,7 +44,7 @@
     <div class="container">
       <TermSearchBar @search="debouncedSearch" />
       <TermSortSelect @sort="sort" />
-      <TermList v-if="store.getters.authenticated" />
+      <TermList v-if="authenticated" />
     </div>
   </div>
 </template>
@@ -62,11 +60,12 @@ import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
 import TermSearchBar from './components/TermList/TermSearchBar.vue'
 import TermSortSelect from './components/TermList/TermSortSelect.vue'
 import ui from './assets/ui'
-import { globalService } from './machines/globalService'
+import { currentState, globalService } from './machines/globalService'
+import { firebaseApp } from './utils/firebase'
 
 import type { FieldNameType } from './types/FieldNameType'
 
-const auth = getAuth()
+const auth = getAuth(firebaseApp)
 
 const ModalContainer = defineAsyncComponent(
   () => import('./components/Modal/ModalContainer.vue')
@@ -75,6 +74,7 @@ const TermList = defineAsyncComponent(() => import('./components/TermList.vue'))
 
 const store = useStore()
 const sortedBy = computed(() => store.state.terms.sortedBy)
+const authenticated = computed(() => currentState.value !== 'authenticated')
 
 globalService.onTransition(async state => {
   if (state.value === 'idle' && state.history?.value === 'importing') {

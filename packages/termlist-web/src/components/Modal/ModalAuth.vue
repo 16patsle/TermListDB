@@ -27,10 +27,11 @@ import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { useStore } from '../../store'
 import { globalService } from '../../machines/globalService'
+import { firebaseApp } from '../../utils/firebase'
 
 import ui from '../../assets/ui'
 
-const auth = getAuth()
+const auth = getAuth(firebaseApp)
 
 const store = useStore()
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
@@ -54,12 +55,7 @@ function isAuthError(value: unknown): value is AuthError {
 
 const login = async (): Promise<void> => {
   try {
-    const { user } = await signInWithEmailAndPassword(
-      auth,
-      email.value,
-      password.value
-    )
-    store.commit('auth/setAuthenticated', user)
+    await signInWithEmailAndPassword(auth, email.value, password.value)
   } catch (err) {
     if (isAuthError(err)) {
       error.value = err.message
