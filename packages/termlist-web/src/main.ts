@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
 import { onSnapshot } from 'firebase/firestore'
@@ -7,7 +8,7 @@ import './auth-ui/firebaseui.css'
 import App from './App.vue'
 
 import database, { firebaseApp } from './utils/firebase'
-import store, { key } from './store'
+import store, { key } from './stores'
 
 const start = async () => {
   await database.start()
@@ -15,6 +16,7 @@ const start = async () => {
   const app = createApp(App)
 
   app.use(store, key)
+  app.use(createPinia())
 
   app.mount('#app')
 

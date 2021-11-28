@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ActionContext } from 'vuex'
-import type { Actions, Mutations } from '../store'
+import type { Actions, Mutations } from '../stores'
 import type { StateType } from './StateType'
 
 export type AugmentedActionContext<

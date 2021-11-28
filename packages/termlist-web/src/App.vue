@@ -53,7 +53,7 @@
 import { computed, defineAsyncComponent } from 'vue'
 import debounce from 'lodash.debounce'
 import { getAuth, signOut } from 'firebase/auth'
-import { useStore } from './store'
+import { useStore } from './stores'
 import AppButton from './components/Generic/AppButton.vue'
 import AppNavbar from './components/Generic/AppNavbar.vue'
 import AppNavbarItem from './components/Generic/AppNavbarItem.vue'

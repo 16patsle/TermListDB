@@ -46,7 +46,7 @@
 
 <script lang="ts" setup>
 import { computed, defineAsyncComponent } from 'vue'
-import { useStore } from '../store'
+import { useStore } from '../stores'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
 import { currentState, globalService } from '../machines/globalService'

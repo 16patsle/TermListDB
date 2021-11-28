@@ -47,7 +47,7 @@
 import { computed, ref } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { useStore } from '../../store'
+import { useStore } from '../../stores'
 import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
