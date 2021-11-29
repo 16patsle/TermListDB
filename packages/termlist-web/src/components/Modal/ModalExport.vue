@@ -23,12 +23,12 @@
 import { computed, ref } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { useStore } from '../../stores'
+import { useImportStore } from '../../stores/import'
 import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
 
-const store = useStore()
+const importStore = useImportStore()
 
 const exportURI = ref<string | undefined>(undefined)
 const exportInstructions = computed(() =>
@@ -40,7 +40,7 @@ const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 globalService.onTransition(state => {
   if (state.value === 'exporting' && state.history?.value !== 'exporting') {
     modal.value?.toggleModal(true)
-    store.dispatch('import/export').then(uri => (exportURI.value = uri))
+    importStore.export().then(uri => (exportURI.value = uri))
   } else if (
     state.value !== 'exporting' &&
     state.history?.value === 'exporting'

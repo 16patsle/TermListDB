@@ -25,13 +25,13 @@
 import { ref } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { useStore } from '../../stores'
+import { useTermsStore } from '../../stores/terms'
 import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
 import type { TermType } from '../../types/TermType'
 
-const store = useStore()
+const termsStore = useTermsStore()
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 const current = ref<TermType | undefined>(undefined)
 
@@ -42,7 +42,7 @@ globalService.onTransition(state => {
 
 const removeTerm = (): void => {
   if (current.value) {
-    store.dispatch('terms/remove', current.value)
+    termsStore.remove(current.value)
   }
 }
 

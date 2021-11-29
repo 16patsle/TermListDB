@@ -61,7 +61,7 @@ import debounce from 'lodash.debounce'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
-import { useStore } from '../../stores'
+import { useTermsStore } from '../../stores/terms'
 import { globalService } from '../../machines/globalService'
 import { FieldType } from '../../types/FieldType'
 import type { TermDefType, TermType } from '../../types/TermType'
@@ -71,7 +71,7 @@ import type { FieldNameType } from '../../types/FieldNameType'
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 
-const store = useStore()
+const termsStore = useTermsStore()
 
 const makeEmptyTerm = (): TermDefType => ({
   date: new Date().toJSON(),
@@ -203,11 +203,11 @@ const saveTerm = async (): Promise<void> => {
 
   if (termObject._id) {
     // Update existing term
-    await store.dispatch('terms/save', termObject as TermType)
+    await termsStore.save(termObject as TermType)
   } else {
     termObject._id = termObject.date
     // Add new term
-    await store.dispatch('terms/add', termObject as TermType)
+    await termsStore.add(termObject as TermType)
   }
 
   // Reset fields

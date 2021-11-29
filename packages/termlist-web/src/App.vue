@@ -30,8 +30,8 @@
         </AppNavbarItem>
       </template>
       <template #end>
-        <AppNavbarItem v-if="authenticated && store.state.auth.user">
-          {{ store.state.auth.user.displayName }}
+        <AppNavbarItem v-if="authenticated && authStore.$state.user">
+          {{ authStore.$state.user.displayName }}
         </AppNavbarItem>
         <AppNavbarItem v-if="authenticated">
           <AppButton @click="logOut">
@@ -53,7 +53,8 @@
 import { computed, defineAsyncComponent } from 'vue'
 import debounce from 'lodash.debounce'
 import { getAuth, signOut } from 'firebase/auth'
-import { useStore } from './stores'
+import { useTermsStore } from './stores/terms'
+import { useAuthStore } from './stores/auth'
 import AppButton from './components/Generic/AppButton.vue'
 import AppNavbar from './components/Generic/AppNavbar.vue'
 import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
@@ -72,22 +73,23 @@ const ModalContainer = defineAsyncComponent(
 )
 const TermList = defineAsyncComponent(() => import('./components/TermList.vue'))
 
-const store = useStore()
-const sortedBy = computed(() => store.state.terms.sortedBy)
+const termsStore = useTermsStore()
+const authStore = useAuthStore()
+const sortedBy = computed(() => termsStore.$state.sortedBy)
 const authenticated = computed(() => currentState.value !== 'authenticated')
 
 globalService.onTransition(async state => {
   if (state.value === 'idle' && state.history?.value === 'importing') {
-    await store.dispatch('terms/fetchTotal')
-    await store.dispatch('terms/getTerms', {
+    await termsStore.fetchTotal()
+    await termsStore.getTerms({
       field: sortedBy.value,
     })
   } else if (
     state.value === 'idle' &&
     state.history?.value === 'authenticating'
   ) {
-    await store.dispatch('terms/fetchTotal')
-    await store.dispatch('terms/getTerms', {
+    await termsStore.fetchTotal()
+    await termsStore.getTerms({
       field: sortedBy.value,
     })
     globalService.send('LOAD_COMPLETE')
@@ -99,11 +101,11 @@ globalService.send('LOG_IN')
 const addTerm = () => globalService.send('EDIT')
 
 const debouncedSearch = debounce(
-  (search: string) => store.dispatch('terms/search', search),
+  (search: string) => termsStore.search(search),
   400
 )
 
-const sort = (field?: FieldNameType) => store.dispatch('terms/sort', field)
+const sort = (field?: FieldNameType) => termsStore.sort(field)
 
 const shortcutUp = (e: KeyboardEvent): void => {
   if (

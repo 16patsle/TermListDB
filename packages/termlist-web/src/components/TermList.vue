@@ -46,7 +46,6 @@
 
 <script lang="ts" setup>
 import { computed, defineAsyncComponent } from 'vue'
-import { useStore } from '../stores'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
 import { currentState, globalService } from '../machines/globalService'
@@ -55,13 +54,14 @@ import type { TermType } from '../types/TermType'
 
 import ui from '../assets/ui'
 import fields from '../assets/fields'
+import { useTermsStore } from '../stores/terms'
 
 const TermRow = defineAsyncComponent(() => import('./TermList/TermRow.vue'))
 
-const store = useStore()
+const termsStore = useTermsStore()
 const loading = computed(() => currentState.value === 'loading')
-const currentPage = computed(() => store.state.terms.currentPage)
-const terms = computed(() => store.state.terms.terms)
+const currentPage = computed(() => termsStore.$state.currentPage)
+const terms = computed(() => termsStore.$state.terms)
 
 const termCount = computed((): number => {
   return terms.value.size
@@ -71,7 +71,7 @@ const lastPage = computed((): number => {
   if (termCount.value < 20) {
     return currentPage.value
   } else {
-    return Math.ceil(store.state.terms.totalRows / 20)
+    return Math.ceil(termsStore.$state.totalRows / 20)
   }
 })
 
@@ -79,7 +79,7 @@ const edit = (term: TermType) => globalService.send({ type: 'EDIT', term })
 const remove = (term: TermType) =>
   globalService.send({ type: 'PROMPT_REMOVE', term })
 const gotoPage = (pageNumber: number) =>
-  store.dispatch('terms/gotoPage', {
+  termsStore.gotoPage({
     pageNumber,
     currentPage: currentPage.value,
   })

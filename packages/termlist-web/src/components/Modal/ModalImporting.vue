@@ -12,24 +12,24 @@
       <div class="field">
         <div class="control">
           <progress
-            :value="store.state.import.imported"
-            :max="store.state.import.total"
+            :value="importStore.$state.imported"
+            :max="importStore.$state.total"
             class="progress is-primary"
           >
             {{
               Math.round(
-                (store.state.import.imported / store.state.import.total) * 100
+                (importStore.$state.imported / importStore.$state.total) * 100
               )
             }}%
           </progress>
           <p class="has-text-centered">
-            {{ store.state.import.imported }} /
-            {{ store.state.import.total }}
+            {{ importStore.$state.imported }} /
+            {{ importStore.$state.total }}
           </p>
           <p class="has-text-centered">
             {{
               Math.round(
-                (store.state.import.imported / store.state.import.total) * 100
+                (importStore.$state.imported / importStore.$state.total) * 100
               )
             }}%
           </p>
@@ -49,12 +49,12 @@
 import { ref } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { useStore } from '../../stores'
 import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
+import { useImportStore } from '../../stores/import'
 
-const store = useStore()
+const importStore = useImportStore()
 
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 

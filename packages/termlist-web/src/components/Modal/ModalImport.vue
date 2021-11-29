@@ -47,12 +47,12 @@
 import { computed, ref } from 'vue'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { useStore } from '../../stores'
+import { useImportStore } from '../../stores/import'
 import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
 
-const store = useStore()
+const importStore = useImportStore()
 
 const selectedFile = ref<File | null>(null)
 let fileReader: FileReader
@@ -85,7 +85,7 @@ const importTerm = (): void => {
 
         globalService.send('IMPORT')
         clear()
-        store.dispatch('import/import', [...file])
+        importStore.import([...file])
       }
     }
     fileReader.readAsText(selectedFile.value)

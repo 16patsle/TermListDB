@@ -25,7 +25,6 @@ import { onMounted, ref } from 'vue'
 import { AuthError, getAuth, signInWithEmailAndPassword } from '@firebase/auth'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { useStore } from '../../stores'
 import { globalService } from '../../machines/globalService'
 import { firebaseApp } from '../../utils/firebase'
 
@@ -33,7 +32,6 @@ import ui from '../../assets/ui'
 
 const auth = getAuth(firebaseApp)
 
-const store = useStore()
 const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 
 const email = ref('')

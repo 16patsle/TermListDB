@@ -193,9 +193,11 @@ export const useTermsStore = defineStore('terms', {
     setSortedBy(sortedBy: FieldNameType) {
       this.sortedBy = sortedBy
     },
-
     setCurrentPage(page: number) {
       this.currentPage = page
+    },
+    setTotal(total: number) {
+      this.totalRows = total
     },
   },
 })
