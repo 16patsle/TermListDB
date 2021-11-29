@@ -1,6 +1,6 @@
 <template>
   <div ref="modal" class="modal">
-    <div class="modal-background" @click="closeAllowed ? close : null" />
+    <div class="modal-background" @click="closeAllowed && close($event)" />
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">
