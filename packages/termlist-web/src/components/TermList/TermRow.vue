@@ -7,8 +7,8 @@
       v-html="getFieldValue(field)"
     />
     <td class="row-buttons">
-      <TermRowButton icon="pencil" @click="edit" />
-      <TermRowButton icon="trash" @click="remove" />
+      <TermRowButton :icon="['fas', 'pencil-alt']" @click="edit" />
+      <TermRowButton :icon="['fas', 'trash-alt']" @click="remove" />
     </td>
   </tr>
 </template>

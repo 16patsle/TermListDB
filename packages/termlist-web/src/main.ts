@@ -6,9 +6,15 @@ import { onSnapshot } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import App from './App.vue'
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
 import database, { firebaseApp } from './utils/firebase'
 import { useAuthStore } from './stores/auth'
 import { useTermsStore } from './stores/terms'
+
+library.add(faPencilAlt, faTrashAlt)
 
 if (document.getElementById('app') === null) {
   const el = document.createElement('div')
@@ -19,7 +25,7 @@ if (document.getElementById('app') === null) {
 const start = async () => {
   await database.start()
 
-  const app = createApp(App)
+  const app = createApp(App).component('fa-icon', FontAwesomeIcon)
 
   app.use(createPinia())
 

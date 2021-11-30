@@ -1,12 +1,12 @@
 <template>
   <a href="#" @click.prevent="click">
     <span class="icon is-small">
-      <i :class="'fa fa-' + icon + ''" />
+      <fa-icon :icon="icon" />
     </span>
   </a>
 </template>
 <script lang="ts" setup>
-defineProps<{ icon: string }>()
+defineProps<{ icon: [string, string] }>()
 
 const emit = defineEmits<{
   (e: 'click', event: MouseEvent): void
