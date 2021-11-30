@@ -3,6 +3,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { RelativeCiAgentWebpackPlugin } = require('@relative-ci/agent')
 const { VueLoaderPlugin } = require('vue-loader')
@@ -99,6 +100,9 @@ module.exports = {
     new webpack.DefinePlugin({
       __VUE_OPTIONS_API__: JSON.stringify(false),
       __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+    }),
+    new HtmlWebpackPlugin({
+      title: 'termlist',
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: !devMode ? 'static' : 'server',

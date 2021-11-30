@@ -1,7 +1,6 @@
 .DS_Store
 node_modules/
 packages/termlist-web/dist/*
-!packages/termlist-web/dist/index.html
 npm-debug.log
 yarn-error.log
 .couchdata/
