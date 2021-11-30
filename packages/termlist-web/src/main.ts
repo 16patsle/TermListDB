@@ -1,34 +1,38 @@
-import '@babel/polyfill'
-import Vue from 'vue'
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
-import firebase from 'firebase/app'
+import { onSnapshot } from 'firebase/firestore'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import './auth-ui/firebaseui.css'
 import App from './App.vue'
 
-import database from './utils/firebase'
-import store from './store'
+import database, { firebaseApp } from './utils/firebase'
+import { useAuthStore } from './stores/auth'
+import { useTermsStore } from './stores/terms'
 
 const start = async () => {
   await database.start()
 
-  new Vue({
-    el: '#app',
-    created() {
-      firebase.auth().onAuthStateChanged(user => {
-        store.commit('setAuthenticated', user)
-        if (database.userInfoReference) {
-          database.userInfoReference.onSnapshot(doc => {
-            const data = doc.data()
-            if (data) {
-              this.$store.commit('setTotal', data.termlists_total)
-            }
-          })
+  const app = createApp(App)
+
+  app.use(createPinia())
+
+  const authStore = useAuthStore()
+  const termsStore = useTermsStore()
+
+  app.mount('#app')
+
+  onAuthStateChanged(getAuth(firebaseApp), user => {
+    authStore.setAuthenticated(user)
+    if (database.userInfoReference) {
+      onSnapshot(database.userInfoReference, doc => {
+        const data = doc.data()
+        if (data) {
+          termsStore.setTotal(data.termlists_total)
         }
       })
-    },
-    store,
-    render: h => h(App),
+    }
   })
 }
-start()
+void start()

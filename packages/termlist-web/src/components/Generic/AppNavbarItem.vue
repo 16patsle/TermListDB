@@ -6,22 +6,23 @@
     <slot />
   </div>
 </template>
-<script>
-export default {
-  props: {
-    href: {
-      type: String,
-      default: null,
-    },
-    link: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  methods: {
-    click(e) {
-      this.$emit('click', e)
-    },
-  },
+<script lang="ts" setup>
+withDefaults(
+  defineProps<{
+    href?: string
+    link?: boolean
+  }>(),
+  {
+    href: undefined,
+    link: false,
+  }
+)
+
+const emit = defineEmits<{
+  (e: 'click', event: MouseEvent): void
+}>()
+
+const click = (e: MouseEvent) => {
+  emit('click', e)
 }
 </script>

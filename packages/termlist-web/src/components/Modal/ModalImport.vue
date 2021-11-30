@@ -35,95 +35,78 @@
       </div>
     </template>
     <template #modal-footer>
-      <AppButton primary @click="importTerm">
-        {{ ui.importTerms }}!
-      </AppButton>
+      <AppButton primary @click="importTerm"> {{ ui.importTerms }}! </AppButton>
       <AppButton @click="close">
         {{ ui.cancel }}
       </AppButton>
     </template>
   </AppModal>
 </template>
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import AppModal from '../Generic/AppModal.vue'
-import AppButton from '../Generic/AppButton.vue'
 
-import type { TermType } from '../../types/TermType'
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
+import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppButton from '../Generic/AppButton.vue'
+import { useImportStore } from '../../stores/import'
+import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
 
-@Component({
-  components: {
-    AppModal,
-    AppButton,
-  },
+const importStore = useImportStore()
+
+const selectedFile = ref<File | null>(null)
+let fileReader: FileReader
+
+const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
+const importFile = ref<InstanceType<typeof HTMLInputElement>>()
+
+const fileInfo = computed((): string | null => {
+  if (selectedFile.value && selectedFile.value.name) {
+    return selectedFile.value.name
+  } else {
+    return null
+  }
 })
-export default class ModalImport extends Vue {
-  $refs!: {
-    modal: AppModal
-    importFile: HTMLInputElement
-  }
 
-  ui = ui
-  selectedFile: File | null = null
-  fileReader?: FileReader
-  importedTerms: TermType[] = []
+globalService.onTransition(state => {
+  modal.value?.toggleModal(state.value === 'confirmImport')
+})
 
-  get fileInfo(): string | null {
-    if (this.selectedFile && this.selectedFile.name) {
-      return this.selectedFile.name
-    } else {
-      return null
-    }
-  }
+const importTerm = (): void => {
+  if (
+    selectedFile.value &&
+    selectedFile.value.type === 'application/json' &&
+    selectedFile.value.size > 0
+  ) {
+    fileReader = new FileReader()
+    fileReader.onload = () => {
+      if (fileReader && fileReader.result) {
+        let file = JSON.parse(fileReader.result.toString())
 
-  toggleModal(bool: boolean): void {
-    this.$refs.modal.toggleModal(bool)
-  }
-
-  confirmImportTerm(): void {
-    this.toggleModal(true)
-  }
-
-  importTerm(): void {
-    if (
-      this.selectedFile &&
-      this.selectedFile.type === 'application/json' &&
-      this.selectedFile.size > 0
-    ) {
-      this.fileReader = new FileReader()
-      this.fileReader.onload = () => {
-        if (this.fileReader && this.fileReader.result) {
-          let file = JSON.parse(this.fileReader.result.toString())
-
-          this.prepareFileImport(file)
-        }
+        globalService.send('IMPORT')
+        clear()
+        importStore.import([...file])
       }
-      this.fileReader.readAsText(this.selectedFile)
     }
+    fileReader.readAsText(selectedFile.value)
   }
+}
 
-  prepareFileImport(file: TermType[]): void {
-    this.importedTerms = [...file]
-
-    this.$emit('import', this.importedTerms)
-
-    this.close()
+const clear = (): void => {
+  if (importFile.value) {
+    importFile.value.value = ''
   }
+  selectedFile.value = null
+}
 
-  close(): void {
-    this.toggleModal(false)
+const close = (): void => {
+  clear()
+  globalService.send('CANCEL')
+}
 
-    this.$refs.importFile.value = ''
-    this.selectedFile = null
-  }
-
-  handleFiles(e: Event): void {
-    const files = (e.target as HTMLInputElement).files
-    this.selectedFile = files ? files[0] : null
-  }
+const handleFiles = (e: Event): void => {
+  const files = (e.target as HTMLInputElement).files
+  selectedFile.value = files ? files[0] : null
 }
 </script>
 <style></style>

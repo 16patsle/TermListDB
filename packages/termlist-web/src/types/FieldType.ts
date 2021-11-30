@@ -2,7 +2,7 @@ import type { FieldNameType } from './FieldNameType'
 
 export type RegularFieldType = {
   name: FieldNameType
-  type: 'short' | 'long' | 'date' | 'filler'
+  type: 'short' | 'long' | 'date'
   immutable?: boolean
 }
 export type SelectFieldType = {
@@ -11,5 +11,10 @@ export type SelectFieldType = {
   options: string[]
   immutable?: boolean
 }
+export type FillerFieldType = {
+  name: ''
+  type: 'filler'
+  immutable: true
+}
 
-export type FieldType = RegularFieldType | SelectFieldType
+export type FieldType = RegularFieldType | SelectFieldType | FillerFieldType

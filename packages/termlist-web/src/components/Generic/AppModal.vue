@@ -1,6 +1,6 @@
 <template>
   <div ref="modal" class="modal">
-    <div class="modal-background" @click="close" />
+    <div class="modal-background" @click="closeAllowed && close($event)" />
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">
@@ -16,7 +16,7 @@
       </section>
       <footer class="modal-card-foot">
         <slot name="modal-footer">
-          <AppButton v-if="okText !== null" primary @click="callback">
+          <AppButton v-if="okText !== null" primary @click="callback || null">
             {{ okText }}
           </AppButton>
           <AppButton v-if="cancelText !== null" @click="close">
@@ -25,71 +25,66 @@
         </slot>
       </footer>
     </div>
-    <button class="modal-close is-large" aria-label="close" @click="close" />
+    <button
+      v-if="closeAllowed"
+      class="modal-close is-large"
+      aria-label="close"
+      @click="close"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+export type AppModalMethods = {
+  toggleModal(bool: boolean): void
+}
+</script>
+
+<script lang="ts" setup>
+import { ref } from 'vue'
 import AppButton from './AppButton.vue'
 
-const AppModalProps = Vue.extend({
-  props: {
-    okText: {
-      type: String,
-      default: 'OK',
-    },
-    cancelText: {
-      type: String,
-      default: 'Cancel',
-    },
-    title: {
-      type: String,
-      default: '',
-    },
-    callback: {
-      type: Function,
-      default: null,
-    },
-    closeCallback: {
-      type: Function,
-      default: null,
-    },
-  },
-})
-
-@Component({
-  components: {
-    AppButton,
-  },
-})
-export default class AppModal extends AppModalProps {
-  show = false
-
-  $refs!: {
-    modal: Element
+const props = withDefaults(
+  defineProps<{
+    okText?: string
+    cancelText?: string
+    title: string
+    callback?: (event: MouseEvent) => void
+    closeCallback?: (event: MouseEvent) => void
+    closeAllowed?: boolean
+  }>(),
+  {
+    okText: 'OK',
+    cancelText: 'Cancel',
+    title: '',
+    callback: undefined,
+    closeCallback: undefined,
+    closeAllowed: true,
   }
+)
 
-  close(): void {
-    if (this.closeCallback) {
-      this.closeCallback()
-    } else {
-      this.toggleModal(false)
-    }
-  }
-  toggleModal(bool: boolean): void {
-    this.show = bool
-    if (bool) {
-      this.$refs.modal.classList.add('is-active')
-    } else {
-      this.$refs.modal.classList.remove('is-active')
-    }
-    //this.$emit('toggle', bool);
-  }
-  isShown(): boolean {
-    return this.show
+const show = ref(false)
+const modal = ref<InstanceType<typeof Element>>()
+
+const close = (e: MouseEvent): void => {
+  if (props.closeCallback) {
+    props.closeCallback(e)
+  } else {
+    toggleModal(false)
   }
 }
+
+const toggleModal = (bool: boolean): void => {
+  show.value = bool
+  if (bool) {
+    modal.value?.classList.add('is-active')
+  } else {
+    modal.value?.classList.remove('is-active')
+  }
+}
+
+defineExpose({
+  toggleModal,
+})
 </script>
 <style></style>

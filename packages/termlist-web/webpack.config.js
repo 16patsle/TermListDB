@@ -1,8 +1,10 @@
 /* eslint-env node */
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
 const webpack = require('webpack')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { RelativeCiAgentWebpackPlugin } = require('@relative-ci/agent')
+const { VueLoaderPlugin } = require('vue-loader')
 require('dotenv').config()
 
 module.exports = {
@@ -28,7 +30,6 @@ module.exports = {
       {
         test: /\.(j|t)s$/,
         loader: 'babel-loader',
-        exclude: /node_modules(?!\/vuex-module-decorators)/,
       },
       {
         test: /\.sass$/,
@@ -121,16 +122,24 @@ module.exports = {
       'FIREBASE_AUTH_DOMAIN',
       'FIREBASE_PROJECT_ID',
     ]),
+    new webpack.DefinePlugin({
+      __VUE_OPTIONS_API__: JSON.stringify(false),
+      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+    }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: process.env.NODE_ENV === 'production' ? 'static' : 'server',
+      openAnalyzer: false,
+      defaultSizes: 'stat',
+    }),
     new RelativeCiAgentWebpackPlugin(),
   ],
   resolve: {
-    alias: {
-      vue$: 'vue/dist/vue.esm.js',
-    },
     extensions: ['.ts', '.js'],
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
     historyApiFallback: true,
   },
   performance: {

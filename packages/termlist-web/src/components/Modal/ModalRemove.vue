@@ -2,7 +2,7 @@
   <AppModal
     ref="modal"
     :title="ui.removeterm"
-    :callback="removeTerm"
+    :close-callback="close"
     :ok-text="ui.save"
     :cancel-text="ui.cancel"
   >
@@ -10,63 +10,42 @@
       <p class="subtitle">
         {{ ui.wanttoremove }}
       </p>
-      <p>{{ currentTerm }}</p>
+      <p>{{ current?.term || '' }}</p>
     </template>
     <template #modal-footer>
-      <AppButton danger @click="removeTerm">
-        {{ ui.removeterm }}!
-      </AppButton>
+      <AppButton danger @click="removeTerm"> {{ ui.removeterm }}! </AppButton>
       <AppButton @click="close">
         {{ ui.cancel }}
       </AppButton>
     </template>
   </AppModal>
 </template>
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import AppModal from '../Generic/AppModal.vue'
-import AppButton from '../Generic/AppButton.vue'
 
-import type { TermType } from '../../types/TermType'
+<script lang="ts" setup>
+import { ref } from 'vue'
+import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppButton from '../Generic/AppButton.vue'
+import { useTermsStore } from '../../stores/terms'
+import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
+import type { TermType } from '../../types/TermType'
 
-@Component({
-  components: {
-    AppModal,
-    AppButton,
-  },
+const termsStore = useTermsStore()
+const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
+const current = ref<TermType | undefined>(undefined)
+
+globalService.onTransition(state => {
+  modal.value?.toggleModal(state.value === 'removing')
+  current.value = state.context.currentTerm
 })
-export default class ModalRemove extends Vue {
-  $refs!: {
-    modal: AppModal
-  }
 
-  ui = ui
-  current: TermType | null = null
-
-  get currentTerm(): string {
-    return this.current && this.current.term ? this.current.term : ''
-  }
-
-  toggleModal(bool: boolean): void {
-    this.$refs.modal.toggleModal(bool)
-  }
-
-  confirmRemoveTerm(current: TermType): void {
-    this.current = current
-    this.toggleModal(true)
-  }
-
-  removeTerm(): void {
-    this.$emit('remove', this.current)
-    this.toggleModal(false)
-  }
-
-  close(): void {
-    this.toggleModal(false)
+const removeTerm = (): void => {
+  if (current.value) {
+    termsStore.remove(current.value)
   }
 }
+
+const close = () => globalService.send('CANCEL')
 </script>
 <style></style>

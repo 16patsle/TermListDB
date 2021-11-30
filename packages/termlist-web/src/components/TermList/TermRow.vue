@@ -12,9 +12,7 @@
     </td>
   </tr>
 </template>
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+<script lang="ts" setup>
 import TermRowButton from './TermRowButton.vue'
 
 import type { FieldType } from '../../types/FieldType'
@@ -24,49 +22,36 @@ import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 import md from '../../utils/markdown'
 
-const TermRowProps = Vue.extend({
-  props: {
-    term: {
-      type: Object,
-      required: true,
-    },
-  },
-})
+const props = defineProps<{ term: TermType }>()
 
-@Component({ components: { TermRowButton } })
-export default class TermRow extends TermRowProps {
-  term!: TermType
+const emit = defineEmits<{
+  (e: 'edit', term: TermType): void
+  (e: 'remove', term: TermType): void
+}>()
 
-  ui = ui
-  fields = fields
+const edit = () => emit('edit', props.term)
+const remove = () => emit('remove', props.term)
 
-  edit(): void {
-    this.$emit('edit', this.term)
-  }
+const getFieldValue = (field: FieldType): string | undefined => {
+  const { term } = props
 
-  remove(): void {
-    this.$emit('remove', this.term)
-  }
-
-  getFieldValue(field: FieldType): string | undefined {
-    if (!this.term[field.name]) {
-      return ''
-    } else if (field.name === 'desc') {
-      return md.render(String(this.term[field.name]))
-    } else if (field.name === 'type') {
-      return this.term.type ? this.ui.wordClasses[this.term.type] : ''
-    } else if (field.name === 'date') {
-      let date = new Date(this.term.date)
-      return new Intl.DateTimeFormat(undefined, {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      }).format(date)
-    } else {
-      return this.term[field.name]
-    }
+  if (field.type === 'filler' || !term[field.name]) {
+    return ''
+  } else if (field.name === 'desc') {
+    return md.render(String(term[field.name]))
+  } else if (field.name === 'type') {
+    return term.type ? ui.wordClasses[term.type] : ''
+  } else if (field.name === 'date') {
+    let date = new Date(term.date)
+    return new Intl.DateTimeFormat(undefined, {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(date)
+  } else {
+    return term[field.name]
   }
 }
 </script>

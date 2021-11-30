@@ -4,23 +4,21 @@
       <template #modal-body>
         Dirty: {{ dirty }}
         <div v-for="field in mutableFields" :key="field.name" class="field">
-          <label class="label">{{ ui[field.name] }}</label>
+          <label class="label">{{ field.name !== '' && ui[field.name] }}</label>
           <div class="control">
             <input
               v-if="field.type === 'short'"
               v-model="currentTerm[field.name]"
-              :data-field="field.name"
               class="input"
               type="text"
-              @keyup="handleKeyUp"
+              @keyup="debouncedChangeHandlers[field.name]()"
             />
             <textarea
               v-else-if="field.type === 'long'"
               v-model="currentTerm[field.name]"
-              :data-field="field.name"
               class="textarea"
               rows="8"
-              @keyup="handleKeyUp"
+              @keyup="debouncedChangeHandlers[field.name]()"
             />
             <AppSelect
               v-else-if="
@@ -29,9 +27,8 @@
               v-model="currentTerm[field.name]"
               :default-option-name="ui.selectTermType"
               :options="reduce(field.options)"
-              :data-field="field.name"
               fullwidth
-              @change="handleSelectChange"
+              @update:modelValue="debouncedChangeHandlers[field.name]()"
             />
           </div>
         </div>
@@ -44,38 +41,29 @@
           accesskey="s"
           @click="saveTerm"
         />
-        <AppButton @click="close">
-          {{ ui.cancel }}
-        </AppButton>
+        <AppButton @click="close">{{ ui.cancel }}</AppButton>
       </template>
     </AppModal>
-    <AppModal
-      ref="modalUnsavedWarning"
-      :title="ui.unsavedWarningTitle"
-    >
-      <template #modal-body>
-        {{ ui.unsavedWarningText }}
-      </template>
+    <AppModal ref="modalUnsavedWarning" :title="ui.unsavedWarningTitle">
+      <template #modal-body>{{ ui.unsavedWarningText }}</template>
       <template #modal-footer>
-      <AppButton primary @click="saveTerm">
-        {{ ui.save }}
-      </AppButton>
-      <AppButton danger @click="discard">
-        {{ ui.discard }}
-      </AppButton>
-    </template>
+        <AppButton primary :loading="loading" @click="saveTerm">{{
+          ui.save
+        }}</AppButton>
+        <AppButton danger @click="discard">{{ ui.discard }}</AppButton>
+      </template>
     </AppModal>
   </form>
 </template>
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
 import debounce from 'lodash.debounce'
-import AppModal from '../Generic/AppModal.vue'
+import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
-
-import type { FieldType } from '../../types/FieldType'
+import { useTermsStore } from '../../stores/terms'
+import { globalService } from '../../machines/globalService'
+import { FieldType } from '../../types/FieldType'
 import type { TermDefType, TermType } from '../../types/TermType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
 import type { FieldNameType } from '../../types/FieldNameType'
@@ -83,187 +71,191 @@ import type { FieldNameType } from '../../types/FieldNameType'
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 
-const emptyTerm: TermDefType = {
+const termsStore = useTermsStore()
+
+const makeEmptyTerm = (): TermDefType => ({
   date: new Date().toJSON(),
   desc: undefined,
   term: undefined,
   type: undefined,
+})
+
+const currentTerm = ref<TermDefType>(makeEmptyTerm())
+const originalTerm = ref<TermType | null>(null)
+const mode = ref<'add' | 'edit'>('edit')
+// @ts-expect-error We need to assign a value here, but the object is populated later.
+const debouncedChangeHandlers: {
+  [K in FieldNameType]: () => void
+} = {}
+// @ts-expect-error We need to assign a value here, but the object is populated later.
+const dirtyFields: {
+  [K in FieldNameType]: boolean
+} = {}
+const dirty = ref(false)
+const loading = ref(false)
+
+const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
+const modalUnsavedWarning = ref<
+  InstanceType<typeof AppModal> & AppModalMethods
+>()
+
+const mutableFields = computed((): FieldType[] => {
+  return fields.filter(field => {
+    return !field.immutable
+  })
+})
+
+globalService.onTransition(state => {
+  if (state.value === 'editing' && state.history?.value !== 'editing') {
+    editTerm(state.context.currentTerm)
+    dirty.value = false
+    modal.value?.toggleModal(true)
+  } else if (state.value !== 'editing' && state.history?.value === 'editing') {
+    modalUnsavedWarning.value?.toggleModal(false)
+    modal.value?.toggleModal(false)
+  }
+})
+
+const handleDirty = (fieldName: FieldNameType): void => {
+  if (mode.value === 'add' && currentTerm.value[fieldName] === '') {
+    // When adding a term and the field is empty
+    dirtyFields[fieldName] = false
+  } else if (
+    mode.value === 'edit' &&
+    originalTerm.value &&
+    originalTerm.value[fieldName] === currentTerm.value[fieldName]
+  ) {
+    // When editing a term and the field's value is unchanged
+    dirtyFields[fieldName] = false
+  } else {
+    dirtyFields[fieldName] = true
+  }
+
+  dirty.value = Object.values(dirtyFields).reduce((prev, curr) => {
+    return curr || prev
+  }, false)
 }
 
-@Component({
-  components: {
-    AppModal,
-    AppButton,
-    AppSelect,
-  },
-})
-export default class ModalEdit extends Vue {
-  $refs!: {
-    modal: AppModal
-    modalUnsavedWarning: AppModal
+const editTerm = (originalEditTerm?: TermType): void => {
+  mode.value = originalEditTerm ? 'edit' : 'add'
+
+  if (originalEditTerm) {
+    originalTerm.value = originalEditTerm
+    currentTerm.value.date = originalEditTerm.date
   }
 
-  ui = ui
-  fields = fields
-  currentTerm: TermDefType = Object.assign({}, emptyTerm)
-  originalTerm: TermType | null = null
-  mode: 'add' | 'edit' = 'edit'
-  // @ts-expect-error We need to assign a value here, but the object is populated later.
-  debouncedChangeHandlers: {
-    [K in FieldNameType]: () => void
-  } = {}
-  // @ts-expect-error We need to assign a value here, but the object is populated later.
-  dirtyFields: {
-    [K in FieldNameType]: boolean
-  } = {}
-  dirty = false
-
-  get mutableFields(): FieldType[] {
-    return (this.fields as FieldType[]).filter(field => {
-      return !field.immutable
-    })
-  }
-
-  created(): void {
-    for (const field of this.fields) {
-      if (!field.immutable) {
-        this.debouncedChangeHandlers[field.name] = debounce(
-          this.handleDirty.bind(this, field.name),
-          400
-        )
-        this.dirtyFields[field.name] = false
-      }
-    }
-  }
-
-  handleKeyUp(e: KeyboardEvent): void {
-    this.debouncedChangeHandlers[
-      (e.target as HTMLElement).dataset.field as FieldNameType
-    ]()
-  }
-
-  handleSelectChange(_value: never, target: HTMLElement): void {
-    const el = (target as HTMLElement).parentElement
-    if (el) {
-      this.debouncedChangeHandlers[el.dataset.field as FieldNameType]()
-    }
-  }
-
-  handleDirty(fieldName: FieldNameType): void {
-    if (this.mode === 'add' && this.currentTerm[fieldName] === '') {
-      // When adding a term and the field is empty
-      this.dirtyFields[fieldName] = false
-    } else if (
-      this.mode === 'edit' &&
-      this.originalTerm &&
-      this.originalTerm[fieldName] === this.currentTerm[fieldName]
-    ) {
-      // When editing a term and the field's value is unchanged
-      this.dirtyFields[fieldName] = false
-    } else {
-      this.dirtyFields[fieldName] = true
-    }
-
-    this.dirty = Object.values(this.dirtyFields).reduce((prev, curr) => {
-      return curr || prev
-    }, false)
-  }
-
-  toggleModal(bool: boolean): void {
-    this.$refs.modal.toggleModal(bool)
-  }
-
-  toggleModalUnsavedWarning(bool: boolean): void {
-    this.$refs.modalUnsavedWarning.toggleModal(bool)
-  }
-
-  editTerm(originalTerm: TermType | null, mode: 'add' | 'edit' = 'edit'): void {
-    this.originalTerm = originalTerm
-    this.mode = mode
-
-    if (originalTerm) {
-      this.currentTerm.date = originalTerm.date
-    }
-
-    for (const field of this.fields) {
-      if (!field.immutable) {
-        if (this.mode === 'edit' && originalTerm) {
-          // Populate fields with term values
-          this.currentTerm[field.name] = originalTerm[field.name] || ''
+  for (const field of fields) {
+    if (!field.immutable) {
+      if (mode.value === 'edit' && originalEditTerm) {
+        // Populate fields with term values
+        if (field.name === 'type') {
+          currentTerm.value[field.name] = originalEditTerm[field.name]
         } else {
-          // Reset fields
-          this.currentTerm[field.name] = ''
+          currentTerm.value[field.name] = originalEditTerm[field.name] || ''
+        }
+      } else {
+        // Reset fields
+        if (field.name === 'type') {
+          currentTerm.value[field.name] = undefined
+        } else {
+          currentTerm.value[field.name] = ''
         }
       }
     }
+  }
 
-    this.toggleModal(true)
-    const focus = this.$refs.modal.$el.querySelector(
-      '.field input, .field textarea, .field select'
-    ) as HTMLElement
-    if (focus) {
-      focus.focus()
+  const focus = modal.value?.$el.querySelector(
+    '.field input, .field textarea, .field select'
+  ) as HTMLElement
+  if (focus) {
+    focus.focus()
+  }
+}
+
+const saveTerm = async (): Promise<void> => {
+  let termObject: TermDefType
+  if (mode.value === 'add') {
+    termObject = {
+      date: new Date().toJSON(),
+    }
+  } else {
+    if (originalTerm.value === null) {
+      return
+    }
+    termObject = {
+      _id: originalTerm.value._id,
+      date: originalTerm.value._id,
     }
   }
 
-  addTerm(): void {
-    this.editTerm(null, 'add')
-  }
+  loading.value = true
 
-  saveTerm(): void {
-    let termObject: TermDefType
-    if (this.mode === 'add') {
-      termObject = {
-        date: new Date().toJSON(),
-      }
-    } else {
-      if (this.originalTerm === null) {
-        return
-      }
-      termObject = {
-        _id: this.originalTerm._id,
-        date: this.originalTerm._id,
+  // Save to the term object
+  for (const field of fields) {
+    if (!field.immutable && currentTerm.value[field.name]) {
+      if (field.name === 'type') {
+        termObject[field.name] = currentTerm.value[field.name]
+      } else {
+        termObject[field.name] = currentTerm.value[field.name] || ''
       }
     }
-
-    for (const field of this.fields) {
-      if (!field.immutable && field.name !== '_id') {
-        termObject[field.name] = this.currentTerm[field.name]
-        this.currentTerm[field.name] = ''
-      }
-    }
-
-    this.$emit('save', termObject)
-
-    this.toggleModal(false)
-    this.toggleModalUnsavedWarning(false)
-
-    this.originalTerm = null
-    this.dirty = false
   }
 
-  close(): void {
-    if (this.dirty) {
-      this.toggleModalUnsavedWarning(true)
-    } else {
-      this.toggleModal(false)
-      this.toggleModalUnsavedWarning(false)
+  if (termObject._id) {
+    // Update existing term
+    await termsStore.save(termObject as TermType)
+  } else {
+    termObject._id = termObject.date
+    // Add new term
+    await termsStore.add(termObject as TermType)
+  }
+
+  // Reset fields
+  for (const field of fields) {
+    if (!field.immutable) {
+      if (field.name === 'type') {
+        currentTerm.value[field.name] = undefined
+      } else {
+        currentTerm.value[field.name] = ''
+      }
     }
   }
 
-  discard(): void {
-    this.dirty = false
-    this.close()
-  }
+  loading.value = false
+  originalTerm.value = null
+  dirty.value = false
+}
 
-  reduce(options: string[]): SelectOptionType[] {
-    return options.reduce((allOptions: SelectOptionType[], option) => {
-      allOptions.push({
-        name: option,
-        ui: this.ui.wordClasses[option],
-      })
-      return allOptions
-    }, [])
+const close = (): void => {
+  if (dirty.value) {
+    modalUnsavedWarning.value?.toggleModal(true)
+  } else {
+    globalService.send('CANCEL')
+  }
+}
+
+const discard = (): void => {
+  dirty.value = false
+  close()
+}
+
+const reduce = (options: string[]): SelectOptionType[] => {
+  return options.reduce((allOptions: SelectOptionType[], option) => {
+    allOptions.push({
+      name: option,
+      ui: ui.wordClasses[option],
+    })
+    return allOptions
+  }, [])
+}
+
+for (const field of fields) {
+  if (!field.immutable) {
+    debouncedChangeHandlers[field.name] = debounce(
+      handleDirty.bind(this, field.name),
+      400
+    )
+    dirtyFields[field.name] = false
   }
 }
 </script>

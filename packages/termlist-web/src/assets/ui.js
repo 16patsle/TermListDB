@@ -44,4 +44,7 @@ export default {
   unsavedWarningTitle: 'Ikke-lagrede endringer',
   unsavedWarningText: 'Du har endringer som ikke er lagret. Vil du lagre?',
   discard: 'Forkast',
+  close: 'Lukk',
+  email: 'E-post',
+  password: 'Passord',
 }

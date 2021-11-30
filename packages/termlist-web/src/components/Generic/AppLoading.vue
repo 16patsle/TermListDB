@@ -10,12 +10,8 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    text: { type: String, default: 'Loading...' },
-  },
-}
+<script lang="ts" setup>
+withDefaults(defineProps<{ text?: string }>(), { text: 'Loading...' })
 </script>
 <style scoped>
 .text-container {

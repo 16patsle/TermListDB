@@ -2,11 +2,10 @@
   <div class="field has-addons">
     <div class="control is-expanded has-icons-left">
       <input
-        ref="searchBar"
+        v-model="value"
         :placeholder="ui.search"
         class="input searchfield"
         type="text"
-        @keyup="search"
       />
       <span class="icon is-small is-left">
         <i class="fa fa-search" />
@@ -14,25 +13,24 @@
     </div>
   </div>
 </template>
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
 import ui from '../../assets/ui'
 
-@Component
-export default class TermSearchBar extends Vue {
-  $refs!: {
-    searchBar: HTMLInputElement
-  }
+const emit = defineEmits<{
+  (e: 'search', search: string): void
+}>()
 
-  ui = ui
+const _value = ref('')
 
-  search(): void {
+const value = computed({
+  get: () => _value.value,
+  set: val => {
+    _value.value = val
     // Search
-    this.$emit('search', {
-      search: this.$refs.searchBar.value,
-    })
-  }
-}
+    if (typeof val === 'string') {
+      emit('search', val)
+    }
+  },
+})
 </script>

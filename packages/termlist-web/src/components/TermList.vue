@@ -1,7 +1,5 @@
 <template>
   <span>
-    <TermSearchBar @search="search" />
-    <TermSortSelect @sort="sort" />
     <AppPagination
       :firstpage="1"
       :currentpage="currentPage"
@@ -28,8 +26,8 @@
         </thead>
         <tbody ref="termlist" class="list">
           <TermRow
-            v-for="term in terms"
-            :key="term._id"
+            v-for="[id, term] of terms"
+            :key="id"
             :term="term"
             @edit="edit"
             @remove="remove"
@@ -45,85 +43,46 @@
     />
   </span>
 </template>
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import TermSearchBar from './TermList/TermSearchBar.vue'
-import TermSortSelect from './TermList/TermSortSelect.vue'
-import TermRow from './TermList/TermRow.vue'
+
+<script lang="ts" setup>
+import { computed, defineAsyncComponent } from 'vue'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
+import { currentState, globalService } from '../machines/globalService'
 
 import type { TermType } from '../types/TermType'
-import type { TermQueryType } from '../types/TermQueryType'
 
 import ui from '../assets/ui'
 import fields from '../assets/fields'
+import { useTermsStore } from '../stores/terms'
 
-const TermListProps = Vue.extend({
-  props: {
-    loading: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
-  },
+const TermRow = defineAsyncComponent(() => import('./TermList/TermRow.vue'))
+
+const termsStore = useTermsStore()
+const loading = computed(() => currentState.value === 'loading')
+const currentPage = computed(() => termsStore.$state.currentPage)
+const terms = computed(() => termsStore.$state.terms)
+
+const termCount = computed((): number => {
+  return terms.value.size
 })
 
-@Component({
-  components: {
-    TermSearchBar,
-    TermSortSelect,
-    TermRow,
-    AppPagination,
-    AppLoading,
-  },
+const lastPage = computed((): number => {
+  if (termCount.value < 20) {
+    return currentPage.value
+  } else {
+    return Math.ceil(termsStore.$state.totalRows / 20)
+  }
 })
-export default class TermList extends TermListProps {
-  ui = ui
-  fields = fields
-  currentPage = 1
 
-  get terms(): {
-    [key: string]: TermType
-  } {
-    return this.$store.state.storeModule.terms
-  }
-
-  get termCount(): number {
-    return Object.keys(this.terms).length
-  }
-
-  get lastPage(): number {
-    if (this.termCount < 20) {
-      return this.currentPage
-    } else {
-      return Math.ceil(this.$store.state.storeModule.totalRows / 20)
-    }
-  }
-
-  search(search: TermQueryType): void {
-    this.$emit('search', search)
-  }
-
-  edit(term: TermType): void {
-    this.$emit('edit', term)
-  }
-
-  remove(term: TermType): void {
-    this.$emit('remove', term)
-  }
-
-  gotoPage(pageNumber: number): void {
-    this.$emit('gotopage', pageNumber, this.currentPage)
-    this.currentPage = pageNumber
-  }
-
-  sort(field: string): void {
-    this.$emit('sort', field)
-    this.currentPage = 1
-  }
-}
+const edit = (term: TermType) => globalService.send({ type: 'EDIT', term })
+const remove = (term: TermType) =>
+  globalService.send({ type: 'PROMPT_REMOVE', term })
+const gotoPage = (pageNumber: number) =>
+  termsStore.gotoPage({
+    pageNumber,
+    currentPage: currentPage.value,
+  })
 </script>
 
 <style scoped>

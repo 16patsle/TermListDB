@@ -10,11 +10,11 @@
       "@babel/preset-env",
       {
         "modules": false,
-        "shippedProposals": true
+        "shippedProposals": true,
+        "useBuiltIns": "usage",
+        "corejs": "3.17"
       }
     ]
   ],
-  "plugins": [
-    ["@babel/proposal-decorators", { "legacy": true }]
-  ]
+  "plugins": []
 }

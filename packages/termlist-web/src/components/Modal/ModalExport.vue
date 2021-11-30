@@ -1,91 +1,59 @@
 <template>
-  <AppModal
-    ref="modal"
-    :title="ui.exportTerms"
-    :close-callback="close"
-    :ok-text="null"
-    :cancel-text="null"
-  >
+  <AppModal ref="modal" :title="ui.exportTerms" :close-callback="close">
     <template #modal-body>
-      <p class="subtitle">
-        {{ exportInstructions }}
-      </p>
+      <p class="subtitle">{{ exportInstructions }}</p>
       <a
-        :href="exportUri"
-        :disabled="!exported"
+        :href="exportURI"
+        :disabled="!exportURI ? true : null"
         class="button is-primary"
         download="terms.json"
         @click="downloadExport"
+        >{{ ui.download }}</a
       >
-        {{ ui.download }}
-      </a>
+    </template>
+    <template #modal-footer>
+      <AppButton @click="close">
+        {{ ui.close }}
+      </AppButton>
     </template>
   </AppModal>
 </template>
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import AppModal from '../Generic/AppModal.vue'
+
+<script lang="ts" setup>
+import { computed, ref } from 'vue'
+import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppButton from '../Generic/AppButton.vue'
+import { useImportStore } from '../../stores/import'
+import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
 
-const ModalExportProps = Vue.extend({
-  props: {
-    exportUri: {
-      type: String,
-      required: true,
-    },
-  },
+const importStore = useImportStore()
+
+const exportURI = ref<string | undefined>(undefined)
+const exportInstructions = computed(() =>
+  exportURI.value ? ui.downloadExportInstructions : ui.processingExport
+)
+
+const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
+
+globalService.onTransition(state => {
+  if (state.value === 'exporting' && state.history?.value !== 'exporting') {
+    modal.value?.toggleModal(true)
+    importStore.export().then(uri => (exportURI.value = uri))
+  } else if (
+    state.value !== 'exporting' &&
+    state.history?.value === 'exporting'
+  ) {
+    modal.value?.toggleModal(false)
+  }
 })
 
-@Component({
-  components: {
-    AppModal,
-  },
-})
-export default class ModalExport extends ModalExportProps {
-  $refs!: {
-    modal: AppModal
-  }
+const close = () => globalService.send('CANCEL')
 
-  ui = ui
-
-  get exportInstructions(): string {
-    if (this.exported) {
-      return this.ui.downloadExportInstructions
-    } else {
-      return this.ui.processingExport
-    }
-  }
-
-  get exported(): boolean {
-    return Boolean(this.exportUri)
-  }
-
-  toggleModal(bool: boolean): void {
-    this.$refs.modal.toggleModal(bool)
-  }
-
-  confirmExportTerm(): void {
-    this.toggleModal(true)
-
-    this.exportTerms()
-  }
-
-  close(): void {
-    this.toggleModal(false)
-
-    this.$emit('close')
-  }
-
-  exportTerms(): void {
-    this.$emit('export')
-  }
-
-  downloadExport(e: MouseEvent): void {
-    if (!this.exported) {
-      e.preventDefault()
-    }
+const downloadExport = (e: MouseEvent): void => {
+  if (!exportURI.value) {
+    e.preventDefault()
   }
 }
 </script>

@@ -3,7 +3,6 @@
     ref="modal"
     :title="ui.importTerms"
     :close-callback="close"
-    :ok-text="null"
     :cancel-text="ui.cancel"
   >
     <template #modal-body>
@@ -13,84 +12,56 @@
       <div class="field">
         <div class="control">
           <progress
-            :value="$store.state.storeModule.imports.imported"
-            :max="$store.state.storeModule.imports.total"
+            :value="importStore.$state.imported"
+            :max="importStore.$state.total"
             class="progress is-primary"
           >
             {{
               Math.round(
-                ($store.state.storeModule.imports.imported /
-                  $store.state.storeModule.imports.total) *
-                  100
+                (importStore.$state.imported / importStore.$state.total) * 100
               )
             }}%
           </progress>
           <p class="has-text-centered">
-            {{ $store.state.storeModule.imports.imported }} /
-            {{ $store.state.storeModule.imports.total }}
+            {{ importStore.$state.imported }} /
+            {{ importStore.$state.total }}
           </p>
           <p class="has-text-centered">
             {{
               Math.round(
-                ($store.state.storeModule.imports.imported /
-                  $store.state.storeModule.imports.total) *
-                  100
+                (importStore.$state.imported / importStore.$state.total) * 100
               )
             }}%
           </p>
         </div>
       </div>
     </template>
+    <template #modal-footer>
+      <AppButton @click="close">
+        {{ ui.cancel }}
+      </AppButton>
+    </template>
   </AppModal>
 </template>
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import AppModal from '../Generic/AppModal.vue'
+<script lang="ts"></script>
 
-import type { Store } from 'vuex'
-import type { StateType } from '../../types/StateType'
+<script lang="ts" setup>
+import { ref } from 'vue'
+import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppButton from '../Generic/AppButton.vue'
+import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
+import { useImportStore } from '../../stores/import'
 
-@Component({
-  components: {
-    AppModal,
-  },
+const importStore = useImportStore()
+
+const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
+
+globalService.onTransition(state => {
+  modal.value?.toggleModal(state.value === 'importing')
 })
-export default class ModalImporting extends Vue {
-  $refs!: {
-    modal: AppModal
-  }
-  $store!: Store<StateType>
 
-  ui = ui
-
-  mounted(): void {
-    this.$watch(
-      () => this.$store.state.storeModule.imports.finished,
-      value => {
-        if (!value) {
-          this.toggleModal(true)
-        } else {
-          this.toggleModal(false)
-        }
-      },
-      {
-        immediate: true,
-      }
-    )
-  }
-
-  toggleModal(bool: boolean): void {
-    this.$refs.modal.toggleModal(bool)
-  }
-
-  close(): void {
-    this.toggleModal(false)
-
-    this.$store.commit('cancelImport')
-  }
-}
+const close = () => globalService.send('CANCEL')
 </script>
 <style></style>
