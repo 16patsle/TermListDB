@@ -3,9 +3,12 @@
 const path = require('path')
 const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { RelativeCiAgentWebpackPlugin } = require('@relative-ci/agent')
 const { VueLoaderPlugin } = require('vue-loader')
 require('dotenv').config()
+
+const devMode = process.env.NODE_ENV !== 'production'
 
 module.exports = {
   entry: './src/main.ts',
@@ -32,42 +35,13 @@ module.exports = {
         loader: 'babel-loader',
       },
       {
-        test: /\.sass$/,
+        test: /\.(sa|sc|c)ss$/,
         use: [
-          {
-            loader: 'style-loader', // creates style nodes from JS strings
-          },
-          {
-            loader: 'css-loader', // translates CSS into CommonJS
-          },
-          {
-            loader: 'sass-loader', // compiles Sass to CSS
-          },
-        ],
-      },
-      {
-        test: /\.sc?a?ss$/,
-        use: [
-          {
-            loader: 'style-loader', // creates style nodes from JS strings
-          },
-          {
-            loader: 'css-loader', // translates CSS into CommonJS
-          },
-          {
-            loader: 'sass-loader', // compiles Sass to CSS
-          },
-        ],
-      },
-      {
-        test: /\.css$/,
-        use: [
-          {
-            loader: 'style-loader', // creates style nodes from JS strings
-          },
-          {
-            loader: 'css-loader', // translates CSS into CommonJS
-          },
+          devMode
+            ? 'style-loader' // creates style nodes from JS strings
+            : MiniCssExtractPlugin.loader, // extracts CSS to files
+          'css-loader', // translates CSS into JS modules
+          'sass-loader', // compiles Sass to CSS
         ],
       },
       {
@@ -127,12 +101,12 @@ module.exports = {
       __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
     }),
     new BundleAnalyzerPlugin({
-      analyzerMode: process.env.NODE_ENV === 'production' ? 'static' : 'server',
+      analyzerMode: !devMode ? 'static' : 'server',
       openAnalyzer: false,
       defaultSizes: 'stat',
     }),
     new RelativeCiAgentWebpackPlugin(),
-  ],
+  ].concat(devMode ? [] : [new MiniCssExtractPlugin()]),
   resolve: {
     extensions: ['.ts', '.js'],
   },
@@ -145,10 +119,5 @@ module.exports = {
   performance: {
     hints: false,
   },
-  devtool: 'eval-source-map',
-}
-
-if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = 'source-map'
-  // http://vue-loader.vuejs.org/en/workflow/production.html
+  devtool: devMode ? 'eval-source-map' : 'source-map', // http://vue-loader.vuejs.org/en/workflow/production.html
 }
