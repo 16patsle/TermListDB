@@ -8,3 +8,5 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(faPencilAlt, faTrashAlt, faSearch, faUpload, faSpinner)
+
+export { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'

@@ -1,12 +1,9 @@
-import { createApp } from 'vue'
+import { createApp, defineAsyncComponent } from 'vue'
 import { createPinia } from 'pinia'
 import { onSnapshot } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import App from './App.vue'
 import './assets/main.scss'
-
-import './iconLibrary'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import database, { firebaseApp } from './utils/firebase'
 import { useAuthStore } from './stores/auth'
@@ -21,7 +18,12 @@ if (document.getElementById('app') === null) {
 const start = async () => {
   await database.start()
 
-  const app = createApp(App).component('fa-icon', FontAwesomeIcon)
+  const app = createApp(App).component(
+    'fa-icon',
+    defineAsyncComponent(
+      async () => (await import('./iconLibrary')).FontAwesomeIcon
+    )
+  )
 
   app.use(createPinia())
 
