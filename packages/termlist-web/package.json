@@ -20,7 +20,6 @@
     "core-js": "^3.17.2",
     "deepmerge": "^4.2.2",
     "firebase": "^9.0.1",
-    "font-awesome": "^4.7.0",
     "lodash.debounce": "^4.0.8",
     "markdown-it": "^12.2.0",
     "pinia": "^2.0.4",

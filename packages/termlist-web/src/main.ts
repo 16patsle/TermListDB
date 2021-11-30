@@ -1,7 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import './assets/main.scss'
-import 'font-awesome/css/font-awesome.css'
 import { onSnapshot } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import App from './App.vue'
