@@ -2,6 +2,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const { RelativeCiAgentWebpackPlugin } = require('@relative-ci/agent')
 require('dotenv').config()
 
 module.exports = {
@@ -120,6 +121,7 @@ module.exports = {
       'FIREBASE_AUTH_DOMAIN',
       'FIREBASE_PROJECT_ID',
     ]),
+    new RelativeCiAgentWebpackPlugin(),
   ],
   resolve: {
     alias: {
