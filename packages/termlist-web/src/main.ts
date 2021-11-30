@@ -10,6 +10,12 @@ import database, { firebaseApp } from './utils/firebase'
 import { useAuthStore } from './stores/auth'
 import { useTermsStore } from './stores/terms'
 
+if (document.getElementById('app') === null) {
+  const el = document.createElement('div')
+  el.id = 'app'
+  document.body.appendChild(el)
+}
+
 const start = async () => {
   await database.start()
 
