@@ -6,21 +6,12 @@ import { onSnapshot } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import App from './App.vue'
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import {
-  faPencilAlt,
-  faTrashAlt,
-  faSearch,
-  faUpload,
-  faSpinner,
-} from '@fortawesome/free-solid-svg-icons'
+import './iconLibrary'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import database, { firebaseApp } from './utils/firebase'
 import { useAuthStore } from './stores/auth'
 import { useTermsStore } from './stores/terms'
-
-library.add(faPencilAlt, faTrashAlt, faSearch, faUpload, faSpinner)
 
 if (document.getElementById('app') === null) {
   const el = document.createElement('div')
