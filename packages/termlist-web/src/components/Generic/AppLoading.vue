@@ -3,7 +3,7 @@
     <div>
       <div>
         <span class="icon is-medium">
-          <i class="fa fa-spinner fa-pulse fa-2x" />
+          <fa-icon :icon="['fas', 'spinner']" pulse size="2x" />
         </span>
       </div>
       {{ text }}

@@ -24,7 +24,7 @@
               />
               <span class="file-cta">
                 <span class="file-icon">
-                  <i class="fa fa-upload" />
+                  <fa-icon :icon="['fas', 'upload']" />
                 </span>
                 <span class="file-label">{{ ui.browseForFile }}</span>
               </span>

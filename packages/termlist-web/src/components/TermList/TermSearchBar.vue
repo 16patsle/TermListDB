@@ -8,7 +8,7 @@
         type="text"
       />
       <span class="icon is-small is-left">
-        <i class="fa fa-search" />
+        <fa-icon :icon="['fas', 'search']" />
       </span>
     </div>
   </div>
