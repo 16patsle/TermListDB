@@ -4,7 +4,6 @@ import './assets/main.scss'
 import 'font-awesome/css/font-awesome.css'
 import { onSnapshot } from 'firebase/firestore'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import './auth-ui/firebaseui.css'
 import App from './App.vue'
 
 import database, { firebaseApp } from './utils/firebase'
