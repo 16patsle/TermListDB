@@ -20,6 +20,7 @@ module.exports = {
     filename: '[name].[contenthash].js',
     clean: true,
   },
+  target: 'browserslist',
   optimization: {
     runtimeChunk: true,
     splitChunks: {
