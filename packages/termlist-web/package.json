@@ -10,7 +10,7 @@
     "lint": "eslint \"src/**/*.{ts,js,vue}\" --fix",
     "lint-types": "eslint \"src/**/*.{ts,js,vue}\" --fix -c .eslintrc-types.json",
     "dev": "webpack serve --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress"
+    "build": "cross-env NODE_ENV=production webpack"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
@@ -37,6 +37,7 @@
     "@typescript-eslint/parser": "^4.30.0",
     "@vue/compiler-sfc": "^3.2.8",
     "babel-loader": "^8.2.2",
+    "ci-info": "^3.3.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.2.0",
     "dotenv": "^10.0.0",

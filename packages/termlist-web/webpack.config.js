@@ -1,5 +1,6 @@
 /* eslint-env node */
 /* eslint-disable @typescript-eslint/no-var-requires */
+const ci = require('ci-info')
 const path = require('path')
 const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
@@ -105,7 +106,9 @@ module.exports = {
       defaultSizes: 'stat',
     }),
     new RelativeCiAgentWebpackPlugin(),
-  ].concat(devMode ? [] : [new MiniCssExtractPlugin()]),
+  ]
+    .concat(devMode ? [] : [new MiniCssExtractPlugin()])
+    .concat(ci.isCI ? [] : [new webpack.ProgressPlugin()]),
   resolve: {
     extensions: ['.ts', '.js'],
   },
