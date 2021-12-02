@@ -20,6 +20,20 @@ module.exports = {
   },
   optimization: {
     runtimeChunk: true,
+    splitChunks: {
+      cacheGroups: {
+        vue: {
+          test: /[\\/]node_modules[\\/]@vue[\\/]/,
+          name: 'vue',
+          chunks: 'all',
+        },
+        firebase: {
+          test: /[\\/]node_modules[\\/]@?firebase[\\/]/,
+          name: 'firebase',
+          chunks: 'all',
+        },
+      },
+    },
   },
   module: {
     rules: [
