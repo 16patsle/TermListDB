@@ -43,7 +43,12 @@ module.exports = {
       },
       {
         test: /\.(j|t)s$/,
-        loader: 'babel-loader',
+        use: {
+          loader: 'babel-loader',
+          options: {
+            cacheDirectory: true,
+          },
+        },
       },
       {
         test: /\.(sa|sc|c)ss$/,
