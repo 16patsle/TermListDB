@@ -35,6 +35,14 @@ module.exports = {
       },
     },
   },
+  cache: {
+    type: 'filesystem',
+    // This makes all dependencies of this file - build dependencies
+    buildDependencies: {
+      config: [__filename],
+    },
+    version: 'v1',
+  },
   module: {
     rules: [
       {
