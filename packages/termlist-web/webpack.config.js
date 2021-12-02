@@ -18,6 +18,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: '[name].[contenthash].js',
+    clean: true,
   },
   optimization: {
     runtimeChunk: true,
@@ -41,6 +42,8 @@ module.exports = {
     // This makes all dependencies of this file - build dependencies
     buildDependencies: {
       config: [__filename],
+      browserslist: ['./.browserslistrc'],
+      babelrc: ['./.babelrc'],
     },
     version: 'v1',
   },
