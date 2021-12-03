@@ -42,8 +42,7 @@
     </AppNavbar>
     <ModalContainer />
     <div class="container">
-      <TermSearchBar @search="debouncedSearch" />
-      <TermSortSelect @sort="sort" />
+      <TermSortToolbar @search="debouncedSearch" @sort="sort" />
       <TermList v-if="authenticated" />
     </div>
   </div>
@@ -58,8 +57,7 @@ import { useAuthStore } from './stores/auth'
 import AppButton from './components/Generic/AppButton.vue'
 import AppNavbar from './components/Generic/AppNavbar.vue'
 import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
-import TermSearchBar from './components/TermList/TermSearchBar.vue'
-import TermSortSelect from './components/TermList/TermSortSelect.vue'
+import TermSortToolbar from './components/TermList/TermSortToolbar.vue'
 import ui from './assets/ui'
 import { currentState, globalService } from './machines/globalService'
 import { firebaseApp } from './utils/initializeFirebase'
