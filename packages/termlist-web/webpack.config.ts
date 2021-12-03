@@ -31,10 +31,15 @@ const config: webpack.Configuration = {
           name: 'vue',
           chunks: 'all',
         },
-        firebase: {
+        firebaseInitial: {
           test: /[\\/]node_modules[\\/]@?firebase[\\/]/,
-          name: 'firebase',
-          chunks: 'all',
+          name: 'firebase-initial',
+          chunks: 'initial',
+        },
+        firebaseAsync: {
+          test: /[\\/]node_modules[\\/]@?firebase[\\/]/,
+          name: 'firebase-async',
+          chunks: 'async',
         },
       },
     },

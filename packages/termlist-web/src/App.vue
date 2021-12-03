@@ -62,7 +62,7 @@ import TermSearchBar from './components/TermList/TermSearchBar.vue'
 import TermSortSelect from './components/TermList/TermSortSelect.vue'
 import ui from './assets/ui'
 import { currentState, globalService } from './machines/globalService'
-import { firebaseApp } from './utils/firebase'
+import { firebaseApp } from './utils/initializeFirebase'
 
 import type { FieldNameType } from './types/FieldNameType'
 

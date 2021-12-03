@@ -26,7 +26,7 @@ import { AuthError, getAuth, signInWithEmailAndPassword } from '@firebase/auth'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { globalService } from '../../machines/globalService'
-import { firebaseApp } from '../../utils/firebase'
+import { firebaseApp } from '../../utils/initializeFirebase'
 
 import ui from '../../assets/ui'
 

@@ -1,4 +1,4 @@
-import database from '../utils/firebase'
+import { database } from '../utils/firebase'
 import { globalService } from '../machines/globalService'
 
 import { defineStore } from 'pinia'
