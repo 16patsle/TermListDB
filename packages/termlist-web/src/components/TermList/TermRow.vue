@@ -38,7 +38,7 @@ const getFieldValue = (field: FieldType): string | undefined => {
   if (field.type === 'filler' || !term[field.name]) {
     return ''
   } else if (field.name === 'desc') {
-    return md.render(String(term[field.name]))
+    return md(String(term[field.name]))
   } else if (field.name === 'type') {
     return term.type ? ui.wordClasses[term.type] : ''
   } else if (field.name === 'date') {
