@@ -1,20 +1,21 @@
 /* eslint-env node */
-/* eslint-disable @typescript-eslint/no-var-requires */
-const ci = require('ci-info')
-const path = require('path')
-const webpack = require('webpack')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const { RelativeCiAgentWebpackPlugin } = require('@relative-ci/agent')
-const { VueLoaderPlugin } = require('vue-loader')
-require('dotenv').config()
+import ci from 'ci-info'
+import path from 'path'
+import webpack from 'webpack'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+// @ts-expect-error Has no declaration file
+import { RelativeCiAgentWebpackPlugin } from '@relative-ci/agent'
+import { VueLoaderPlugin } from 'vue-loader'
+import { config as configureDotenv } from 'dotenv'
+configureDotenv()
 
 const devMode = process.env.NODE_ENV !== 'production'
 
-module.exports = {
+const config: webpack.Configuration = {
   entry: './src/main.ts',
-  mode: process.env.NODE_ENV ? process.env.NODE_ENV : 'development',
+  mode: !devMode ? 'production' : 'development',
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: '[name].[contenthash].js',
@@ -127,3 +128,5 @@ module.exports = {
   },
   devtool: devMode ? 'eval-source-map' : 'source-map', // http://vue-loader.vuejs.org/en/workflow/production.html
 }
+
+export default config
