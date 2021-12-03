@@ -21,7 +21,9 @@ const start = async () => {
   const app = createApp(App).component(
     'fa-icon',
     defineAsyncComponent(
-      async () => (await import('./iconLibrary')).FontAwesomeIcon
+      async () =>
+        (await import(/* webpackPrefetch: true */ './iconLibrary'))
+          .FontAwesomeIcon
     )
   )
 

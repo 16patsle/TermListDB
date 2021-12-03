@@ -56,7 +56,9 @@ import ui from '../assets/ui'
 import fields from '../assets/fields'
 import { useTermsStore } from '../stores/terms'
 
-const TermRow = defineAsyncComponent(() => import('./TermList/TermRow.vue'))
+const TermRow = defineAsyncComponent(
+  () => import(/* webpackPrefetch: true */ './TermList/TermRow.vue')
+)
 
 const termsStore = useTermsStore()
 const loading = computed(() => currentState.value === 'loading')

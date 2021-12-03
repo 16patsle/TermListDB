@@ -69,9 +69,12 @@ import type { FieldNameType } from './types/FieldNameType'
 const auth = getAuth(firebaseApp)
 
 const ModalContainer = defineAsyncComponent(
-  () => import('./components/Modal/ModalContainer.vue')
+  () =>
+    import(/* webpackPrefetch: true */ './components/Modal/ModalContainer.vue')
 )
-const TermList = defineAsyncComponent(() => import('./components/TermList.vue'))
+const TermList = defineAsyncComponent(
+  () => import(/* webpackPreload: true */ './components/TermList.vue')
+)
 
 const termsStore = useTermsStore()
 const authStore = useAuthStore()
