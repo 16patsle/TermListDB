@@ -51,7 +51,7 @@
 
 <script lang="ts" setup>
 import { computed, defineAsyncComponent } from 'vue'
-import debounce from 'lodash.debounce'
+import debounce from 'just-debounce-it'
 import { getAuth, signOut } from 'firebase/auth'
 import { useTermsStore } from './stores/terms'
 import { useAuthStore } from './stores/auth'

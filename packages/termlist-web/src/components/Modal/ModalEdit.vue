@@ -57,7 +57,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import debounce from 'lodash.debounce'
+import debounce from 'just-debounce-it'
 import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
