@@ -19,7 +19,7 @@
               :key="field.name"
               :class="field.name || field.type"
             >
-              {{ ui[field.name] }}
+              {{ field.name ? ui[field.name] : '' }}
             </th>
             <th class="row-buttons" />
           </tr>
