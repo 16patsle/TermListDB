@@ -5,9 +5,11 @@ $link: $primary;
 $link-invert: $primary-invert;
 @import '~bulma/bulma';
 
+$navbar-height-and-padding: $navbar-height + 0.25rem;
+
 div {
   &.has-navbar-fixed-top {
-    padding-top: $navbar-height;
+    padding-top: $navbar-height-and-padding;
   }
 
   &.has-navbar-fixed-bottom {
@@ -19,4 +21,8 @@ div {
   position: fixed;
   top: 5px;
   right: 5px;
+}
+
+.app-content-container {
+  height: calc(100% - #{$navbar-height-and-padding});
 }

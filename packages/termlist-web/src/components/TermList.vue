@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <div class="termlist-container">
     <AppPagination
       :firstpage="1"
       :currentpage="currentPage"
@@ -41,7 +41,7 @@
       :lastpage="lastPage"
       @gotopage="gotoPage"
     />
-  </span>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -88,8 +88,15 @@ const gotoPage = (pageNumber: number) =>
 </script>
 
 <style scoped>
+.termlist-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
 .content-container {
   position: relative;
+  overflow-y: scroll;
 }
 
 .loading-indicator {

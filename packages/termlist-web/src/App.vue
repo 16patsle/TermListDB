@@ -41,7 +41,7 @@
       </template>
     </AppNavbar>
     <ModalContainer />
-    <div class="container">
+    <div class="container app-content-container">
       <TermSortToolbar @search="debouncedSearch" @sort="sort" />
       <TermList v-if="authenticated" />
     </div>
@@ -136,6 +136,5 @@ document.addEventListener('keyup', shortcutUp, false)
   text-align: center;
   color: #2c3e50;
   height: 100vh;
-  margin-top: 0.25rem;
 }
 </style>
