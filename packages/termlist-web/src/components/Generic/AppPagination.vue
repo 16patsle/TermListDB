@@ -99,11 +99,17 @@ const onlyOnePage = computed(() =>
 )
 
 const previous = (e: MouseEvent): void => {
+  if (cannotGoBack.value) {
+    return
+  }
   emit('goto', e)
   gotoPage(props.currentpage - 1)
 }
 
 const next = (e: MouseEvent): void => {
+  if (cannotGoForward.value) {
+    return
+  }
   emit('goto', e)
   gotoPage(props.currentpage + 1)
 }
