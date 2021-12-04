@@ -25,14 +25,13 @@ const TermList = defineAsyncComponent(
 )
 
 const termsStore = useTermsStore()
-const sortedBy = computed(() => termsStore.$state.sortedBy)
 const authenticated = computed(() => currentState.value !== 'authenticated')
 
 globalService.onTransition(async state => {
   if (state.value === 'idle' && state.history?.value === 'importing') {
     await termsStore.fetchTotal()
     await termsStore.getTerms({
-      field: sortedBy.value,
+      field: termsStore.$state.sortedBy,
     })
   } else if (
     state.value === 'idle' &&
@@ -40,15 +39,13 @@ globalService.onTransition(async state => {
   ) {
     await termsStore.fetchTotal()
     await termsStore.getTerms({
-      field: sortedBy.value,
+      field: termsStore.$state.sortedBy,
     })
     globalService.send('LOAD_COMPLETE')
   }
 })
 
 globalService.send('LOG_IN')
-
-const addTerm = () => globalService.send('EDIT')
 
 const shortcutUp = (e: KeyboardEvent): void => {
   if (
@@ -58,7 +55,7 @@ const shortcutUp = (e: KeyboardEvent): void => {
     ) === -1 &&
     e.key.toLowerCase() === 'n'
   ) {
-    addTerm()
+    globalService.send('EDIT')
   }
 }
 
