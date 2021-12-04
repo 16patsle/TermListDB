@@ -16,7 +16,11 @@
       </section>
       <footer class="modal-card-foot">
         <slot name="modal-footer">
-          <AppButton v-if="okText !== null" primary @click="callback || null">
+          <AppButton
+            v-if="okText !== null"
+            primary
+            @click="emit('okClick', $event)"
+          >
             {{ okText }}
           </AppButton>
           <AppButton v-if="cancelText !== null" @click="close">
@@ -43,19 +47,18 @@ withDefaults(
     okText?: string
     cancelText?: string
     title: string
-    callback?: (event: MouseEvent) => void
     closeAllowed?: boolean
   }>(),
   {
     okText: 'OK',
     cancelText: 'Cancel',
     title: '',
-    callback: undefined,
     closeAllowed: true,
   }
 )
 
 const emit = defineEmits<{
+  (e: 'okClick', event: MouseEvent): void
   (e: 'close', event: MouseEvent): void
 }>()
 
