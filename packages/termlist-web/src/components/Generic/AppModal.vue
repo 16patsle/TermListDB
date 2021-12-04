@@ -1,5 +1,5 @@
 <template>
-  <div ref="modal" class="modal">
+  <div class="modal" :class="{ 'is-active': show }">
     <div class="modal-background" @click="closeAllowed && close($event)" />
     <div class="modal-card">
       <header class="modal-card-head">
@@ -64,7 +64,6 @@ const props = withDefaults(
 )
 
 const show = ref(false)
-const modal = ref<InstanceType<typeof Element>>()
 
 const close = (e: MouseEvent): void => {
   if (props.closeCallback) {
@@ -76,11 +75,6 @@ const close = (e: MouseEvent): void => {
 
 const toggleModal = (bool: boolean): void => {
   show.value = bool
-  if (bool) {
-    modal.value?.classList.add('is-active')
-  } else {
-    modal.value?.classList.remove('is-active')
-  }
 }
 
 defineExpose({
