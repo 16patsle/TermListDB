@@ -1,6 +1,6 @@
 <template>
   <AppModal
-    ref="modal"
+    :is-active="showModal"
     :title="ui.importTerms"
     :callback="importTerm"
     :close-callback="close"
@@ -45,7 +45,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { useImportStore } from '../../stores/import'
 import { globalService } from '../../machines/globalService'
@@ -54,10 +54,10 @@ import ui from '../../assets/ui'
 
 const importStore = useImportStore()
 
+const showModal = ref(false)
 const selectedFile = ref<File | null>(null)
 let fileReader: FileReader
 
-const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
 const importFile = ref<InstanceType<typeof HTMLInputElement>>()
 
 const fileInfo = computed((): string | null => {
@@ -69,7 +69,7 @@ const fileInfo = computed((): string | null => {
 })
 
 globalService.onTransition(state => {
-  modal.value?.toggleModal(state.value === 'confirmImport')
+  showModal.value = state.value === 'confirmImport'
 })
 
 const importTerm = (): void => {

@@ -1,5 +1,9 @@
 <template>
-  <AppModal ref="modal" :title="ui.exportTerms" :close-callback="close">
+  <AppModal
+    :is-active="showModal"
+    :title="ui.exportTerms"
+    :close-callback="close"
+  >
     <template #modal-body>
       <p class="subtitle">{{ exportInstructions }}</p>
       <a
@@ -21,7 +25,7 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { useImportStore } from '../../stores/import'
 import { globalService } from '../../machines/globalService'
@@ -30,22 +34,21 @@ import ui from '../../assets/ui'
 
 const importStore = useImportStore()
 
+const showModal = ref(false)
 const exportURI = ref<string | undefined>(undefined)
 const exportInstructions = computed(() =>
   exportURI.value ? ui.downloadExportInstructions : ui.processingExport
 )
 
-const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
-
 globalService.onTransition(state => {
   if (state.value === 'exporting' && state.history?.value !== 'exporting') {
-    modal.value?.toggleModal(true)
+    showModal.value = true
     importStore.export().then(uri => (exportURI.value = uri))
   } else if (
     state.value !== 'exporting' &&
     state.history?.value === 'exporting'
   ) {
-    modal.value?.toggleModal(false)
+    showModal.value = false
   }
 })
 

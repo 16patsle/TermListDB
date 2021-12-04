@@ -1,6 +1,6 @@
 <template>
   <AppModal
-    ref="modal"
+    :is-active="showModal"
     :title="ui.importTerms"
     :close-callback="close"
     :cancel-text="ui.cancel"
@@ -43,11 +43,10 @@
     </template>
   </AppModal>
 </template>
-<script lang="ts"></script>
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { globalService } from '../../machines/globalService'
 
@@ -56,10 +55,10 @@ import { useImportStore } from '../../stores/import'
 
 const importStore = useImportStore()
 
-const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
+const showModal = ref(false)
 
 globalService.onTransition(state => {
-  modal.value?.toggleModal(state.value === 'importing')
+  showModal.value = state.value === 'importing'
 })
 
 const close = () => globalService.send('CANCEL')

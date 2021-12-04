@@ -1,6 +1,11 @@
 <template>
   <form @submit.prevent>
-    <AppModal ref="modal" :title="ui.editterm" :close-callback="close">
+    <AppModal
+      ref="modal"
+      :is-active="showModal"
+      :title="ui.editterm"
+      :close-callback="close"
+    >
       <template #modal-body>
         Dirty: {{ dirty }}
         <div v-for="field in mutableFields" :key="field.name" class="field">
@@ -44,7 +49,11 @@
         <AppButton @click="close">{{ ui.cancel }}</AppButton>
       </template>
     </AppModal>
-    <AppModal ref="modalUnsavedWarning" :title="ui.unsavedWarningTitle">
+    <AppModal
+      :is-active="showUnsavedWarningModal"
+      :title="ui.unsavedWarningTitle"
+      :close-callback="() => (showUnsavedWarningModal = false)"
+    >
       <template #modal-body>{{ ui.unsavedWarningText }}</template>
       <template #modal-footer>
         <AppButton primary :loading="loading" @click="saveTerm">{{
@@ -58,7 +67,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import debounce from 'just-debounce-it'
-import AppModal, { AppModalMethods } from '../Generic/AppModal.vue'
+import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
 import { useTermsStore } from '../../stores/terms'
@@ -80,6 +89,8 @@ const makeEmptyTerm = (): TermDefType => ({
   type: undefined,
 })
 
+const showModal = ref(false)
+const showUnsavedWarningModal = ref(false)
 const currentTerm = ref<TermDefType>(makeEmptyTerm())
 const originalTerm = ref<TermType | null>(null)
 const mode = ref<'add' | 'edit'>('edit')
@@ -94,10 +105,7 @@ const dirtyFields: {
 const dirty = ref(false)
 const loading = ref(false)
 
-const modal = ref<InstanceType<typeof AppModal> & AppModalMethods>()
-const modalUnsavedWarning = ref<
-  InstanceType<typeof AppModal> & AppModalMethods
->()
+const modal = ref<InstanceType<typeof AppModal>>()
 
 const mutableFields = computed((): FieldType[] => {
   return fields.filter(field => {
@@ -109,10 +117,10 @@ globalService.onTransition(state => {
   if (state.value === 'editing' && state.history?.value !== 'editing') {
     editTerm(state.context.currentTerm)
     dirty.value = false
-    modal.value?.toggleModal(true)
+    showModal.value = true
   } else if (state.value !== 'editing' && state.history?.value === 'editing') {
-    modalUnsavedWarning.value?.toggleModal(false)
-    modal.value?.toggleModal(false)
+    showUnsavedWarningModal.value = false
+    showModal.value = false
   }
 })
 
@@ -228,7 +236,7 @@ const saveTerm = async (): Promise<void> => {
 
 const close = (): void => {
   if (dirty.value) {
-    modalUnsavedWarning.value?.toggleModal(true)
+    showUnsavedWarningModal.value = true
   } else {
     globalService.send('CANCEL')
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="modal" :class="{ 'is-active': show }">
+  <div class="modal" :class="{ 'is-active': isActive }">
     <div class="modal-background" @click="closeAllowed && close($event)" />
     <div class="modal-card">
       <header class="modal-card-head">
@@ -34,23 +34,17 @@
   </div>
 </template>
 
-<script lang="ts">
-export type AppModalMethods = {
-  toggleModal(bool: boolean): void
-}
-</script>
-
 <script lang="ts" setup>
-import { ref } from 'vue'
 import AppButton from './AppButton.vue'
 
 const props = withDefaults(
   defineProps<{
+    isActive: boolean
     okText?: string
     cancelText?: string
     title: string
     callback?: (event: MouseEvent) => void
-    closeCallback?: (event: MouseEvent) => void
+    closeCallback: (event: MouseEvent) => void
     closeAllowed?: boolean
   }>(),
   {
@@ -63,22 +57,10 @@ const props = withDefaults(
   }
 )
 
-const show = ref(false)
-
 const close = (e: MouseEvent): void => {
   if (props.closeCallback) {
     props.closeCallback(e)
-  } else {
-    toggleModal(false)
   }
 }
-
-const toggleModal = (bool: boolean): void => {
-  show.value = bool
-}
-
-defineExpose({
-  toggleModal,
-})
 </script>
 <style></style>
