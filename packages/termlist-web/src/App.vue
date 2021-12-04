@@ -136,5 +136,7 @@ document.addEventListener('keyup', shortcutUp, false)
   text-align: center;
   color: #2c3e50;
   height: 100vh;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 </style>
