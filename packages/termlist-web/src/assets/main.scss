@@ -24,5 +24,11 @@ div {
 }
 
 .app-content-container {
-  height: calc(100% - #{$navbar-height-and-padding});
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+html {
+  overflow-y: hidden;
 }

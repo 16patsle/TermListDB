@@ -89,9 +89,9 @@ const gotoPage = (pageNumber: number) =>
 
 <style scoped>
 .termlist-container {
-  height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .content-container {
