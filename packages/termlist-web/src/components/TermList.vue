@@ -117,6 +117,10 @@ const gotoPage = (pageNumber: number) =>
   width: 3.9em;
 }
 
+.pagination:not(:last-child) {
+  margin-bottom: 0.75rem;
+}
+
 .pagination:last-child {
   margin-bottom: 0.75rem;
   margin-top: 0.75rem;
