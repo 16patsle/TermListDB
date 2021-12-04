@@ -1,45 +1,6 @@
 <template>
   <div id="app-container" class="has-navbar-fixed-top">
-    <AppNavbar fixed="top">
-      <template #brand>
-        <AppNavbarItem>
-          <h1 class="title">
-            {{ ui.termlist }}
-          </h1>
-        </AppNavbarItem>
-      </template>
-      <template #start>
-        <AppNavbarItem v-if="authenticated">
-          <div class="field is-grouped">
-            <div class="control">
-              <AppButton primary @click="addTerm">
-                {{ ui.add }}
-              </AppButton>
-            </div>
-            <div class="control">
-              <AppButton @click="globalService.send('IMPORT')">
-                {{ ui.importTerms }}
-              </AppButton>
-            </div>
-            <div class="control">
-              <AppButton @click="globalService.send('EXPORT')">
-                {{ ui.exportTerms }}
-              </AppButton>
-            </div>
-          </div>
-        </AppNavbarItem>
-      </template>
-      <template #end>
-        <AppNavbarItem v-if="authenticated && authStore.$state.user">
-          {{ authStore.$state.user.displayName }}
-        </AppNavbarItem>
-        <AppNavbarItem v-if="authenticated">
-          <AppButton @click="logOut">
-            {{ ui.logOut }}
-          </AppButton>
-        </AppNavbarItem>
-      </template>
-    </AppNavbar>
+    <Navbar />
     <ModalContainer />
     <div class="container app-content-container">
       <TermSortToolbar @search="debouncedSearch" @sort="sort" />
@@ -51,20 +12,12 @@
 <script lang="ts" setup>
 import { computed, defineAsyncComponent } from 'vue'
 import debounce from 'just-debounce-it'
-import { getAuth, signOut } from 'firebase/auth'
 import { useTermsStore } from './stores/terms'
-import { useAuthStore } from './stores/auth'
-import AppButton from './components/Generic/AppButton.vue'
-import AppNavbar from './components/Generic/AppNavbar.vue'
-import AppNavbarItem from './components/Generic/AppNavbarItem.vue'
+import Navbar from './components/Navbar.vue'
 import TermSortToolbar from './components/TermList/TermSortToolbar.vue'
-import ui from './assets/ui'
 import { currentState, globalService } from './machines/globalService'
-import { firebaseApp } from './utils/initializeFirebase'
 
 import type { FieldNameType } from './types/FieldNameType'
-
-const auth = getAuth(firebaseApp)
 
 const ModalContainer = defineAsyncComponent(
   () =>
@@ -75,7 +28,6 @@ const TermList = defineAsyncComponent(
 )
 
 const termsStore = useTermsStore()
-const authStore = useAuthStore()
 const sortedBy = computed(() => termsStore.$state.sortedBy)
 const authenticated = computed(() => currentState.value !== 'authenticated')
 
@@ -118,11 +70,6 @@ const shortcutUp = (e: KeyboardEvent): void => {
   ) {
     addTerm()
   }
-}
-
-const logOut = async () => {
-  await signOut(auth)
-  globalService.send('LOG_OUT')
 }
 
 document.addEventListener('keyup', shortcutUp, false)
