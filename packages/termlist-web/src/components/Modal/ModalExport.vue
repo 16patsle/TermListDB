@@ -1,9 +1,5 @@
 <template>
-  <AppModal
-    :is-active="showModal"
-    :title="ui.exportTerms"
-    :close-callback="close"
-  >
+  <AppModal :is-active="showModal" :title="ui.exportTerms" @close="close">
     <template #modal-body>
       <p class="subtitle">{{ exportInstructions }}</p>
       <a

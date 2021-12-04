@@ -4,7 +4,7 @@
       ref="modal"
       :is-active="showModal"
       :title="ui.editterm"
-      :close-callback="close"
+      @close="close"
     >
       <template #modal-body>
         Dirty: {{ dirty }}
@@ -52,7 +52,7 @@
     <AppModal
       :is-active="showUnsavedWarningModal"
       :title="ui.unsavedWarningTitle"
-      :close-callback="() => (showUnsavedWarningModal = false)"
+      @close="() => (showUnsavedWarningModal = false)"
     >
       <template #modal-body>{{ ui.unsavedWarningText }}</template>
       <template #modal-footer>

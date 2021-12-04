@@ -37,14 +37,13 @@
 <script lang="ts" setup>
 import AppButton from './AppButton.vue'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     isActive: boolean
     okText?: string
     cancelText?: string
     title: string
     callback?: (event: MouseEvent) => void
-    closeCallback: (event: MouseEvent) => void
     closeAllowed?: boolean
   }>(),
   {
@@ -52,15 +51,14 @@ const props = withDefaults(
     cancelText: 'Cancel',
     title: '',
     callback: undefined,
-    closeCallback: undefined,
     closeAllowed: true,
   }
 )
 
-const close = (e: MouseEvent): void => {
-  if (props.closeCallback) {
-    props.closeCallback(e)
-  }
-}
+const emit = defineEmits<{
+  (e: 'close', event: MouseEvent): void
+}>()
+
+const close = (e: MouseEvent): void => emit('close', e)
 </script>
 <style></style>

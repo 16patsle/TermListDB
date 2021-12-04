@@ -1,10 +1,5 @@
 <template>
-  <AppModal
-    :is-active="showModal"
-    :title="ui.logIn"
-    :close-allowed="false"
-    :close-callback="() => {}"
-  >
+  <AppModal :is-active="showModal" :title="ui.logIn" :close-allowed="false">
     <template #modal-body>
       <div class="field">
         <label class="label">{{ ui.email }}</label>

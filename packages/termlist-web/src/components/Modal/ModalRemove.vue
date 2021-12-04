@@ -1,11 +1,5 @@
 <template>
-  <AppModal
-    :is-active="showModal"
-    :title="ui.removeterm"
-    :close-callback="close"
-    :ok-text="ui.save"
-    :cancel-text="ui.cancel"
-  >
+  <AppModal :is-active="showModal" :title="ui.removeterm" @close="close">
     <template #modal-body>
       <p class="subtitle">
         {{ ui.wanttoremove }}

@@ -1,10 +1,5 @@
 <template>
-  <AppModal
-    :is-active="showModal"
-    :title="ui.importTerms"
-    :close-callback="close"
-    :cancel-text="ui.cancel"
-  >
+  <AppModal :is-active="showModal" :title="ui.importTerms" @close="close">
     <template #modal-body>
       <p class="subtitle">
         {{ ui.processingImport }}
