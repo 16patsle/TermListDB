@@ -11,7 +11,7 @@ export async function initApp(firebaseApp: FirebaseApp) {
   await database.start()
 
   const app = createApp(
-    defineAsyncComponent(() => import('./App.vue'))
+    defineAsyncComponent(() => import(/* webpackPreload: true */ './App.vue'))
   ).component(
     'fa-icon',
     defineAsyncComponent(
