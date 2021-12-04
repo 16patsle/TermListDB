@@ -3,7 +3,7 @@
     <Navbar />
     <ModalContainer />
     <div class="container app-content-container">
-      <TermSortToolbar @search="debouncedSearch" @sort="sort" />
+      <TermSortToolbar />
       <TermList v-if="authenticated" />
     </div>
   </div>
@@ -11,13 +11,10 @@
 
 <script lang="ts" setup>
 import { computed, defineAsyncComponent } from 'vue'
-import debounce from 'just-debounce-it'
 import { useTermsStore } from './stores/terms'
 import Navbar from './components/Navbar.vue'
 import TermSortToolbar from './components/TermList/TermSortToolbar.vue'
 import { currentState, globalService } from './machines/globalService'
-
-import type { FieldNameType } from './types/FieldNameType'
 
 const ModalContainer = defineAsyncComponent(
   () =>
@@ -52,13 +49,6 @@ globalService.onTransition(async state => {
 globalService.send('LOG_IN')
 
 const addTerm = () => globalService.send('EDIT')
-
-const debouncedSearch = debounce(
-  (search: string) => termsStore.search(search),
-  400
-)
-
-const sort = (field?: FieldNameType) => termsStore.sort(field)
 
 const shortcutUp = (e: KeyboardEvent): void => {
   if (

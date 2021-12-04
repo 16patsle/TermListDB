@@ -1,22 +1,27 @@
 <template>
   <div class="field is-horizontal">
     <div class="field-body">
-      <TermSearchBar @search="emit('search', $event)" />
-      <TermSortSelect class="term-sort-select" @sort="emit('sort', $event)" />
+      <TermSearchBar @search="debouncedSearch" />
+      <TermSortSelect
+        class="term-sort-select"
+        @sort="termsStore.sort($event)"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import debounce from 'just-debounce-it'
+import { useTermsStore } from '../../stores/terms'
 import TermSearchBar from './TermSearchBar.vue'
 import TermSortSelect from './TermSortSelect.vue'
 
-import type { FieldNameType } from '../../types/FieldNameType'
+const termsStore = useTermsStore()
 
-const emit = defineEmits<{
-  (e: 'search', search: string): void
-  (e: 'sort', value?: FieldNameType): void
-}>()
+const debouncedSearch = debounce(
+  (search: string) => termsStore.search(search),
+  400
+)
 </script>
 
 <style>
