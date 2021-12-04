@@ -1,6 +1,7 @@
 <template>
   <div class="termlist-container">
     <AppPagination
+      class="is-hidden-mobile"
       :firstpage="1"
       :currentpage="currentPage"
       :lastpage="lastPage"
@@ -114,5 +115,10 @@ const gotoPage = (pageNumber: number) =>
 
 .table th.row-buttons {
   width: 3.9em;
+}
+
+.pagination:last-child {
+  margin-bottom: 0.75rem;
+  margin-top: 0.75rem;
 }
 </style>
