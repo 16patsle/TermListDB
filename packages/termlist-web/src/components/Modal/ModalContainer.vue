@@ -10,14 +10,21 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import ModalEdit from './ModalEdit.vue'
-import ModalRemove from './ModalRemove.vue'
-import ModalImport from './ModalImport.vue'
-import ModalImporting from './ModalImporting.vue'
-import ModalExport from './ModalExport.vue'
-import ModalAuth from './ModalAuth.vue'
+import { defineAsyncComponent, ref } from 'vue'
 import { addTransitionListener } from '../../utils/addTransitionListener'
+
+const ModalEdit = defineAsyncComponent(
+  () => import(/* webpackPrefetch: true */ './ModalEdit.vue')
+)
+const ModalRemove = defineAsyncComponent(() => import('./ModalRemove.vue'))
+const ModalImport = defineAsyncComponent(() => import('./ModalImport.vue'))
+const ModalImporting = defineAsyncComponent(
+  () => import('./ModalImporting.vue')
+)
+const ModalExport = defineAsyncComponent(() => import('./ModalExport.vue'))
+const ModalAuth = defineAsyncComponent(
+  () => import(/* webpackPreload: true */ './ModalAuth.vue')
+)
 
 const showEditModal = ref(false)
 const showRemoveModal = ref(false)

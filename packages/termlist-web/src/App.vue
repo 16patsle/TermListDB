@@ -12,14 +12,11 @@
 <script lang="ts" setup>
 import { computed, defineAsyncComponent } from 'vue'
 import { useTermsStore } from './stores/terms'
+import ModalContainer from './components/Modal/ModalContainer.vue'
 import Navbar from './components/Navbar.vue'
 import TermSortToolbar from './components/TermList/TermSortToolbar.vue'
 import { currentState, globalService } from './machines/globalService'
 
-const ModalContainer = defineAsyncComponent(
-  () =>
-    import(/* webpackPrefetch: true */ './components/Modal/ModalContainer.vue')
-)
 const TermList = defineAsyncComponent(
   () => import(/* webpackPreload: true */ './components/TermList.vue')
 )
