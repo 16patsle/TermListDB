@@ -28,48 +28,12 @@ const showAuthModal = ref(false)
 
 addTransitionListener(state => {
   if (state.changed) {
-    // Handle switch to current state
-    switch (state.value) {
-      case 'editing':
-        showEditModal.value = true
-        break
-      case 'removing':
-        showRemoveModal.value = true
-        break
-      case 'confirmImport':
-        showImportModal.value = true
-        break
-      case 'importing':
-        showImportModal.value = true
-        break
-      case 'exporting':
-        showExportModal.value = true
-        break
-      case 'authenticating':
-        showAuthModal.value = true
-        break
-    }
-    // Handle switch from previous state
-    switch (state.history?.value) {
-      case 'editing':
-        showEditModal.value = false
-        break
-      case 'removing':
-        showRemoveModal.value = false
-        break
-      case 'confirmImport':
-        showImportModal.value = false
-        break
-      case 'importing':
-        showImportModal.value = false
-        break
-      case 'exporting':
-        showExportModal.value = false
-        break
-      case 'authenticating':
-        showAuthModal.value = false
-        break
-    }
+    showEditModal.value = state.value === 'editing'
+    showRemoveModal.value = state.value === 'removing'
+    showImportModal.value = state.value === 'confirmImport'
+    showImportingModal.value = state.value === 'importing'
+    showExportModal.value = state.value === 'exporting'
+    showAuthModal.value = state.value === 'authenticating'
   }
 })
 </script>
