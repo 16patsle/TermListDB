@@ -1,11 +1,6 @@
 <template>
   <form @submit.prevent>
-    <AppModal
-      ref="modal"
-      :is-active="showModal"
-      :title="ui.editterm"
-      @close="close"
-    >
+    <AppModal ref="modal" :is-active="true" :title="ui.editterm" @close="close">
       <template #modal-body>
         Dirty: {{ dirty }}
         <div v-for="field in mutableFields" :key="field.name" class="field">
@@ -65,14 +60,13 @@
   </form>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import debounce from 'just-debounce-it'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
 import { useTermsStore } from '../../stores/terms'
 import { globalService } from '../../machines/globalService'
-import { addTransitionListener } from '../../utils/addTransitionListener'
 import { FieldType } from '../../types/FieldType'
 import type { TermDefType, TermType } from '../../types/TermType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
@@ -90,7 +84,6 @@ const makeEmptyTerm = (): TermDefType => ({
   type: undefined,
 })
 
-const showModal = ref(false)
 const showUnsavedWarningModal = ref(false)
 const currentTerm = ref<TermDefType>(makeEmptyTerm())
 const originalTerm = ref<TermType | null>(null)
@@ -114,15 +107,9 @@ const mutableFields = computed((): FieldType[] => {
   })
 })
 
-addTransitionListener(state => {
-  if (state.value === 'editing' && state.history?.value !== 'editing') {
-    editTerm(state.context.currentTerm)
-    dirty.value = false
-    showModal.value = true
-  } else if (state.value !== 'editing' && state.history?.value === 'editing') {
-    showUnsavedWarningModal.value = false
-    showModal.value = false
-  }
+onMounted(() => editTerm(globalService.state.context.currentTerm))
+onUnmounted(() => {
+  showUnsavedWarningModal.value = false
 })
 
 const handleDirty = (fieldName: FieldNameType): void => {
