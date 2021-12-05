@@ -72,6 +72,7 @@ import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
 import { useTermsStore } from '../../stores/terms'
 import { globalService } from '../../machines/globalService'
+import { addTransitionListener } from '../../utils/addTransitionListener'
 import { FieldType } from '../../types/FieldType'
 import type { TermDefType, TermType } from '../../types/TermType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
@@ -113,7 +114,7 @@ const mutableFields = computed((): FieldType[] => {
   })
 })
 
-globalService.onTransition(state => {
+addTransitionListener(state => {
   if (state.value === 'editing' && state.history?.value !== 'editing') {
     editTerm(state.context.currentTerm)
     dirty.value = false
