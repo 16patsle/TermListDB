@@ -1,5 +1,5 @@
 <template>
-  <AppModal :is-active="showModal" :title="ui.importTerms" @close="close">
+  <AppModal :is-active="true" :title="ui.importTerms" @close="close">
     <template #modal-body>
       <p class="subtitle">
         {{ ui.trelloImportInstructions }}
@@ -47,7 +47,6 @@ import ui from '../../assets/ui'
 
 const importStore = useImportStore()
 
-const showModal = ref(false)
 const selectedFile = ref<File | null>(null)
 let fileReader: FileReader
 
@@ -59,10 +58,6 @@ const fileInfo = computed((): string | null => {
   } else {
     return null
   }
-})
-
-globalService.onTransition(state => {
-  showModal.value = state.value === 'confirmImport'
 })
 
 const importTerm = (): void => {

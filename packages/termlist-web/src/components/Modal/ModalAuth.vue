@@ -1,5 +1,5 @@
 <template>
-  <AppModal :is-active="showModal" :title="ui.logIn" :close-allowed="false">
+  <AppModal :is-active="true" :title="ui.logIn" :close-allowed="false">
     <template #modal-body>
       <div class="field">
         <label class="label">{{ ui.email }}</label>
@@ -21,27 +21,19 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { AuthError, getAuth, signInWithEmailAndPassword } from '@firebase/auth'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { globalService } from '../../machines/globalService'
 import { firebaseApp } from '../../utils/initializeFirebase'
 
 import ui from '../../assets/ui'
 
 const auth = getAuth(firebaseApp)
 
-const showModal = ref(false)
 const email = ref('')
 const password = ref('')
 const error = ref('')
-
-onMounted(() =>
-  globalService.onTransition(state => {
-    showModal.value = state.value === 'authenticating'
-  })
-)
 
 function isAuthError(value: unknown): value is AuthError {
   return (

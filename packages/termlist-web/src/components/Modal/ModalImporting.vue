@@ -1,5 +1,5 @@
 <template>
-  <AppModal :is-active="showModal" :title="ui.importTerms" @close="close">
+  <AppModal :is-active="true" :title="ui.importTerms" @close="close">
     <template #modal-body>
       <p class="subtitle">
         {{ ui.processingImport }}
@@ -40,7 +40,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { globalService } from '../../machines/globalService'
@@ -49,12 +48,6 @@ import ui from '../../assets/ui'
 import { useImportStore } from '../../stores/import'
 
 const importStore = useImportStore()
-
-const showModal = ref(false)
-
-globalService.onTransition(state => {
-  showModal.value = state.value === 'importing'
-})
 
 const close = () => globalService.send('CANCEL')
 </script>

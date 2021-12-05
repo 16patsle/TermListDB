@@ -1,5 +1,5 @@
 <template>
-  <AppModal :is-active="showModal" :title="ui.exportTerms" @close="close">
+  <AppModal :is-active="true" :title="ui.exportTerms" @close="close">
     <template #modal-body>
       <p class="subtitle">{{ exportInstructions }}</p>
       <a
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { useImportStore } from '../../stores/import'
@@ -30,23 +30,12 @@ import ui from '../../assets/ui'
 
 const importStore = useImportStore()
 
-const showModal = ref(false)
 const exportURI = ref<string | undefined>(undefined)
 const exportInstructions = computed(() =>
   exportURI.value ? ui.downloadExportInstructions : ui.processingExport
 )
 
-globalService.onTransition(state => {
-  if (state.value === 'exporting' && state.history?.value !== 'exporting') {
-    showModal.value = true
-    importStore.export().then(uri => (exportURI.value = uri))
-  } else if (
-    state.value !== 'exporting' &&
-    state.history?.value === 'exporting'
-  ) {
-    showModal.value = false
-  }
-})
+onMounted(async () => (exportURI.value = await importStore.export()))
 
 const close = () => globalService.send('CANCEL')
 
