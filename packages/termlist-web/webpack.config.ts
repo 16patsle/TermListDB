@@ -109,6 +109,9 @@ const config: webpack.Configuration = {
     }),
     new HtmlWebpackPlugin({
       title: 'termlist',
+      meta: {
+        viewport: 'width=device-width, initial-scale=1, viewport-fit=cover',
+      },
     }),
     new BundleAnalyzerPlugin({
       analyzerMode: !devMode ? 'static' : 'server',
