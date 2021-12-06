@@ -145,13 +145,6 @@ const editTerm = (originalEditTerm?: TermType): void => {
         } else {
           currentTerm.value[field.name] = originalEditTerm[field.name] || ''
         }
-      } else {
-        // Reset fields
-        if (field.name === 'type') {
-          currentTerm.value[field.name] = undefined
-        } else {
-          currentTerm.value[field.name] = ''
-        }
       }
     }
   }
