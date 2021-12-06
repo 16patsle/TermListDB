@@ -34,6 +34,7 @@
         <AppButton
           primary
           :loading="loading"
+          :disabled="currentTerm.term === ''"
           type="submit"
           accesskey="s"
           @click="saveTerm"
