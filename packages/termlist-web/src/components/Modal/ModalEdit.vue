@@ -8,6 +8,7 @@
           <div class="control">
             <input
               v-if="field.type === 'short'"
+              :ref="field.name === 'term' ? 'firstInput' : undefined"
               v-model="currentTerm[field.name]"
               class="input"
               type="text"
@@ -59,7 +60,7 @@
   </form>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import compare from 'just-compare'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
@@ -111,12 +112,11 @@ const mutableFields = computed((): FieldType[] =>
   fields.filter(field => !field.immutable)
 )
 
-const focus = modal.value?.$el.querySelector(
-  '.field input, .field textarea, .field select'
-) as HTMLElement
-if (focus) {
-  focus.focus()
-}
+const firstInput = ref<HTMLInputElement>()
+
+onMounted(() => {
+  firstInput.value?.focus()
+})
 
 const saveTerm = async () => {
   let termObject: TermDefType
