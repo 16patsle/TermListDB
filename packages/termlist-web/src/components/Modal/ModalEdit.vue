@@ -11,14 +11,12 @@
               v-model="currentTerm[field.name]"
               class="input"
               type="text"
-              @keyup="debouncedChangeHandlers[field.name]()"
             />
             <textarea
               v-else-if="field.type === 'long'"
               v-model="currentTerm[field.name]"
               class="textarea"
               rows="8"
-              @keyup="debouncedChangeHandlers[field.name]()"
             />
             <AppSelect
               v-else-if="
@@ -28,7 +26,6 @@
               :default-option-name="ui.selectTermType"
               :options="reduce(field.options)"
               fullwidth
-              @update:modelValue="debouncedChangeHandlers[field.name]()"
             />
           </div>
         </div>
@@ -61,8 +58,8 @@
   </form>
 </template>
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
-import debounce from 'just-debounce-it'
+import { computed, onUnmounted, ref } from 'vue'
+import compare from 'just-compare'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppSelect from '../Generic/AppSelect.vue'
@@ -71,33 +68,42 @@ import { globalService } from '../../machines/globalService'
 import { FieldType } from '../../types/FieldType'
 import type { TermDefType, TermType } from '../../types/TermType'
 import type { SelectOptionType } from '../../types/SelectOptionType'
-import type { FieldNameType } from '../../types/FieldNameType'
 
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 
+const props = defineProps<{
+  term?: TermDefType
+}>()
+
 const termsStore = useTermsStore()
 
-const makeEmptyTerm = (): TermDefType => ({
-  date: new Date().toJSON(),
-  desc: undefined,
-  term: undefined,
-  type: undefined,
+const showUnsavedWarningModal = ref(false)
+const originalTerm = ref<TermDefType>(
+  props.term
+    ? {
+        date: props.term?.date,
+        desc: props.term?.desc,
+        term: props.term?.term,
+        type: props.term?.type,
+      }
+    : {
+        date: new Date().toJSON(),
+        desc: '',
+        term: '',
+        type: undefined,
+      }
+)
+const currentTerm = ref<TermDefType>({
+  date: originalTerm.value.date,
+  desc: originalTerm.value.desc,
+  term: originalTerm.value.term,
+  type: originalTerm.value.type,
 })
 
-const showUnsavedWarningModal = ref(false)
-const currentTerm = ref<TermDefType>(makeEmptyTerm())
-const originalTerm = ref<TermType | null>(null)
-const mode = ref<'add' | 'edit'>('edit')
-// @ts-expect-error We need to assign a value here, but the object is populated later.
-const debouncedChangeHandlers: {
-  [K in FieldNameType]: () => void
-} = {}
-// @ts-expect-error We need to assign a value here, but the object is populated later.
-const dirtyFields: {
-  [K in FieldNameType]: boolean
-} = {}
-const dirty = ref(false)
+const dirty = computed(
+  (): boolean => !compare(currentTerm.value, originalTerm.value)
+)
 const loading = ref(false)
 
 const modal = ref<InstanceType<typeof AppModal>>()
@@ -108,73 +114,31 @@ const mutableFields = computed((): FieldType[] => {
   })
 })
 
-onMounted(() => editTerm(globalService.state.context.currentTerm))
+const focus = modal.value?.$el.querySelector(
+  '.field input, .field textarea, .field select'
+) as HTMLElement
+if (focus) {
+  focus.focus()
+}
+
 onUnmounted(() => {
   showUnsavedWarningModal.value = false
 })
 
-const handleDirty = (fieldName: FieldNameType): void => {
-  if (mode.value === 'add' && currentTerm.value[fieldName] === '') {
-    // When adding a term and the field is empty
-    dirtyFields[fieldName] = false
-  } else if (
-    mode.value === 'edit' &&
-    originalTerm.value &&
-    originalTerm.value[fieldName] === currentTerm.value[fieldName]
-  ) {
-    // When editing a term and the field's value is unchanged
-    dirtyFields[fieldName] = false
-  } else {
-    dirtyFields[fieldName] = true
-  }
-
-  dirty.value = Object.values(dirtyFields).reduce((prev, curr) => {
-    return curr || prev
-  }, false)
-}
-
-const editTerm = (originalEditTerm?: TermType): void => {
-  mode.value = originalEditTerm ? 'edit' : 'add'
-
-  if (originalEditTerm) {
-    originalTerm.value = originalEditTerm
-    currentTerm.value.date = originalEditTerm.date
-  }
-
-  for (const field of fields) {
-    if (!field.immutable) {
-      if (mode.value === 'edit' && originalEditTerm) {
-        // Populate fields with term values
-        if (field.name === 'type') {
-          currentTerm.value[field.name] = originalEditTerm[field.name]
-        } else {
-          currentTerm.value[field.name] = originalEditTerm[field.name] || ''
-        }
-      }
-    }
-  }
-
-  const focus = modal.value?.$el.querySelector(
-    '.field input, .field textarea, .field select'
-  ) as HTMLElement
-  if (focus) {
-    focus.focus()
-  }
-}
-
-const saveTerm = async (): Promise<void> => {
+const saveTerm = async () => {
   let termObject: TermDefType
-  if (mode.value === 'add') {
-    termObject = {
-      date: new Date().toJSON(),
-    }
-  } else {
-    if (originalTerm.value === null) {
+  if (props.term) {
+    if (!props.term?._id) {
       return
     }
     termObject = {
-      _id: originalTerm.value._id,
-      date: originalTerm.value._id,
+      _id: props.term._id,
+      date: props.term._id,
+    }
+  } else {
+    termObject = {
+      date: currentTerm.value.date,
+      _id: currentTerm.value.date,
     }
   }
 
@@ -195,25 +159,11 @@ const saveTerm = async (): Promise<void> => {
     // Update existing term
     await termsStore.save(termObject as TermType)
   } else {
-    termObject._id = termObject.date
     // Add new term
     await termsStore.add(termObject as TermType)
   }
 
-  // Reset fields
-  for (const field of fields) {
-    if (!field.immutable) {
-      if (field.name === 'type') {
-        currentTerm.value[field.name] = undefined
-      } else {
-        currentTerm.value[field.name] = ''
-      }
-    }
-  }
-
   loading.value = false
-  originalTerm.value = null
-  dirty.value = false
 }
 
 const close = (): void => {
@@ -225,8 +175,7 @@ const close = (): void => {
 }
 
 const discard = (): void => {
-  dirty.value = false
-  close()
+  globalService.send('CANCEL')
 }
 
 const reduce = (options: string[]): SelectOptionType[] => {
@@ -237,16 +186,6 @@ const reduce = (options: string[]): SelectOptionType[] => {
     })
     return allOptions
   }, [])
-}
-
-for (const field of fields) {
-  if (!field.immutable) {
-    debouncedChangeHandlers[field.name] = debounce(
-      handleDirty.bind(this, field.name),
-      400
-    )
-    dirtyFields[field.name] = false
-  }
 }
 </script>
 <style></style>

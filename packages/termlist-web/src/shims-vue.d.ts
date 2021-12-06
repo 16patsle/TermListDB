@@ -4,3 +4,7 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+
+declare module 'just-compare' {
+  export default function compare(a?: object, b?: object): boolean
+}

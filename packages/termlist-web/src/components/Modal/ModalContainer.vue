@@ -1,6 +1,9 @@
 <template>
   <div>
-    <ModalEdit v-if="showEditModal" />
+    <ModalEdit
+      v-if="showEditModal"
+      :term="globalService.state.context.currentTerm"
+    />
     <ModalRemove v-if="showRemoveModal" />
     <ModalImport v-if="showImportModal" />
     <ModalImporting v-if="showImportingModal" />
@@ -12,6 +15,7 @@
 <script lang="ts" setup>
 import { defineAsyncComponent, ref } from 'vue'
 import { addTransitionListener } from '../../utils/addTransitionListener'
+import { globalService } from '../../machines/globalService'
 
 const ModalEdit = defineAsyncComponent(
   () => import(/* webpackPrefetch: true */ './ModalEdit.vue')

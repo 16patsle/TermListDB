@@ -20,6 +20,7 @@
     "core-js": "^3.19.2",
     "deepmerge": "^4.2.2",
     "firebase": "^9.5.0",
+    "just-compare": "^2.0.1",
     "just-debounce-it": "^3.0.1",
     "pinia": "^2.0.5",
     "rehype-sanitize": "^5.0.0",
