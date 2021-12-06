@@ -58,7 +58,7 @@
   </form>
 </template>
 <script lang="ts" setup>
-import { computed, onUnmounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import compare from 'just-compare'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
@@ -72,9 +72,7 @@ import type { SelectOptionType } from '../../types/SelectOptionType'
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 
-const props = defineProps<{
-  term?: TermDefType
-}>()
+const props = defineProps<{ term?: TermDefType }>()
 
 const termsStore = useTermsStore()
 
@@ -108,11 +106,9 @@ const loading = ref(false)
 
 const modal = ref<InstanceType<typeof AppModal>>()
 
-const mutableFields = computed((): FieldType[] => {
-  return fields.filter(field => {
-    return !field.immutable
-  })
-})
+const mutableFields = computed((): FieldType[] =>
+  fields.filter(field => !field.immutable)
+)
 
 const focus = modal.value?.$el.querySelector(
   '.field input, .field textarea, .field select'
@@ -120,10 +116,6 @@ const focus = modal.value?.$el.querySelector(
 if (focus) {
   focus.focus()
 }
-
-onUnmounted(() => {
-  showUnsavedWarningModal.value = false
-})
 
 const saveTerm = async () => {
   let termObject: TermDefType
@@ -166,7 +158,7 @@ const saveTerm = async () => {
   loading.value = false
 }
 
-const close = (): void => {
+const close = () => {
   if (dirty.value) {
     showUnsavedWarningModal.value = true
   } else {
@@ -174,18 +166,15 @@ const close = (): void => {
   }
 }
 
-const discard = (): void => {
-  globalService.send('CANCEL')
-}
+const discard = () => globalService.send('CANCEL')
 
-const reduce = (options: string[]): SelectOptionType[] => {
-  return options.reduce((allOptions: SelectOptionType[], option) => {
+const reduce = (options: string[]): SelectOptionType[] =>
+  options.reduce((allOptions: SelectOptionType[], option) => {
     allOptions.push({
       name: option,
       ui: ui.wordClasses[option],
     })
     return allOptions
   }, [])
-}
 </script>
 <style></style>
