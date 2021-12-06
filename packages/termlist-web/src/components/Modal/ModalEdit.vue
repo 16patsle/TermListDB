@@ -34,13 +34,9 @@
         </div>
       </template>
       <template #modal-footer>
-        <input
-          :value="ui.save"
-          type="submit"
-          class="button is-primary"
-          accesskey="s"
-          @click="saveTerm"
-        />
+        <AppButton primary type="submit" accesskey="s" @click="saveTerm">{{
+          ui.save
+        }}</AppButton>
         <AppButton @click="close">{{ ui.cancel }}</AppButton>
       </template>
     </AppModal>

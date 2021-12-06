@@ -5,6 +5,7 @@
       'is-danger': danger,
       'is-loading': loading,
     }"
+    type="button"
     class="button"
     @click="click"
   >
