@@ -1,4 +1,3 @@
-import { firebaseApp } from './utils/initializeFirebase'
 import './assets/main.scss'
 
 if (document.getElementById('app') === null) {
@@ -9,6 +8,6 @@ if (document.getElementById('app') === null) {
 
 const start = async () => {
   const { initApp } = await import(/* webpackPreload: true */ './initApp')
-  await initApp(firebaseApp)
+  await initApp()
 }
 void start()

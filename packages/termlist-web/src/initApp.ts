@@ -1,13 +1,13 @@
 import { createApp, defineAsyncComponent } from 'vue'
 import { createPinia } from 'pinia'
 import { onSnapshot } from 'firebase/firestore'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { onAuthStateChanged } from 'firebase/auth'
 import { database } from './utils/firebase'
+import { auth } from './utils/getAuth'
 import { useAuthStore } from './stores/auth'
 import { useTermsStore } from './stores/terms'
-import { FirebaseApp } from '@firebase/app'
 
-export async function initApp(firebaseApp: FirebaseApp) {
+export async function initApp() {
   await database.start()
 
   const app = createApp(
@@ -28,7 +28,7 @@ export async function initApp(firebaseApp: FirebaseApp) {
 
   app.mount('#app')
 
-  onAuthStateChanged(getAuth(firebaseApp), user => {
+  onAuthStateChanged(auth, user => {
     authStore.setAuthenticated(user)
     if (database.userInfoReference) {
       onSnapshot(database.userInfoReference, doc => {

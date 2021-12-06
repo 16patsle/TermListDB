@@ -43,16 +43,14 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { getAuth, signOut } from 'firebase/auth'
+import { signOut } from 'firebase/auth'
 import { useAuthStore } from '../stores/auth'
 import AppButton from './Generic/AppButton.vue'
 import AppNavbar from './Generic/AppNavbar.vue'
 import AppNavbarItem from './Generic/AppNavbarItem.vue'
 import ui from '../assets/ui'
 import { currentState, globalService } from '../machines/globalService'
-import { firebaseApp } from '../utils/initializeFirebase'
-
-const auth = getAuth(firebaseApp)
+import { auth } from '../utils/getAuth'
 
 const authStore = useAuthStore()
 const authenticated = computed(() => currentState.value !== 'authenticated')

@@ -28,14 +28,12 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { AuthError, getAuth, signInWithEmailAndPassword } from '@firebase/auth'
+import { AuthError, signInWithEmailAndPassword } from '@firebase/auth'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { firebaseApp } from '../../utils/initializeFirebase'
+import { auth } from '../../utils/getAuth'
 
 import ui from '../../assets/ui'
-
-const auth = getAuth(firebaseApp)
 
 const email = ref('')
 const password = ref('')
