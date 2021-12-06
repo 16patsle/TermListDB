@@ -1,7 +1,6 @@
 <template>
   <div class="termlist-container">
     <AppPagination
-      class="is-hidden-mobile"
       :firstpage="1"
       :currentpage="currentPage"
       :lastpage="lastPage"
@@ -37,6 +36,7 @@
       </table>
     </div>
     <AppPagination
+      class="is-hidden-mobile"
       :firstpage="1"
       :currentpage="currentPage"
       :lastpage="lastPage"
