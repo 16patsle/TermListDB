@@ -21,7 +21,9 @@
       </div>
     </template>
     <template #modal-footer>
-      <AppButton primary @click="login">{{ ui.logIn }}</AppButton>
+      <AppButton primary :loading="loading" @click="login">{{
+        ui.logIn
+      }}</AppButton>
     </template>
   </AppModal>
 </template>
@@ -38,6 +40,7 @@ import ui from '../../assets/ui'
 const email = ref('')
 const password = ref('')
 const error = ref('')
+const loading = ref(false)
 
 function isAuthError(value: unknown): value is AuthError {
   return (
@@ -50,6 +53,7 @@ const getErrorDescription = (code: string) =>
   ui.errorDescriptions[code] ?? ui.errorDescriptions.generic + ` (${code})`
 
 const login = async (): Promise<void> => {
+  loading.value = true
   try {
     await signInWithEmailAndPassword(auth, email.value, password.value)
   } catch (err) {
@@ -59,6 +63,7 @@ const login = async (): Promise<void> => {
       error.value = ui.errorDescriptions.generic
     }
   }
+  loading.value = false
 }
 </script>
 <style></style>
