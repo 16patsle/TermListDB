@@ -147,7 +147,7 @@ const saveTerm = async () => {
     }
   }
 
-  if (termObject._id) {
+  if (props.term) {
     // Update existing term
     await termsStore.save(termObject as TermType)
   } else {
