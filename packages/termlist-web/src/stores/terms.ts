@@ -128,14 +128,12 @@ export const useTermsStore = defineStore('terms', {
         if (isBefore) {
           await this.getTerms({
             field: sortedBy,
-            endBefore: Array.from(terms.entries())[0][1][sortedBy],
+            endBefore: findBeforeAfter(terms, sortedBy, 'before'),
           })
         } else {
           await this.getTerms({
             field: sortedBy,
-            startAfter: Array.from(terms.entries())[terms.size - 1][1][
-              sortedBy
-            ],
+            startAfter: findBeforeAfter(terms, sortedBy, 'after'),
           })
         }
       } else {
@@ -161,9 +159,7 @@ export const useTermsStore = defineStore('terms', {
 
           await this.getTerms({
             field: sortedBy,
-            startAfter: Array.from(terms.entries())[terms.size - 1][1][
-              sortedBy
-            ],
+            startAfter: findBeforeAfter(terms, sortedBy, 'after'),
             limit,
             showLimit,
           })
@@ -201,3 +197,13 @@ export const useTermsStore = defineStore('terms', {
     },
   },
 })
+
+const findBeforeAfter = (
+  terms: Map<string, TermType>,
+  sortedBy: FieldNameType,
+  mode: 'before' | 'after'
+): string | undefined => {
+  const termsArray = Array.from(terms.values())
+  // Return first if before, last if after
+  return termsArray.at(mode === 'before' ? 0 : -1)?.[sortedBy]
+}
