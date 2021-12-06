@@ -1,3 +1,13 @@
+const errorDescriptions: {
+  [k: string]: string
+} = {
+  'auth/invalid-email': 'E-postadressen er ikke gyldig.',
+  'auth/internal-error': 'Intern feil oppstod.',
+  'auth/user-not-found': 'Feil e-postadresse eller passord.',
+  'auth/wrong-password': 'Feil e-postadresse eller passord.',
+  generic: 'En feil oppstod.',
+}
+
 export default {
   termlist: 'Ordliste',
   allColumns: 'Alle kolonner',
@@ -47,4 +57,5 @@ export default {
   close: 'Lukk',
   email: 'E-post',
   password: 'Passord',
+  errorDescriptions,
 }

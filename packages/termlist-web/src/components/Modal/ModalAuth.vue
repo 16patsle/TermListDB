@@ -6,11 +6,17 @@
         <div class="control">
           <input v-model="email" class="input" type="email" />
         </div>
+        <div v-if="error.includes('email')" class="help is-danger">
+          {{ getErrorDescription(error) }}
+        </div>
       </div>
       <div class="field">
         <label class="label">{{ ui.password }}</label>
         <div class="control">
           <input v-model="password" class="input" type="password" />
+        </div>
+        <div v-if="error && !error.includes('email')" class="help is-danger">
+          {{ getErrorDescription(error) }}
         </div>
       </div>
     </template>
@@ -42,14 +48,17 @@ function isAuthError(value: unknown): value is AuthError {
   )
 }
 
+const getErrorDescription = (code: string) =>
+  ui.errorDescriptions[code] ?? ui.errorDescriptions.generic + ` (${code})`
+
 const login = async (): Promise<void> => {
   try {
     await signInWithEmailAndPassword(auth, email.value, password.value)
   } catch (err) {
     if (isAuthError(err)) {
-      error.value = err.message
+      error.value = err.code
     } else {
-      error.value = 'Error!'
+      error.value = ui.errorDescriptions.generic
     }
   }
 }
