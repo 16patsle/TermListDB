@@ -34,9 +34,14 @@
         </div>
       </template>
       <template #modal-footer>
-        <AppButton primary type="submit" accesskey="s" @click="saveTerm">{{
-          ui.save
-        }}</AppButton>
+        <AppButton
+          primary
+          :loading="loading"
+          type="submit"
+          accesskey="s"
+          @click="saveTerm"
+          >{{ ui.save }}</AppButton
+        >
         <AppButton @click="close">{{ ui.cancel }}</AppButton>
       </template>
     </AppModal>
