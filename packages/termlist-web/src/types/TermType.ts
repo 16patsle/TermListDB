@@ -15,7 +15,6 @@ export type TermDefType = {
 
 export type TermType = TermDefType & {
   _id: string
-  _deleted?: boolean
   /**
    * Slices of the term name used for searching
    * Usually contain the first char and the first three chars

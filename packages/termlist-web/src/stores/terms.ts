@@ -70,12 +70,7 @@ export const useTermsStore = defineStore('terms', {
 
           await database.save(term)
           if (this.terms.has(term._id)) {
-            if (term._deleted) {
-              // TODO: Is this still used?
-              this.terms.delete(term._id)
-            } else {
-              this.terms.set(term._id, term)
-            }
+            this.terms.set(term._id, term)
           } else {
             console.error('Could not save! Term might not exist!', term)
           }
