@@ -5,6 +5,7 @@
     <ModalImport v-if="showImportModal" />
     <ModalImporting v-if="showImportingModal" />
     <ModalExport v-if="showExportModal" />
+    <ModalTools v-if="showToolsModal" />
     <ModalAuth v-if="showAuthModal" />
   </div>
 </template>
@@ -22,6 +23,7 @@ const ModalImporting = defineAsyncComponent(
   () => import('./ModalImporting.vue')
 )
 const ModalExport = defineAsyncComponent(() => import('./ModalExport.vue'))
+const ModalTools = defineAsyncComponent(() => import('./ModalTools.vue'))
 const ModalAuth = defineAsyncComponent(
   () => import(/* webpackPreload: true */ './ModalAuth.vue')
 )
@@ -31,6 +33,7 @@ const showRemoveModal = computed(() => currentState.value === 'removing')
 const showImportModal = computed(() => currentState.value === 'confirmImport')
 const showImportingModal = computed(() => currentState.value === 'importing')
 const showExportModal = computed(() => currentState.value === 'exporting')
+const showToolsModal = computed(() => currentState.value === 'viewTools')
 const showAuthModal = computed(() => currentState.value === 'authenticating')
 </script>
 <style></style>

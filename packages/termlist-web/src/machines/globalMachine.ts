@@ -14,6 +14,7 @@ export type GlobalEvent =
   | { type: 'LOG_OUT' }
   | { type: 'COMPLETE' }
   | { type: 'LOG_IN' }
+  | { type: 'VIEW_TOOLS' }
 
 export type GlobalContext = {
   currentTerm?: TermType
@@ -42,8 +43,7 @@ export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
           LOAD_START: { target: 'loading' },
           EDIT: { target: 'editing', actions: 'setCurrentTerm' },
           PROMPT_REMOVE: { target: 'removing', actions: 'setCurrentTerm' },
-          IMPORT: { target: 'confirmImport' },
-          EXPORT: { target: 'exporting' },
+          VIEW_TOOLS: { target: 'viewTools' },
           LOG_OUT: { target: 'authenticating' },
         },
       },
@@ -80,6 +80,13 @@ export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
       authenticating: {
         on: {
           LOG_IN: { target: 'idle' },
+        },
+      },
+      viewTools: {
+        on: {
+          CANCEL: { target: 'idle' },
+          IMPORT: { target: 'confirmImport' },
+          EXPORT: { target: 'exporting' },
         },
       },
     },

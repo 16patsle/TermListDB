@@ -57,5 +57,6 @@ export default {
   close: 'Lukk',
   email: 'E-post',
   password: 'Passord',
+  tools: 'Verktøy',
   errorDescriptions,
 }

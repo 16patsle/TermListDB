@@ -16,13 +16,8 @@
             </AppButton>
           </div>
           <div class="control">
-            <AppButton @click="globalService.send('IMPORT')">
-              {{ ui.importTerms }}
-            </AppButton>
-          </div>
-          <div class="control">
-            <AppButton @click="globalService.send('EXPORT')">
-              {{ ui.exportTerms }}
+            <AppButton @click="globalService.send('VIEW_TOOLS')">
+              {{ ui.tools }}
             </AppButton>
           </div>
         </div>
