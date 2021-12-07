@@ -6,13 +6,12 @@ import { database } from './utils/firebase'
 import { auth } from './utils/getAuth'
 import { useAuthStore } from './stores/auth'
 import { useTermsStore } from './stores/terms'
+import App from './App.vue'
 
 export async function initApp() {
   await database.start()
 
-  const app = createApp(
-    defineAsyncComponent(() => import(/* webpackPreload: true */ './App.vue'))
-  ).component(
+  const app = createApp(App).component(
     'fa-icon',
     defineAsyncComponent(
       async () =>

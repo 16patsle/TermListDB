@@ -46,9 +46,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineAsyncComponent } from 'vue'
+import { computed } from 'vue'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
+import TermRow from './TermList/TermRow.vue'
 import { currentState, globalService } from '../machines/globalService'
 
 import type { TermType } from '../types/TermType'
@@ -56,10 +57,6 @@ import type { TermType } from '../types/TermType'
 import ui from '../assets/ui'
 import fields from '../assets/fields'
 import { useTermsStore } from '../stores/terms'
-
-const TermRow = defineAsyncComponent(
-  () => import(/* webpackPrefetch: true */ './TermList/TermRow.vue')
-)
 
 const termsStore = useTermsStore()
 const loading = computed(() => currentState.value === 'loading')
