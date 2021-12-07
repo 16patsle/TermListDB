@@ -45,6 +45,8 @@ import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
 
+import(/* webpackPreload: true */ './ModalImporting.vue')
+
 const importStore = useImportStore()
 
 const selectedFile = ref<File | null>(null)

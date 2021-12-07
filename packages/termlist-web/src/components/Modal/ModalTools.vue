@@ -27,6 +27,9 @@ import { globalService } from '../../machines/globalService'
 
 import ui from '../../assets/ui'
 
+import(/* webpackPrefetch: true */ './ModalImport.vue')
+import(/* webpackPrefetch: true */ './ModalExport.vue')
+
 const close = () => globalService.send('CANCEL')
 </script>
 <style></style>
