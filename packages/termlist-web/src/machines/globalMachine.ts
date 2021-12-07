@@ -62,7 +62,7 @@ export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
       confirmImport: {
         on: {
           IMPORT: { target: 'importing' },
-          CANCEL: { target: 'idle' },
+          CANCEL: { target: 'viewTools' },
         },
       },
       importing: {
@@ -73,7 +73,7 @@ export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
       },
       exporting: {
         on: {
-          CANCEL: { target: 'idle' },
+          CANCEL: { target: 'viewTools' },
           COMPLETE: { target: 'idle' },
         },
       },
