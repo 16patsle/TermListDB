@@ -64,5 +64,7 @@ document.addEventListener('keyup', shortcutUp, false)
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   text-align: center;
   height: 100vh;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
 }
 </style>
