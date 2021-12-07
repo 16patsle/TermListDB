@@ -64,4 +64,9 @@ const emit = defineEmits<{
 
 const close = (e: MouseEvent): void => emit('close', e)
 </script>
-<style></style>
+
+<style>
+.modal {
+  text-align: center;
+}
+</style>
