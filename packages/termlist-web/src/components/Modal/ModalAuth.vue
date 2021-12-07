@@ -4,18 +4,28 @@
       <div class="field">
         <label class="label">{{ ui.email }}</label>
         <div class="control">
-          <input v-model="email" class="input" type="email" />
+          <input
+            v-model="email"
+            class="input"
+            :class="{ 'is-danger': isEmailError }"
+            type="email"
+          />
         </div>
-        <div v-if="error.includes('email')" class="help is-danger">
+        <div v-if="isEmailError" class="help is-danger">
           {{ getErrorDescription(error) }}
         </div>
       </div>
       <div class="field">
         <label class="label">{{ ui.password }}</label>
         <div class="control">
-          <input v-model="password" class="input" type="password" />
+          <input
+            v-model="password"
+            class="input"
+            :class="{ 'is-danger': error && !isEmailError }"
+            type="password"
+          />
         </div>
-        <div v-if="error && !error.includes('email')" class="help is-danger">
+        <div v-if="error && !isEmailError" class="help is-danger">
           {{ getErrorDescription(error) }}
         </div>
       </div>
@@ -29,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { AuthError, signInWithEmailAndPassword } from '@firebase/auth'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
@@ -41,6 +51,7 @@ const email = ref('')
 const password = ref('')
 const error = ref('')
 const loading = ref(false)
+const isEmailError = computed(() => error.value.includes('email'))
 
 function isAuthError(value: unknown): value is AuthError {
   return (
