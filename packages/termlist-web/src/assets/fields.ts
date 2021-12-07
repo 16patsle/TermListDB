@@ -27,11 +27,6 @@ const fields: FieldType[] = [
     type: 'date',
     immutable: true,
   },
-  {
-    name: '',
-    type: 'filler',
-    immutable: true,
-  },
 ]
 
 export default fields
