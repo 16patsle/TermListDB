@@ -13,16 +13,27 @@
 <script lang="ts" setup>
 import { computed, defineAsyncComponent } from 'vue'
 import { currentState, currentContext } from '../../machines/globalService'
+import AppLoadingModal from '../Generic/AppLoadingModal.vue'
 
 const ModalEdit = defineAsyncComponent(
   () => import(/* webpackPrefetch: true */ './ModalEdit.vue')
 )
 const ModalRemove = defineAsyncComponent(() => import('./ModalRemove.vue'))
-const ModalImport = defineAsyncComponent(() => import('./ModalImport.vue'))
-const ModalImporting = defineAsyncComponent(
-  () => import('./ModalImporting.vue')
-)
-const ModalExport = defineAsyncComponent(() => import('./ModalExport.vue'))
+const ModalImport = defineAsyncComponent({
+  loader: () => import('./ModalImport.vue'),
+  delay: 0,
+  loadingComponent: AppLoadingModal,
+})
+const ModalImporting = defineAsyncComponent({
+  loader: () => import('./ModalImporting.vue'),
+  delay: 0,
+  loadingComponent: AppLoadingModal,
+})
+const ModalExport = defineAsyncComponent({
+  loader: () => import('./ModalExport.vue'),
+  delay: 0,
+  loadingComponent: AppLoadingModal,
+})
 const ModalTools = defineAsyncComponent(() => import('./ModalTools.vue'))
 const ModalAuth = defineAsyncComponent(
   () => import(/* webpackPreload: true */ './ModalAuth.vue')
