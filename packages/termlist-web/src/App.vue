@@ -62,12 +62,7 @@ document.addEventListener('keyup', shortcutUp, false)
 <style>
 #app-container {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   height: 100vh;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
 }
 </style>
