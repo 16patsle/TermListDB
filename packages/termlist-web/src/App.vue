@@ -1,7 +1,7 @@
 <template>
   <div id="app-container" class="has-navbar-fixed-top">
     <Navbar />
-    <ModalContainer />
+    <Modals />
     <div class="container app-content-container">
       <TermSortToolbar />
       <TermList v-if="authenticated" />
@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { computed, defineAsyncComponent } from 'vue'
 import { useTermsStore } from './stores/terms'
-import ModalContainer from './components/Modal/ModalContainer.vue'
+import Modals from './components/Modals.vue'
 import Navbar from './components/Navbar.vue'
 import TermSortToolbar from './components/TermList/TermSortToolbar.vue'
 import { currentState, globalService } from './machines/globalService'
