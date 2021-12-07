@@ -181,8 +181,8 @@ export const useTermsStore = defineStore('terms', {
       this.setSortedBy(field)
       this.setCurrentPage(1)
     },
-    setSortedBy(sortedBy: FieldNameType) {
-      this.sortedBy = sortedBy
+    setSortedBy(sortedBy?: FieldNameType) {
+      this.sortedBy = sortedBy ?? 'term'
     },
     setCurrentPage(page: number) {
       this.currentPage = page
