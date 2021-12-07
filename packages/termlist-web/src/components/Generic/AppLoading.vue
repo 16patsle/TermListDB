@@ -11,7 +11,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-withDefaults(defineProps<{ text?: string }>(), { text: 'Loading...' })
+import ui from '../../assets/ui'
+
+withDefaults(defineProps<{ text?: string }>(), { text: ui.loading })
 </script>
 <style scoped>
 .text-container {

@@ -58,5 +58,6 @@ export default {
   email: 'E-post',
   password: 'Passord',
   tools: 'Verktøy',
+  loading: 'Laster…',
   errorDescriptions,
 }
