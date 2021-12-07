@@ -1,10 +1,7 @@
 <template>
   <div>
-    <ModalEdit
-      v-if="showEditModal"
-      :term="globalService.state.context.currentTerm"
-    />
-    <ModalRemove v-if="showRemoveModal" />
+    <ModalEdit v-if="showEditModal" :term="currentContext.currentTerm" />
+    <ModalRemove v-if="showRemoveModal" :term="currentContext.currentTerm" />
     <ModalImport v-if="showImportModal" />
     <ModalImporting v-if="showImportingModal" />
     <ModalExport v-if="showExportModal" />
@@ -13,9 +10,8 @@
 </template>
 
 <script lang="ts" setup>
-import { defineAsyncComponent, ref } from 'vue'
-import { addTransitionListener } from '../../utils/addTransitionListener'
-import { globalService } from '../../machines/globalService'
+import { computed, defineAsyncComponent } from 'vue'
+import { currentState, currentContext } from '../../machines/globalService'
 
 const ModalEdit = defineAsyncComponent(
   () => import(/* webpackPrefetch: true */ './ModalEdit.vue')
@@ -30,22 +26,11 @@ const ModalAuth = defineAsyncComponent(
   () => import(/* webpackPreload: true */ './ModalAuth.vue')
 )
 
-const showEditModal = ref(false)
-const showRemoveModal = ref(false)
-const showImportModal = ref(false)
-const showImportingModal = ref(false)
-const showExportModal = ref(false)
-const showAuthModal = ref(false)
-
-addTransitionListener(state => {
-  if (state.changed) {
-    showEditModal.value = state.value === 'editing'
-    showRemoveModal.value = state.value === 'removing'
-    showImportModal.value = state.value === 'confirmImport'
-    showImportingModal.value = state.value === 'importing'
-    showExportModal.value = state.value === 'exporting'
-    showAuthModal.value = state.value === 'authenticating'
-  }
-})
+const showEditModal = computed(() => currentState.value === 'editing')
+const showRemoveModal = computed(() => currentState.value === 'removing')
+const showImportModal = computed(() => currentState.value === 'confirmImport')
+const showImportingModal = computed(() => currentState.value === 'importing')
+const showExportModal = computed(() => currentState.value === 'exporting')
+const showAuthModal = computed(() => currentState.value === 'authenticating')
 </script>
 <style></style>
