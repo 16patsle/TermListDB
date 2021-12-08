@@ -28,9 +28,9 @@ const props = defineProps<{ term?: TermType }>()
 
 const termsStore = useTermsStore()
 
-const removeTerm = (): void => {
+const removeTerm = () => {
   if (props.term) {
-    termsStore.remove(props.term)
+    return termsStore.remove(props.term)
   }
 }
 

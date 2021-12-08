@@ -32,7 +32,7 @@ export async function initApp() {
     if (database.userInfoReference) {
       onSnapshot(database.userInfoReference, doc => {
         const data = doc.data()
-        if (data) {
+        if (data && typeof data.termlists_total === 'number') {
           termsStore.setTotal(data.termlists_total)
         }
       })

@@ -173,7 +173,7 @@ const reduce = (options: string[]): SelectOptionType[] =>
   options.reduce((allOptions: SelectOptionType[], option) => {
     allOptions.push({
       name: option,
-      ui: ui.wordClasses[option],
+      ui: ui.wordClasses[option as NonNullable<TermType['type']>],
     })
     return allOptions
   }, [])

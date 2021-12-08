@@ -29,11 +29,8 @@
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { globalService } from '../../machines/globalService'
-import { useDedupeStore } from '../../stores/dedupe'
 
 import ui from '../../assets/ui'
-
-const dedupeStore = useDedupeStore()
 
 const close = () => globalService.send('CANCEL')
 </script>

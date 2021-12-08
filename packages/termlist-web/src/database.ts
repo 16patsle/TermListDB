@@ -57,7 +57,7 @@ class TermDatabase {
   connect(user: User): void {
     this.userInfoReference = doc(collection(this.db, 'users'), user.uid)
 
-    updateDoc(this.userInfoReference, { name: user.displayName })
+    void updateDoc(this.userInfoReference, { name: user.displayName })
     this.termsDB = collection(this.db, 'users', user.uid, 'termlists')
 
     this.userId = user.uid

@@ -42,6 +42,7 @@ import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { useImportStore } from '../../stores/import'
 import { globalService } from '../../machines/globalService'
+import type { TermType } from '../../types/TermType'
 
 import ui from '../../assets/ui'
 
@@ -62,7 +63,7 @@ const fileInfo = computed((): string | null => {
   }
 })
 
-const importTerm = (): void => {
+const importTerm = () => {
   if (
     selectedFile.value &&
     selectedFile.value.type === 'application/json' &&
@@ -71,11 +72,11 @@ const importTerm = (): void => {
     fileReader = new FileReader()
     fileReader.onload = () => {
       if (fileReader && fileReader.result) {
-        let file = JSON.parse(fileReader.result.toString())
+        let file: TermType[] = JSON.parse(fileReader.result.toString())
 
         globalService.send('IMPORT')
         clear()
-        importStore.import([...file])
+        return importStore.import([...file])
       }
     }
     fileReader.readAsText(selectedFile.value)

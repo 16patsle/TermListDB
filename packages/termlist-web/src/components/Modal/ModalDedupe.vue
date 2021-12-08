@@ -63,7 +63,7 @@ const percent = computed(() =>
 )
 const complete = computed(() => dedupeStore.$state.complete)
 
-dedupeStore.checkForDuplicates()
+void dedupeStore.checkForDuplicates()
 
 const close = () => globalService.send('CANCEL')
 const search = (term: TermType) => {
