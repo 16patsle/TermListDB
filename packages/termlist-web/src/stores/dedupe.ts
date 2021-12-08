@@ -24,6 +24,7 @@ export const useDedupeStore = defineStore('dedupe', {
   actions: {
     async checkForDuplicates() {
       this.duplicatedTerms = []
+      this.processed = 0
       let terms: TermType[]
       let last: TermType | undefined = undefined
       do {
@@ -40,7 +41,7 @@ export const useDedupeStore = defineStore('dedupe', {
         last = terms.at(-1)
         // Filter out duplicates
         this.duplicatedTerms.push(...terms.filter(filterDuplicatedTerms))
-        this.processed += batchSize
+        this.processed += terms.length
       } while (terms.length >= batchSize)
     },
   },
