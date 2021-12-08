@@ -1,10 +1,10 @@
-@import "~bulma/sass/utilities/initial-variables";
-@import "~bulma/sass/utilities/functions";
-@import "~bulma/sass/utilities/derived-variables";
+@import "bulma/sass/utilities/initial-variables";
+@import "bulma/sass/utilities/functions";
+@import "bulma/sass/utilities/derived-variables";
 $link: $primary;
 $link-invert: $primary-invert;
 
-@import "~bulma/bulma";
+@import "bulma/bulma";
 
 $navbar-height-and-padding: $navbar-height + 0.25rem;
 
