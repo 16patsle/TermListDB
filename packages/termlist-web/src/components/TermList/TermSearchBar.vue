@@ -1,6 +1,6 @@
 <template>
   <div class="field has-addons">
-    <div class="control is-expanded has-icons-left">
+    <div class="control is-expanded has-icons-left has-icons-right">
       <input
         :value="modelValue"
         class="input searchfield"
@@ -10,6 +10,11 @@
       />
       <span class="icon is-small is-left">
         <fa-icon :icon="['fas', 'search']" />
+      </span>
+      <span class="icon is-small is-right">
+        <button class="button is-small clear-button" @click="onClear">
+          <fa-icon :icon="['fas', 'times']" />
+        </button>
       </span>
     </div>
   </div>
@@ -27,4 +32,26 @@ const onInput = (e: Event) => {
   const target = e.target as HTMLInputElement
   emit('update:modelValue', target.value)
 }
+
+const onClear = () => {
+  emit('update:modelValue', '')
+}
 </script>
+
+<style lang="scss" scoped>
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/elements/button';
+@import 'bulma/sass/form/shared.sass';
+
+.button.clear-button {
+  pointer-events: all;
+  background-color: none;
+  border: none;
+  color: $input-icon-color;
+
+  &:hover {
+    color: $button-text-color;
+  }
+}
+</style>
