@@ -13,8 +13,11 @@ const batchSize = 100
 const isDuplicateTerm = (term1: TermType, term2?: TermType) =>
   term1.term === term2?.term
 
-const filterDuplicatedTerms = (term: TermType, i: number, terms: TermType[]) =>
+const onlyDuplicatedTerms = (term: TermType, i: number, terms: TermType[]) =>
   isDuplicateTerm(term, terms[i + 1])
+
+const deduplicateTerms = (term: TermType, i: number, terms: TermType[]) =>
+  !isDuplicateTerm(term, terms[i + 1])
 
 export const useDedupeStore = defineStore('dedupe', {
   state: (): State => ({
@@ -32,17 +35,18 @@ export const useDedupeStore = defineStore('dedupe', {
         terms = await database.getTerms({
           field: 'term',
           limit: batchSize,
+          // If last is undefined, we are on the first batch, and startAfter does nothing
           startAfter: last?.term,
         })
-        // Make sure to check the last term of the previous batch
-        if (last && isDuplicateTerm(last, terms[0])) {
-          this.duplicatedTerms.push(last)
-        }
-        last = terms.at(-1)
+        // When last is defined, make sure to check it against the current batch
+        const toFilter = last ? [last, ...terms] : terms
         // Filter out duplicates
-        this.duplicatedTerms.push(...terms.filter(filterDuplicatedTerms))
+        this.duplicatedTerms.push(...toFilter.filter(onlyDuplicatedTerms))
+        last = terms.at(-1)
         this.processed += terms.length
       } while (terms.length >= batchSize)
+      // Filter out duplicates
+      this.duplicatedTerms = this.duplicatedTerms.filter(deduplicateTerms)
     },
   },
 })
