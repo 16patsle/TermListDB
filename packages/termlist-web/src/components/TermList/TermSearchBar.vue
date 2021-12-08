@@ -1,6 +1,11 @@
 <template>
   <div class="field has-addons">
-    <div class="control is-expanded has-icons-left has-icons-right">
+    <div
+      class="control is-expanded has-icons-left"
+      :class="{
+        'has-icons-right': modelValue.length,
+      }"
+    >
       <input
         :value="modelValue"
         class="input searchfield"
@@ -11,7 +16,7 @@
       <span class="icon is-small is-left">
         <fa-icon :icon="['fas', 'search']" />
       </span>
-      <span class="icon is-small is-right">
+      <span v-if="modelValue.length" class="icon is-small is-right">
         <button class="button is-small clear-button" @click="onClear">
           <fa-icon :icon="['fas', 'times']" />
         </button>
