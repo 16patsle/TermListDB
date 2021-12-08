@@ -51,3 +51,11 @@ const importStore = useImportStore()
 
 const close = () => globalService.send('CANCEL')
 </script>
+
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/elements/progress';
+@import 'bulma/sass/form/shared';
+@import 'bulma/sass/form/tools';
+</style>

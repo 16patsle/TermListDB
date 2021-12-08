@@ -25,8 +25,15 @@ watch(
 )
 </script>
 
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/form/shared';
+@import 'bulma/sass/form/tools';
+</style>
+
 <style>
-.field-body > .field.term-sort-select {
+.field > .field-body > .field.term-sort-select {
   flex-grow: 0;
 }
 </style>

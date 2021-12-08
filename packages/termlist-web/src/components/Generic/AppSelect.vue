@@ -39,3 +39,10 @@ const value = computed({
   set: val => emit('update:modelValue', val),
 })
 </script>
+
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/form/shared';
+@import 'bulma/sass/form/select';
+</style>

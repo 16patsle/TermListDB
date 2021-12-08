@@ -100,3 +100,11 @@ const handleFiles = (e: Event): void => {
   selectedFile.value = files ? files[0] : null
 }
 </script>
+
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/form/shared';
+@import 'bulma/sass/form/file';
+@import 'bulma/sass/form/tools';
+</style>

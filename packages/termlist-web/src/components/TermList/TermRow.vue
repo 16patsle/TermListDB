@@ -62,6 +62,12 @@ const getFieldValue = (field: FieldType): string | undefined => {
 }
 </script>
 
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/elements/content';
+</style>
+
 <style>
 tr.term-row td {
   white-space: pre-line;

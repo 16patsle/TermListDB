@@ -10,11 +10,19 @@
     </div>
   </div>
 </template>
+
 <script lang="ts" setup>
 import ui from '../../assets/ui'
 
 withDefaults(defineProps<{ text?: string }>(), { text: ui.loading })
 </script>
+
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/elements/icon';
+</style>
+
 <style scoped>
 .text-container {
   width: 100%;

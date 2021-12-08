@@ -33,6 +33,7 @@
     </div>
   </nav>
 </template>
+
 <script lang="ts" setup>
 import { ref } from 'vue'
 
@@ -46,3 +47,9 @@ const toggleMenu = () => {
   isActive.value = !isActive.value
 }
 </script>
+
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/components/navbar';
+</style>

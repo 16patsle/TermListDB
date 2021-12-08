@@ -59,7 +59,9 @@ const shortcutUp = (e: KeyboardEvent): void => {
 document.addEventListener('keyup', shortcutUp, false)
 </script>
 
-<style>
+<style lang="scss">
+@import 'bulma/sass/elements/container';
+
 #app-container {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   height: 100vh;

@@ -76,7 +76,12 @@ const config: webpack.Configuration = {
             ? 'style-loader' // creates style nodes from JS strings
             : MiniCssExtractPlugin.loader, // extracts CSS to files
           'css-loader', // translates CSS into JS modules
-          'sass-loader', // compiles Sass to CSS
+          {
+            loader: 'sass-loader', // compiles Sass to CSS
+            options: {
+              additionalData: `@import '@/assets/variables';`,
+            },
+          },
         ],
       },
       {
@@ -124,6 +129,9 @@ const config: webpack.Configuration = {
     .concat(ci.isCI ? [] : [new webpack.ProgressPlugin()]),
   resolve: {
     extensions: ['.ts', '.js'],
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   devServer: {
     static: {

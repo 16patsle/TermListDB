@@ -65,6 +65,12 @@ const emit = defineEmits<{
 const close = (e: MouseEvent): void => emit('close', e)
 </script>
 
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/components/modal';
+</style>
+
 <style>
 .modal {
   text-align: center;

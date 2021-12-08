@@ -12,6 +12,7 @@
     <slot>OK</slot>
   </button>
 </template>
+
 <script lang="ts" setup>
 withDefaults(
   defineProps<{
@@ -30,3 +31,9 @@ const click = (e: MouseEvent) => {
   emit('click', e)
 }
 </script>
+
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/elements/button';
+</style>

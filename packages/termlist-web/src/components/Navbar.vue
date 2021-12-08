@@ -55,3 +55,11 @@ const logOut = async () => {
   globalService.send('LOG_OUT')
 }
 </script>
+
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/elements/title';
+@import 'bulma/sass/form/shared';
+@import 'bulma/sass/form/tools';
+</style>

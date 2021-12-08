@@ -122,3 +122,9 @@ const gotoPage = (pageNumber: number): void => {
   emit('gotopage', pageNumber)
 }
 </script>
+
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/components/pagination';
+</style>

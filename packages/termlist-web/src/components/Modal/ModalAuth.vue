@@ -77,3 +77,11 @@ const login = async (): Promise<void> => {
   loading.value = false
 }
 </script>
+
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/form/shared';
+@import 'bulma/sass/form/tools';
+@import 'bulma/sass/form/input-textarea';
+</style>

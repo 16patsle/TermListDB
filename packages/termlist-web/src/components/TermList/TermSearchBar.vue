@@ -48,11 +48,14 @@ const onClear = () => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import 'bulma/sass/utilities/controls';
 @import 'bulma/sass/utilities/extends';
 @import 'bulma/sass/elements/button';
+@import 'bulma/sass/elements/icon';
 @import 'bulma/sass/form/shared';
+@import 'bulma/sass/form/tools';
+@import 'bulma/sass/form/input-textarea';
 
 .button.clear-button {
   pointer-events: all;
