@@ -47,7 +47,7 @@ const onClear = () => {
 @import 'bulma/sass/utilities/controls';
 @import 'bulma/sass/utilities/extends';
 @import 'bulma/sass/elements/button';
-@import 'bulma/sass/form/shared.sass';
+@import 'bulma/sass/form/shared';
 
 .button.clear-button {
   pointer-events: all;
