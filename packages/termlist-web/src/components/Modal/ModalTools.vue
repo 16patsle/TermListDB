@@ -15,6 +15,7 @@
         <AppButton @click="dedupeStore.checkForDuplicates">
           Check for duplicates
         </AppButton>
+        {{ dedupeStore.$state.processed }}
         <p v-for="term in dedupeStore.$state.duplicatedTerms" :key="term._id">
           {{ term.term }}
         </p>
