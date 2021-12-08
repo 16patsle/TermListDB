@@ -24,23 +24,21 @@ export const useDedupeStore = defineStore('dedupe', {
   actions: {
     async checkForDuplicates() {
       this.duplicatedTerms = []
-      let terms = await database.getTerms({
-        field: 'term',
-        limit: batchSize + 1,
-      })
-      let last = terms.at(-1)
-      while (terms.length > batchSize && last) {
+      let terms: TermType[]
+      let last: TermType | undefined = undefined
+      do {
         terms = await database.getTerms({
           field: 'term',
           limit: batchSize,
-          startAfter: last.term,
+          startAfter: last?.term,
         })
-        const newLast = terms.at(-1)
-        terms.push(last)
-        last = newLast
+        if (last && isDuplicateTerm(last, terms[0])) {
+          this.duplicatedTerms.push(last)
+        }
+        last = terms.at(-1)
         this.duplicatedTerms.push(...terms.filter(filterDuplicatedTerms))
         this.processed += batchSize
-      }
+      } while (terms.length >= batchSize)
     },
   },
 })
