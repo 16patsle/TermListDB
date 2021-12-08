@@ -62,5 +62,6 @@ export default {
   duplicates: 'Duplikater',
   checkForDuplicates: 'Sjekk etter duplikater',
   processingDedupe: 'Sjekker etter duplikater…',
+  numberOfDuplicates: 'Antall duplikater',
   errorDescriptions,
 }
