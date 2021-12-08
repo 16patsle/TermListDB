@@ -36,4 +36,3 @@ watch(
     (showToolModals.value = currentState.value === 'viewTools')
 )
 </script>
-<style></style>

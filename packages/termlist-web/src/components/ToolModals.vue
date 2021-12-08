@@ -20,4 +20,3 @@ const showImportingModal = computed(() => currentState.value === 'importing')
 const showExportModal = computed(() => currentState.value === 'exporting')
 const showDedupeModal = computed(() => currentState.value === 'deduping')
 </script>
-<style></style>

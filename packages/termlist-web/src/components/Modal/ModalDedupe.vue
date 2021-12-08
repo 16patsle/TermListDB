@@ -73,4 +73,3 @@ const search = (term: TermType) => {
   }
 }
 </script>
-<style></style>

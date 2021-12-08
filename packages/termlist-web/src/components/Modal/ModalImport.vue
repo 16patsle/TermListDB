@@ -99,4 +99,3 @@ const handleFiles = (e: Event): void => {
   selectedFile.value = files ? files[0] : null
 }
 </script>
-<style></style>

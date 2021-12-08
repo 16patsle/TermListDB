@@ -36,4 +36,3 @@ const removeTerm = (): void => {
 
 const close = () => globalService.send('CANCEL')
 </script>
-<style></style>

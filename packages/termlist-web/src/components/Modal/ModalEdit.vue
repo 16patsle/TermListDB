@@ -178,4 +178,3 @@ const reduce = (options: string[]): SelectOptionType[] =>
     return allOptions
   }, [])
 </script>
-<style></style>

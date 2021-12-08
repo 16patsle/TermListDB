@@ -77,4 +77,3 @@ const login = async (): Promise<void> => {
   loading.value = false
 }
 </script>
-<style></style>

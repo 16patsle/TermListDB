@@ -45,4 +45,3 @@ const downloadExport = (e: MouseEvent): void => {
   }
 }
 </script>
-<style></style>

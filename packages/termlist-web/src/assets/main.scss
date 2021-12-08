@@ -1,9 +1,10 @@
-@import '~bulma/sass/utilities/initial-variables';
-@import '~bulma/sass/utilities/functions';
-@import '~bulma/sass/utilities/derived-variables';
+@import "~bulma/sass/utilities/initial-variables";
+@import "~bulma/sass/utilities/functions";
+@import "~bulma/sass/utilities/derived-variables";
 $link: $primary;
 $link-invert: $primary-invert;
-@import '~bulma/bulma';
+
+@import "~bulma/bulma";
 
 $navbar-height-and-padding: $navbar-height + 0.25rem;
 
@@ -33,13 +34,14 @@ html {
   overflow-y: hidden;
 }
 
-@supports(padding: env(safe-area-inset-left)) {
+@supports (padding: env(safe-area-inset-left)) {
   html {
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
     padding-top: env(safe-area-inset-top);
     padding-bottom: env(safe-area-inset-bottom);
   }
+
   .navbar {
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
