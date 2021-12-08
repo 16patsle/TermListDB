@@ -63,5 +63,6 @@ export default {
   checkForDuplicates: 'Sjekk etter duplikater',
   processingDedupe: 'Sjekker etter duplikater…',
   numberOfDuplicates: 'Antall duplikater',
+  clearSearch: 'Tøm søkefelt',
   errorDescriptions,
 }

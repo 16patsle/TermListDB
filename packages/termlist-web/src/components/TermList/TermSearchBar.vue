@@ -17,8 +17,13 @@
         <fa-icon :icon="['fas', 'search']" />
       </span>
       <span v-if="modelValue.length" class="icon is-small is-right">
-        <button class="button is-small clear-button" @click="onClear">
+        <button
+          class="button is-small clear-button"
+          :title="ui.clearSearch"
+          @click="onClear"
+        >
           <fa-icon :icon="['fas', 'times']" />
+          <span class="sr-only">{{ ui.clearSearch }}</span>
         </button>
       </span>
     </div>
