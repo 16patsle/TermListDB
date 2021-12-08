@@ -12,13 +12,9 @@
         </AppButton>
       </div>
       <div class="control">
-        <AppButton @click="dedupeStore.checkForDuplicates">
+        <AppButton @click="globalService.send('DEDUPE')">
           Check for duplicates
         </AppButton>
-        {{ dedupeStore.$state.processed }}
-        <p v-for="term in dedupeStore.$state.duplicatedTerms" :key="term._id">
-          {{ term.term }}
-        </p>
       </div>
     </template>
     <template #modal-footer>

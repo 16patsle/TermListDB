@@ -15,9 +15,11 @@ export type GlobalEvent =
   | { type: 'COMPLETE' }
   | { type: 'LOG_IN' }
   | { type: 'VIEW_TOOLS' }
+  | { type: 'DEDUPE' }
 
 export type GlobalContext = {
   currentTerm?: TermType
+  dedupe?: boolean
 }
 
 export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
@@ -87,6 +89,12 @@ export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
           CANCEL: { target: 'idle' },
           IMPORT: { target: 'confirmImport' },
           EXPORT: { target: 'exporting' },
+          DEDUPE: { target: 'deduping', actions: 'setDedupe' },
+        },
+      },
+      deduping: {
+        on: {
+          CANCEL: { target: 'viewTools', actions: 'setDedupe' },
         },
       },
     },
@@ -98,6 +106,13 @@ export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
           context.currentTerm = event.term
         } else {
           context.currentTerm = undefined
+        }
+      },
+      setDedupe(context, event) {
+        if (event.type === 'DEDUPE') {
+          context.dedupe = true
+        } else if (event.type === 'CANCEL') {
+          context.dedupe = false
         }
       },
     },

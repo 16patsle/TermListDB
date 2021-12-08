@@ -1,6 +1,7 @@
 import { database } from '../utils/firebase'
 
 import { defineStore } from 'pinia'
+import { currentContext } from '../machines/globalService'
 import type { TermType } from '../types/TermType'
 
 export type State = {
@@ -44,7 +45,7 @@ export const useDedupeStore = defineStore('dedupe', {
         this.duplicatedTerms.push(...toFilter.filter(onlyDuplicatedTerms))
         last = terms.at(-1)
         this.processed += terms.length
-      } while (terms.length >= batchSize)
+      } while (terms.length >= batchSize && currentContext.value.dedupe)
       // Filter out duplicates
       this.duplicatedTerms = this.duplicatedTerms.filter(deduplicateTerms)
     },
