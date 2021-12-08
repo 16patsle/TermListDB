@@ -13,7 +13,7 @@
       </div>
       <div class="control">
         <AppButton @click="globalService.send('DEDUPE')">
-          Check for duplicates
+          {{ ui.checkForDuplicates }}
         </AppButton>
       </div>
     </template>

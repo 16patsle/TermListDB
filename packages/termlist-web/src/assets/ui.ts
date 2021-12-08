@@ -59,5 +59,8 @@ export default {
   password: 'Passord',
   tools: 'Verktøy',
   loading: 'Laster…',
+  duplicates: 'Duplikater',
+  checkForDuplicates: 'Sjekk etter duplikater',
+  processingDedupe: 'Sjekker etter duplikater…',
   errorDescriptions,
 }

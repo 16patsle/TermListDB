@@ -1,33 +1,17 @@
 <template>
-  <AppModal :is-active="true" :title="ui.importTerms" @close="close">
+  <AppModal :is-active="true" :title="ui.duplicates" @close="close">
     <template #modal-body>
-      <p class="subtitle">Checking for duplicates</p>
+      <p class="subtitle">{{ ui.processingDedupe }}</p>
       <div class="field">
         <div class="control">
-          <progress
-            :value="dedupeStore.$state.processed"
-            :max="termsStore.$state.totalRows"
-            class="progress is-primary"
-          >
-            {{
-              Math.round(
-                (dedupeStore.$state.processed / termsStore.$state.totalRows) *
-                  100
-              )
-            }}%
+          <progress :value="processed" :max="total" class="progress is-primary">
+            {{ percent }}%
           </progress>
           <p class="has-text-centered">
-            {{ dedupeStore.$state.processed }} /
-            {{ termsStore.$state.totalRows }}
+            {{ processed }} /
+            {{ total }}
           </p>
-          <p class="has-text-centered">
-            {{
-              Math.round(
-                (dedupeStore.$state.processed / termsStore.$state.totalRows) *
-                  100
-              )
-            }}%
-          </p>
+          <p class="has-text-centered">{{ percent }}%</p>
         </div>
       </div>
       <p>
@@ -43,6 +27,7 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from 'vue'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { globalService } from '../../machines/globalService'
@@ -53,6 +38,12 @@ import { useTermsStore } from '../../stores/terms'
 
 const dedupeStore = useDedupeStore()
 const termsStore = useTermsStore()
+
+const processed = computed(() => dedupeStore.$state.processed)
+const total = computed(() => termsStore.$state.totalRows)
+const percent = computed(() =>
+  Math.round((processed.value / total.value) * 100)
+)
 
 dedupeStore.checkForDuplicates()
 
