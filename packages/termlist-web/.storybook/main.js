@@ -12,9 +12,19 @@ module.exports = {
 
     config.module.rules.push({
       test: /\.scss$/,
-      use: ['style-loader', 'css-loader', 'sass-loader'],
+      use: [
+        'style-loader',
+        'css-loader',
+        {
+          loader: 'sass-loader',
+          options: {
+            additionalData: `@import '@/assets/variables';`,
+          },
+        },
+      ],
       include: path.resolve(__dirname, '../'),
     })
+    config.resolve.alias['@'] = path.resolve(__dirname, '../src')
     return config
   },
 }
