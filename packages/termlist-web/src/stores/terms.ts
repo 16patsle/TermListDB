@@ -11,6 +11,7 @@ export type State = {
   totalRows: number
   sortedBy: FieldNameType
   currentPage: number
+  search: string
 }
 
 export const useTermsStore = defineStore('terms', {
@@ -19,6 +20,7 @@ export const useTermsStore = defineStore('terms', {
     totalRows: 0,
     sortedBy: 'term',
     currentPage: 1,
+    search: '',
   }),
   getters: {
     loading(): boolean {
@@ -164,12 +166,12 @@ export const useTermsStore = defineStore('terms', {
       globalService.send('LOAD_COMPLETE')
       this.setCurrentPage(pageNumber)
     },
-    async search(search: string) {
+    async search() {
       globalService.send('LOAD_START')
 
       await this.getTerms({
         field: this.sortedBy,
-        search,
+        search: this.$state.search,
       })
 
       globalService.send('LOAD_COMPLETE')
@@ -189,6 +191,9 @@ export const useTermsStore = defineStore('terms', {
     },
     setTotal(total: number) {
       this.totalRows = total
+    },
+    setSearch(search: string) {
+      this.$state.search = search
     },
   },
 })

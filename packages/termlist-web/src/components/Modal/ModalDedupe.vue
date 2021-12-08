@@ -69,7 +69,7 @@ const close = () => globalService.send('CANCEL')
 const search = (term: TermType) => {
   if (term.term) {
     globalService.send('SEARCH')
-    termsStore.search(term.term)
+    termsStore.setSearch(term.term)
   }
 }
 </script>

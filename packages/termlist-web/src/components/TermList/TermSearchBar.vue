@@ -2,10 +2,11 @@
   <div class="field has-addons">
     <div class="control is-expanded has-icons-left">
       <input
-        v-model="value"
-        :placeholder="ui.search"
+        :value="modelValue"
         class="input searchfield"
+        :placeholder="ui.search"
         type="text"
+        @input="onInput"
       />
       <span class="icon is-small is-left">
         <fa-icon :icon="['fas', 'search']" />
@@ -14,23 +15,16 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
 import ui from '../../assets/ui'
 
+defineProps<{ modelValue: string }>()
+
 const emit = defineEmits<{
-  (e: 'search', search: string): void
+  (e: 'update:modelValue', search: string): void
 }>()
 
-const _value = ref('')
-
-const value = computed({
-  get: () => _value.value,
-  set: val => {
-    _value.value = val
-    // Search
-    if (typeof val === 'string') {
-      emit('search', val)
-    }
-  },
-})
+const onInput = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  emit('update:modelValue', target.value)
+}
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="field is-horizontal">
     <div class="field-body">
-      <TermSearchBar @search="debouncedSearch" />
+      <TermSearchBar v-model="termsStore.$state.search" />
       <TermSortSelect
         class="term-sort-select"
         @sort="termsStore.sort($event)"
@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts" setup>
+import { watch } from 'vue'
 import debounce from 'just-debounce-it'
 import { useTermsStore } from '../../stores/terms'
 import TermSearchBar from './TermSearchBar.vue'
@@ -18,9 +19,9 @@ import TermSortSelect from './TermSortSelect.vue'
 
 const termsStore = useTermsStore()
 
-const debouncedSearch = debounce(
-  (search: string) => termsStore.search(search),
-  400
+watch(
+  () => termsStore.$state.search,
+  debounce(() => termsStore.search(), 400)
 )
 </script>
 
