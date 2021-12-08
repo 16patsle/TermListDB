@@ -27,15 +27,18 @@ export const useDedupeStore = defineStore('dedupe', {
       let terms: TermType[]
       let last: TermType | undefined = undefined
       do {
+        // Fetch the next batch of terms
         terms = await database.getTerms({
           field: 'term',
           limit: batchSize,
           startAfter: last?.term,
         })
+        // Make sure to check the last term of the previous batch
         if (last && isDuplicateTerm(last, terms[0])) {
           this.duplicatedTerms.push(last)
         }
         last = terms.at(-1)
+        // Filter out duplicates
         this.duplicatedTerms.push(...terms.filter(filterDuplicatedTerms))
         this.processed += batchSize
       } while (terms.length >= batchSize)
