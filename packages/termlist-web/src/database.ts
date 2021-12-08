@@ -28,10 +28,6 @@ import type { User } from 'firebase/auth'
 import type { TermQueryType } from './types/TermQueryType'
 import type { TermType } from './types/TermType'
 
-const regexQuote = function (str: string) {
-  return (str + '').replace(/[.?*+^$[\]\\(){}|-]/g, '\\$&')
-}
-
 class TermDatabase {
   db: Firestore
   userId?: string
@@ -130,8 +126,6 @@ class TermDatabase {
       const termQuery = query(this.termsDB, ...queryConstraints)
       return (await getDocs(termQuery)).docs.map(val => val.data() as TermType)
     } else {
-      const regex = new RegExp('.*' + regexQuote(data.search) + '.*', 'g')
-
       let slice = data.search.substr(0, 3)
       if (data.search.length < 3) {
         slice = data.search.substr(0, 1)
@@ -140,10 +134,10 @@ class TermDatabase {
 
       const termQuery = query(this.termsDB, ...queryConstraints)
       return (await getDocs(termQuery)).docs.reduce((returnArray, val) => {
-        const data = val.data() as TermType
-        const { term } = data
-        if (term && regex.test(term)) {
-          returnArray.push(data)
+        const termData = val.data() as TermType
+        const { term } = termData
+        if (term && data.search && term.includes(data.search)) {
+          returnArray.push(termData)
         }
         return returnArray
       }, [] as TermType[])
