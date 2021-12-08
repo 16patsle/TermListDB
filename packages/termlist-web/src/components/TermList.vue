@@ -11,7 +11,7 @@
       <div v-if="termCount < 1" class="no-terms-indicator">
         {{ ui.noTermsMatching }}
       </div>
-      <table v-if="termCount > 1" class="table is-fullwidth is-hoverable">
+      <table v-else class="table is-fullwidth is-hoverable">
         <thead>
           <tr>
             <th
