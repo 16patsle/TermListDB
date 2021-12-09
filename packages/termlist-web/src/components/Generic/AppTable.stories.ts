@@ -31,4 +31,19 @@ const Template: Story = args => ({
 })
 
 export const Basic = Template.bind({})
-Basic.args = {}
+
+export const Fullwidth = Template.bind({})
+Fullwidth.args = {
+  fullwidth: true,
+}
+
+export const Hoverable = Template.bind({})
+Hoverable.args = {
+  hoverable: true,
+}
+
+export const FullwidthHoverable = Template.bind({})
+FullwidthHoverable.args = {
+  fullwidth: true,
+  hoverable: true,
+}

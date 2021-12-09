@@ -1,12 +1,28 @@
 <template>
-  <table class="table is-fullwidth is-hoverable">
+  <table
+    class="table"
+    :class="{ 'is-fullwidth': fullwidth, 'is-hoverable': hoverable }"
+  >
     <thead>
       <tr>
         <slot name="table-header" />
       </tr>
     </thead>
-    <tbody ref="termlist" class="list">
+    <tbody>
       <slot name="table-body" />
     </tbody>
   </table>
 </template>
+
+<script lang="ts" setup>
+withDefaults(
+  defineProps<{
+    fullwidth?: boolean
+    hoverable?: boolean
+  }>(),
+  {
+    fullwidth: false,
+    hoverable: false,
+  }
+)
+</script>
