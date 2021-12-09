@@ -8,6 +8,17 @@ export default {
     onEdit: { action: 'edited' },
     onRemove: { action: 'removed' },
   },
+  decorators: [
+    () => ({
+      template: `
+    <table class="table">
+      <tbody>
+        <story/>
+      </tbody>
+    </table>
+  `,
+    }),
+  ],
 }
 
 const Template: Story = args => ({

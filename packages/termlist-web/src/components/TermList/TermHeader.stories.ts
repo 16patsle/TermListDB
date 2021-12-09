@@ -4,6 +4,19 @@ import TermHeader from './TermHeader.vue'
 export default {
   title: 'TermList/TermHeader',
   component: TermHeader,
+  decorators: [
+    () => ({
+      template: `
+    <table class="table">
+      <thead>
+        <tr>
+          <story/>
+        </tr>
+      </thead>
+    </table>
+  `,
+    }),
+  ],
 }
 
 export const Basic: Story = args => ({
