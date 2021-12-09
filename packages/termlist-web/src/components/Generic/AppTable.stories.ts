@@ -1,5 +1,8 @@
 import type { Story } from '@storybook/vue3'
 import AppTable from './AppTable.vue'
+import TermHeader from '../TermList/TermHeader.vue'
+import TermRow from '../TermList/TermRow.vue'
+import { Basic as BasicTerm, MarkdownDesc } from '../TermList/TermRow.stories'
 
 export default {
   title: 'Generic/AppTable',
@@ -46,4 +49,28 @@ export const FullwidthHoverable = Template.bind({})
 FullwidthHoverable.args = {
   fullwidth: true,
   hoverable: true,
+}
+
+export const WithTermHeaderAndRow: Story = args => ({
+  components: { AppTable, TermHeader, TermRow },
+  setup() {
+    return { args }
+  },
+  template: `
+    <AppTable v-bind="args">
+      <template #table-header>
+        <TermHeader />
+      </template>
+      <template #table-body>
+        <TermRow :term="args.term1" />
+        <TermRow :term="args.term2" />
+      </template>
+    </AppTable>
+  `,
+})
+WithTermHeaderAndRow.args = {
+  fullwidth: true,
+  hoverable: true,
+  term1: BasicTerm.args?.term,
+  term2: MarkdownDesc.args?.term,
 }
