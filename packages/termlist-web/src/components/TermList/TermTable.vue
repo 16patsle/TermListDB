@@ -1,5 +1,5 @@
 <template>
-  <AppTable>
+  <AppTable fullwidth hoverable>
     <template #table-header>
       <TermHeader />
     </template>
