@@ -13,3 +13,6 @@ export const Basic: Story = args => ({
   },
   template: '<TermHeader v-bind="args"></TermHeader>',
 })
+Basic.parameters = {
+  controls: { hideNoControlsWarning: true },
+}
