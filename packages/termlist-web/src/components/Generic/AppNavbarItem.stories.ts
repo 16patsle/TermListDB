@@ -1,3 +1,4 @@
+import type { Story } from '@storybook/vue3'
 import AppNavbarItem from './AppNavbarItem.vue'
 import AppButton from './AppButton.vue'
 import { Primary } from './AppButton.stories'
@@ -7,7 +8,7 @@ export default {
   component: AppNavbarItem,
 }
 
-const Template = args => ({
+const Template: Story = args => ({
   components: { AppNavbarItem },
   setup() {
     return { args }
@@ -27,7 +28,7 @@ LinkWithHref.args = {
   href: 'https://www.google.com',
 }
 
-export const NavbarButton = args => ({
+export const NavbarButton: Story = args => ({
   components: { AppNavbarItem, AppButton },
   setup() {
     return { args }

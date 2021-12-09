@@ -1,3 +1,4 @@
+import type { Story } from '@storybook/vue3'
 import AppPagination from './AppPagination.vue'
 
 export default {
@@ -9,7 +10,7 @@ export default {
   },
 }
 
-const Template = args => ({
+const Template: Story = args => ({
   components: { AppPagination },
   setup() {
     return { args }

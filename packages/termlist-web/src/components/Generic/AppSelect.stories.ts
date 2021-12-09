@@ -1,3 +1,4 @@
+import type { Story } from '@storybook/vue3'
 import AppSelect from './AppSelect.vue'
 
 export default {
@@ -8,7 +9,7 @@ export default {
   },
 }
 
-const Template = args => ({
+const Template: Story = args => ({
   components: { AppSelect },
   setup() {
     return { args }

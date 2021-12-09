@@ -1,3 +1,4 @@
+import type { Story } from '@storybook/vue3'
 import AppLoading from './AppLoading.vue'
 
 export default {
@@ -8,7 +9,7 @@ export default {
   },
 }
 
-export const Regular = args => ({
+export const Regular: Story = args => ({
   components: { AppLoading },
   setup() {
     return { args }

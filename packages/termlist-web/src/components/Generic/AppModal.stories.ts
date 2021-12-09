@@ -1,3 +1,4 @@
+import type { Story } from '@storybook/vue3'
 import AppModal from './AppModal.vue'
 import AppButton from './AppButton.vue'
 
@@ -10,7 +11,7 @@ export default {
   },
 }
 
-const Template = args => ({
+const Template: Story = args => ({
   components: { AppModal },
   setup() {
     return { args }
@@ -44,7 +45,7 @@ CustomText.args = {
   cancelText: 'Custom Cancel Text',
 }
 
-export const CustomFooter = args => ({
+export const CustomFooter: Story = args => ({
   components: { AppModal, AppButton },
   setup() {
     return { args }
@@ -64,7 +65,7 @@ CustomFooter.args = {
   ...Basic.args,
 }
 
-export const CustomHeader = args => ({
+export const CustomHeader: Story = args => ({
   components: { AppModal, AppButton },
   setup() {
     return { args }

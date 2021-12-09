@@ -1,3 +1,4 @@
+import type { Story } from '@storybook/vue3'
 import AppNavbar from './AppNavbar.vue'
 import AppNavbarItem from './AppNavbarItem.vue'
 
@@ -6,7 +7,7 @@ export default {
   component: AppNavbar,
 }
 
-export const ManyItemsTop = args => ({
+export const ManyItemsTop: Story = args => ({
   components: { AppNavbar, AppNavbarItem },
   setup() {
     return { args }
