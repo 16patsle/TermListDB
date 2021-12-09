@@ -102,14 +102,6 @@ const gotoPage = (pageNumber: number) =>
   margin-bottom: 1.5em;
 }
 
-.table th.date {
-  width: 9.6em;
-}
-
-.table th.row-buttons {
-  width: 3.9em;
-}
-
 .pagination:not(:last-child) {
   margin-bottom: 0.75rem;
 }

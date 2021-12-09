@@ -12,3 +12,13 @@
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 </script>
+
+<style scoped>
+.table th.date {
+  width: 9.6em;
+}
+
+.table th.row-buttons {
+  width: 3.9em;
+}
+</style>
