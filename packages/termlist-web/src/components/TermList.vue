@@ -11,20 +11,7 @@
       <div v-if="termCount < 1" class="no-terms-indicator">
         {{ ui.noTermsMatching }}
       </div>
-      <AppTable v-else>
-        <template #table-header>
-          <TermHeader />
-        </template>
-        <template #table-body>
-          <TermRow
-            v-for="[id, term] of terms"
-            :key="id"
-            :term="term"
-            @edit="edit"
-            @remove="remove"
-          />
-        </template>
-      </AppTable>
+      <TermTable v-else :terms="terms" @edit="edit" @remove="remove" />
     </div>
     <AppPagination
       class="is-hidden-mobile"
@@ -40,9 +27,7 @@
 import { computed } from 'vue'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
-import AppTable from './Generic/AppTable.vue'
-import TermHeader from './TermList/TermHeader.vue'
-import TermRow from './TermList/TermRow.vue'
+import TermTable from './TermList/TermTable.vue'
 import { currentState, globalService } from '../machines/globalService'
 
 import type { TermType } from '../types/TermType'
@@ -53,10 +38,10 @@ import { useTermsStore } from '../stores/terms'
 const termsStore = useTermsStore()
 const loading = computed(() => currentState.value === 'loading')
 const currentPage = computed(() => termsStore.$state.currentPage)
-const terms = computed(() => termsStore.$state.terms)
+const terms = computed(() => Array.from(termsStore.$state.terms.values()))
 
 const termCount = computed((): number => {
-  return terms.value.size
+  return terms.value.length
 })
 
 const lastPage = computed((): number => {
