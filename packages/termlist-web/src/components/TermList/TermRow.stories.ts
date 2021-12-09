@@ -29,6 +29,14 @@ Basic.args = {
   },
 }
 
+export const MarkdownDesc = Template.bind({})
+MarkdownDesc.args = {
+  term: {
+    ...Basic.args.term,
+    desc: '*This* description has **markdown** support.',
+  },
+}
+
 export const Empty = Template.bind({})
 Empty.args = {
   term: {},
