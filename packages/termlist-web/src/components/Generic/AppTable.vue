@@ -26,3 +26,10 @@ withDefaults(
   }
 )
 </script>
+
+<style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/elements/table';
+@import 'bulma/sass/helpers/visibility';
+</style>

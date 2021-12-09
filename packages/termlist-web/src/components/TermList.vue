@@ -11,20 +11,11 @@
       <div v-if="termCount < 1" class="no-terms-indicator">
         {{ ui.noTermsMatching }}
       </div>
-      <table v-else class="table is-fullwidth is-hoverable">
-        <thead>
-          <tr>
-            <th
-              v-for="field in fields"
-              :key="field.name"
-              :class="field.name || field.type"
-            >
-              {{ field.name ? ui[field.name] : '' }}
-            </th>
-            <th class="row-buttons" />
-          </tr>
-        </thead>
-        <tbody ref="termlist" class="list">
+      <AppTable v-else>
+        <template #table-header>
+          <TermHeader />
+        </template>
+        <template #table-body>
           <TermRow
             v-for="[id, term] of terms"
             :key="id"
@@ -32,8 +23,8 @@
             @edit="edit"
             @remove="remove"
           />
-        </tbody>
-      </table>
+        </template>
+      </AppTable>
     </div>
     <AppPagination
       class="is-hidden-mobile"
@@ -49,13 +40,14 @@
 import { computed } from 'vue'
 import AppPagination from './Generic/AppPagination.vue'
 import AppLoading from './Generic/AppLoading.vue'
+import AppTable from './Generic/AppTable.vue'
+import TermHeader from './TermList/TermHeader.vue'
 import TermRow from './TermList/TermRow.vue'
 import { currentState, globalService } from '../machines/globalService'
 
 import type { TermType } from '../types/TermType'
 
 import ui from '../assets/ui'
-import fields from '../assets/fields'
 import { useTermsStore } from '../stores/terms'
 
 const termsStore = useTermsStore()
@@ -86,9 +78,6 @@ const gotoPage = (pageNumber: number) =>
 </script>
 
 <style lang="scss">
-@import 'bulma/sass/utilities/controls';
-@import 'bulma/sass/utilities/extends';
-@import 'bulma/sass/elements/table';
 @import 'bulma/sass/helpers/visibility';
 </style>
 
