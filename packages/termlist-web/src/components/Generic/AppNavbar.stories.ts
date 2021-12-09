@@ -5,6 +5,12 @@ import AppNavbarItem from './AppNavbarItem.vue'
 export default {
   title: 'Generic/AppNavbar',
   component: AppNavbar,
+  argTypes: {
+    fixed: {
+      options: ['top', 'bottom'],
+      control: 'radio',
+    },
+  },
 }
 
 export const ManyItemsTop: Story = args => ({
