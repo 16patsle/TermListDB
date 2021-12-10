@@ -3,9 +3,12 @@
     <AppModal ref="modal" :is-active="true" :title="ui.editterm" @close="close">
       <template #modal-body>
         Dirty: {{ dirty }}
-        <div v-for="field in mutableFields" :key="field.name" class="field">
-          <label class="label">{{ field.name !== '' && ui[field.name] }}</label>
-          <div class="control">
+        <AppInputField
+          v-for="field in mutableFields"
+          :key="field.name"
+          :label="(field.name !== '' && ui[field.name]) || undefined"
+        >
+          <template #control>
             <AppInput
               v-if="field.type === 'short'"
               :ref="field.name === 'term' ? 'firstInput' : undefined"
@@ -26,8 +29,8 @@
               :options="reduce(field.options)"
               fullwidth
             />
-          </div>
-        </div>
+          </template>
+        </AppInputField>
       </template>
       <template #modal-footer>
         <AppButton
@@ -63,6 +66,7 @@ import compare from 'just-compare'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppInput from '../Generic/AppInput.vue'
+import AppInputField from '../Generic/AppInputField.vue'
 import AppSelect from '../Generic/AppSelect.vue'
 import { useTermsStore } from '../../stores/terms'
 import { globalService } from '../../machines/globalService'
