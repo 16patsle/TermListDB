@@ -6,24 +6,12 @@
       </p>
       <AppInputField>
         <template #control>
-          <div class="file is-centered has-name is-boxed">
-            <label class="file-label">
-              <input
-                ref="importFile"
-                class="file-input"
-                type="file"
-                accept="application/json"
-                @change="handleFiles"
-              />
-              <span class="file-cta">
-                <span class="file-icon">
-                  <fa-icon :icon="['fas', 'upload']" />
-                </span>
-                <span class="file-label">{{ ui.browseForFile }}</span>
-              </span>
-              <span v-if="fileInfo" class="file-name">{{ fileInfo }}</span>
-            </label>
-          </div>
+          <AppFileInput
+            :label="ui.browseForFile"
+            accept="application/json"
+            centered
+            @change="selectedFile = $event"
+          />
         </template>
       </AppInputField>
     </template>
@@ -37,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import AppModal from '../Generic/AppModal.vue'
 import AppInputField from '../Generic/AppInputField.vue'
 import AppButton from '../Generic/AppButton.vue'
@@ -46,25 +34,17 @@ import { globalService } from '../../machines/globalService'
 import type { TermType } from '../../types/TermType'
 
 import ui from '../../assets/ui'
+import AppFileInput from '../Generic/AppFileInput.vue'
 
 import(/* webpackPreload: true */ './ModalImporting.vue')
 
 const importStore = useImportStore()
 
-const selectedFile = ref<File | null>(null)
+const selectedFile = ref<File | undefined>()
 let fileReader: FileReader
 
-const importFile = ref<InstanceType<typeof HTMLInputElement>>()
-
-const fileInfo = computed((): string | null => {
-  if (selectedFile.value && selectedFile.value.name) {
-    return selectedFile.value.name
-  } else {
-    return null
-  }
-})
-
 const importTerm = () => {
+  //return
   if (
     selectedFile.value &&
     selectedFile.value.type === 'application/json' &&
@@ -76,7 +56,6 @@ const importTerm = () => {
         let file: TermType[] = JSON.parse(fileReader.result.toString())
 
         globalService.send('IMPORT')
-        clear()
         return importStore.import([...file])
       }
     }
@@ -84,28 +63,5 @@ const importTerm = () => {
   }
 }
 
-const clear = (): void => {
-  if (importFile.value) {
-    importFile.value.value = ''
-  }
-  selectedFile.value = null
-}
-
-const close = (): void => {
-  clear()
-  globalService.send('CANCEL')
-}
-
-const handleFiles = (e: Event): void => {
-  const files = (e.target as HTMLInputElement).files
-  selectedFile.value = files ? files[0] : null
-}
+const close = () => globalService.send('CANCEL')
 </script>
-
-<style lang="scss">
-@import 'bulma/sass/utilities/controls';
-@import 'bulma/sass/utilities/extends';
-@import 'bulma/sass/form/shared';
-@import 'bulma/sass/form/file';
-@import 'bulma/sass/form/tools';
-</style>
