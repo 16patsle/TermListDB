@@ -1,8 +1,17 @@
 <template>
   <div class="field">
-    <label class="label">{{ label }}</label>
-    <div class="control">
+    <label v-if="label" class="label">{{ label }}</label>
+    <div
+      class="control"
+      :class="{
+        'has-icons-left': hasIcons === 'left' || hasIcons === 'both',
+        'has-icons-right': hasIcons === 'right' || hasIcons === 'both',
+      }"
+    >
       <slot name="control" />
+    </div>
+    <div v-if="$slots.help" class="help" :class="{ 'is-danger': helpDanger }">
+      <slot name="help" />
     </div>
   </div>
 </template>
@@ -11,9 +20,13 @@
 withDefaults(
   defineProps<{
     label?: string
+    hasIcons?: 'left' | 'right' | 'both' | 'none'
+    helpDanger?: boolean
   }>(),
   {
     label: '',
+    hasIcons: 'none',
+    helpDanger: false,
   }
 )
 </script>

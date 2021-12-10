@@ -4,8 +4,8 @@
       <p class="subtitle">
         {{ ui.processingImport }}
       </p>
-      <div class="field">
-        <div class="control">
+      <AppInputField>
+        <template #control>
           <progress
             :value="importStore.$state.imported"
             :max="importStore.$state.total"
@@ -28,8 +28,8 @@
               )
             }}%
           </p>
-        </div>
-      </div>
+        </template>
+      </AppInputField>
     </template>
     <template #modal-footer>
       <AppButton @click="close">
@@ -41,6 +41,7 @@
 
 <script lang="ts" setup>
 import AppModal from '../Generic/AppModal.vue'
+import AppInputField from '../Generic/AppInputField.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { globalService } from '../../machines/globalService'
 

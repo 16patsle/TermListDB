@@ -4,8 +4,8 @@
       <p class="subtitle">
         {{ ui.trelloImportInstructions }}
       </p>
-      <div class="field">
-        <div class="control">
+      <AppInputField>
+        <template #control>
           <div class="file is-centered has-name is-boxed">
             <label class="file-label">
               <input
@@ -24,8 +24,8 @@
               <span v-if="fileInfo" class="file-name">{{ fileInfo }}</span>
             </label>
           </div>
-        </div>
-      </div>
+        </template>
+      </AppInputField>
     </template>
     <template #modal-footer>
       <AppButton primary @click="importTerm"> {{ ui.importTerms }}! </AppButton>
@@ -39,6 +39,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import AppModal from '../Generic/AppModal.vue'
+import AppInputField from '../Generic/AppInputField.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { useImportStore } from '../../stores/import'
 import { globalService } from '../../machines/globalService'

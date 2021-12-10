@@ -1,11 +1,6 @@
 <template>
-  <div class="field has-addons">
-    <div
-      class="control is-expanded has-icons-left"
-      :class="{
-        'has-icons-right': modelValue.length,
-      }"
-    >
+  <AppInputField :has-icons="modelValue.length ? 'both' : 'left'">
+    <template #control>
       <AppInput
         v-model="value"
         class="searchfield"
@@ -25,11 +20,12 @@
           <span class="sr-only">{{ ui.clearSearch }}</span>
         </button>
       </span>
-    </div>
-  </div>
+    </template>
+  </AppInputField>
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue'
+import AppInputField from '../Generic/AppInputField.vue'
 import AppInput from '../Generic/AppInput.vue'
 import ui from '../../assets/ui'
 
@@ -55,8 +51,6 @@ const onClear = () => {
 @import 'bulma/sass/elements/button';
 @import 'bulma/sass/elements/icon';
 @import 'bulma/sass/form/shared';
-@import 'bulma/sass/form/tools';
-@import 'bulma/sass/form/input-textarea';
 
 .button.clear-button {
   pointer-events: all;

@@ -4,8 +4,8 @@
       <p v-if="!complete" class="subtitle">
         {{ ui.processingDedupe }}
       </p>
-      <div v-if="!complete" class="field">
-        <div class="control">
+      <AppInputField v-if="!complete">
+        <template #control>
           <progress :value="processed" :max="total" class="progress is-primary">
             {{ percent }}%
           </progress>
@@ -18,8 +18,8 @@
             {{ ui.numberOfDuplicates }}:
             {{ dedupeStore.$state.duplicatedTerms.length }}
           </p>
-        </div>
-      </div>
+        </template>
+      </AppInputField>
       <div v-if="complete">
         <ul>
           <li
@@ -52,6 +52,7 @@ import { useTermsStore } from '../../stores/terms'
 import type { TermType } from '../../types/TermType'
 
 import ui from '../../assets/ui'
+import AppInputField from '../Generic/AppInputField.vue'
 
 const dedupeStore = useDedupeStore()
 const termsStore = useTermsStore()

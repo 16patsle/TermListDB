@@ -1,28 +1,26 @@
 <template>
   <AppModal :is-active="true" :title="ui.logIn" :close-allowed="false">
     <template #modal-body>
-      <div class="field">
-        <label class="label">{{ ui.email }}</label>
-        <div class="control">
+      <AppInputField :label="ui.email" help-danger>
+        <template #control>
           <AppInput v-model="email" :danger="isEmailError" type="email" />
-        </div>
-        <div v-if="isEmailError" class="help is-danger">
+        </template>
+        <template v-if="isEmailError" #help>
           {{ getErrorDescription(error) }}
-        </div>
-      </div>
-      <div class="field">
-        <label class="label">{{ ui.password }}</label>
-        <div class="control">
+        </template>
+      </AppInputField>
+      <AppInputField :label="ui.password" help-danger>
+        <template #control>
           <AppInput
             v-model="password"
             :danger="Boolean(error) && !isEmailError"
             type="password"
           />
-        </div>
-        <div v-if="error && !isEmailError" class="help is-danger">
+        </template>
+        <template v-if="error && !isEmailError" #help>
           {{ getErrorDescription(error) }}
-        </div>
-      </div>
+        </template>
+      </AppInputField>
     </template>
     <template #modal-footer>
       <AppButton primary :loading="loading" @click="login">{{
@@ -36,6 +34,7 @@
 import { ref, computed } from 'vue'
 import { AuthError, signInWithEmailAndPassword } from '@firebase/auth'
 import AppModal from '../Generic/AppModal.vue'
+import AppInputField from '../Generic/AppInputField.vue'
 import AppInput from '../Generic/AppInput.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { auth } from '../../utils/getAuth'
@@ -72,10 +71,3 @@ const login = async (): Promise<void> => {
   loading.value = false
 }
 </script>
-
-<style lang="scss">
-@import 'bulma/sass/utilities/controls';
-@import 'bulma/sass/utilities/extends';
-@import 'bulma/sass/form/shared';
-@import 'bulma/sass/form/tools';
-</style>

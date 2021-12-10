@@ -1,17 +1,18 @@
 <template>
-  <div class="field is-expanded">
-    <div class="control">
+  <AppInputField>
+    <template #control>
       <AppSelect
         v-model="sortValue"
         :default-option="false"
         :options="options"
         fullwidth
       />
-    </div>
-  </div>
+    </template>
+  </AppInputField>
 </template>
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
+import AppInputField from '../Generic/AppInputField.vue'
 import AppSelect from '../Generic/AppSelect.vue'
 
 import type { SelectOptionType } from '../../types/SelectOptionType'
