@@ -14,9 +14,7 @@ const Template: Story = args => ({
   },
   template: `
     <AppInputField v-bind="args">
-      <template #control>
-        <AppInput />
-      </template>
+      <AppInput />
     </AppInputField>
   `,
 })
@@ -36,12 +34,10 @@ export const WithIconLeft: Story = args => ({
   },
   template: `
     <AppInputField v-bind="args">
-      <template #control>
-        <span class="icon is-small is-left">
-          <fa-icon :icon="['fas', 'search']" />
-        </span>
-        <AppInput placeholder="Search" />
-      </template>
+      <span class="icon is-small is-left">
+        <fa-icon :icon="['fas', 'search']" />
+      </span>
+      <AppInput placeholder="Search" />
     </AppInputField>
   `,
 })
@@ -57,9 +53,7 @@ export const WithDangerHelpText: Story = args => ({
   },
   template: `
     <AppInputField v-bind="args">
-      <template #control>
-        <AppInput placeholder="Search" />
-      </template>
+      <AppInput placeholder="Search" />
       <template #help>
         And it is {{args.helpDanger ? '' : 'not'}} dangerous
       </template>

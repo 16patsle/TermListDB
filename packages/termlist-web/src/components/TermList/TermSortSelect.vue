@@ -1,13 +1,11 @@
 <template>
   <AppInputField>
-    <template #control>
-      <AppSelect
-        v-model="sortValue"
-        :default-option="false"
-        :options="options"
-        fullwidth
-      />
-    </template>
+    <AppSelect
+      v-model="sortValue"
+      :default-option="false"
+      :options="options"
+      fullwidth
+    />
   </AppInputField>
 </template>
 <script lang="ts" setup>

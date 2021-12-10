@@ -5,14 +5,12 @@
         {{ ui.trelloImportInstructions }}
       </p>
       <AppInputField>
-        <template #control>
-          <AppFileInput
-            :label="ui.browseForFile"
-            accept="application/json"
-            centered
-            @change="selectedFile = $event"
-          />
-        </template>
+        <AppFileInput
+          :label="ui.browseForFile"
+          accept="application/json"
+          centered
+          @change="selectedFile = $event"
+        />
       </AppInputField>
     </template>
     <template #modal-footer>

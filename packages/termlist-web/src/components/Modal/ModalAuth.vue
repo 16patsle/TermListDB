@@ -2,21 +2,17 @@
   <AppModal is-active :title="ui.logIn" :close-allowed="false">
     <template #modal-body>
       <AppInputField :label="ui.email" help-danger>
-        <template #control>
-          <AppInput v-model="email" :danger="isEmailError" type="email" />
-        </template>
+        <AppInput v-model="email" :danger="isEmailError" type="email" />
         <template v-if="isEmailError" #help>
           {{ getErrorDescription(error) }}
         </template>
       </AppInputField>
       <AppInputField :label="ui.password" help-danger>
-        <template #control>
-          <AppInput
-            v-model="password"
-            :danger="Boolean(error) && !isEmailError"
-            type="password"
-          />
-        </template>
+        <AppInput
+          v-model="password"
+          :danger="Boolean(error) && !isEmailError"
+          type="password"
+        />
         <template v-if="error && !isEmailError" #help>
           {{ getErrorDescription(error) }}
         </template>

@@ -5,30 +5,28 @@
         {{ ui.processingImport }}
       </p>
       <AppInputField>
-        <template #control>
-          <progress
-            :value="importStore.$state.imported"
-            :max="importStore.$state.total"
-            class="progress is-primary"
-          >
-            {{
-              Math.round(
-                (importStore.$state.imported / importStore.$state.total) * 100
-              )
-            }}%
-          </progress>
-          <p class="has-text-centered">
-            {{ importStore.$state.imported }} /
-            {{ importStore.$state.total }}
-          </p>
-          <p class="has-text-centered">
-            {{
-              Math.round(
-                (importStore.$state.imported / importStore.$state.total) * 100
-              )
-            }}%
-          </p>
-        </template>
+        <progress
+          :value="importStore.$state.imported"
+          :max="importStore.$state.total"
+          class="progress is-primary"
+        >
+          {{
+            Math.round(
+              (importStore.$state.imported / importStore.$state.total) * 100
+            )
+          }}%
+        </progress>
+        <p class="has-text-centered">
+          {{ importStore.$state.imported }} /
+          {{ importStore.$state.total }}
+        </p>
+        <p class="has-text-centered">
+          {{
+            Math.round(
+              (importStore.$state.imported / importStore.$state.total) * 100
+            )
+          }}%
+        </p>
       </AppInputField>
     </template>
     <template #modal-footer>

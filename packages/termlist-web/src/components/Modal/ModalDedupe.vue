@@ -5,20 +5,18 @@
         {{ ui.processingDedupe }}
       </p>
       <AppInputField v-if="!complete">
-        <template #control>
-          <progress :value="processed" :max="total" class="progress is-primary">
-            {{ percent }}%
-          </progress>
-          <p class="has-text-centered">
-            {{ processed }} /
-            {{ total }}
-          </p>
-          <p class="has-text-centered">{{ percent }}%</p>
-          <p class="has-text-centered">
-            {{ ui.numberOfDuplicates }}:
-            {{ dedupeStore.$state.duplicatedTerms.length }}
-          </p>
-        </template>
+        <progress :value="processed" :max="total" class="progress is-primary">
+          {{ percent }}%
+        </progress>
+        <p class="has-text-centered">
+          {{ processed }} /
+          {{ total }}
+        </p>
+        <p class="has-text-centered">{{ percent }}%</p>
+        <p class="has-text-centered">
+          {{ ui.numberOfDuplicates }}:
+          {{ dedupeStore.$state.duplicatedTerms.length }}
+        </p>
       </AppInputField>
       <div v-if="complete">
         <ul>

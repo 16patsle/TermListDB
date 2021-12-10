@@ -8,7 +8,7 @@
         'has-icons-right': hasIcons === 'right' || hasIcons === 'both',
       }"
     >
-      <slot name="control" />
+      <slot />
     </div>
     <div v-if="$slots.help" class="help" :class="{ 'is-danger': helpDanger }">
       <slot name="help" />

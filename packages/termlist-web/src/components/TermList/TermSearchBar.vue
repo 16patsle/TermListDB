@@ -1,26 +1,24 @@
 <template>
   <AppInputField :has-icons="modelValue.length ? 'both' : 'left'">
-    <template #control>
-      <AppInput
-        v-model="value"
-        class="searchfield"
-        :placeholder="ui.search"
-        type="search"
-      />
-      <span class="icon is-small is-left">
-        <fa-icon :icon="['fas', 'search']" />
-      </span>
-      <span v-if="modelValue.length" class="icon is-small is-right">
-        <button
-          class="button is-small clear-button"
-          :title="ui.clearSearch"
-          @click="onClear"
-        >
-          <fa-icon :icon="['fas', 'times']" />
-          <span class="sr-only">{{ ui.clearSearch }}</span>
-        </button>
-      </span>
-    </template>
+    <AppInput
+      v-model="value"
+      class="searchfield"
+      :placeholder="ui.search"
+      type="search"
+    />
+    <span class="icon is-small is-left">
+      <fa-icon :icon="['fas', 'search']" />
+    </span>
+    <span v-if="modelValue.length" class="icon is-small is-right">
+      <button
+        class="button is-small clear-button"
+        :title="ui.clearSearch"
+        @click="onClear"
+      >
+        <fa-icon :icon="['fas', 'times']" />
+        <span class="sr-only">{{ ui.clearSearch }}</span>
+      </button>
+    </span>
   </AppInputField>
 </template>
 <script lang="ts" setup>

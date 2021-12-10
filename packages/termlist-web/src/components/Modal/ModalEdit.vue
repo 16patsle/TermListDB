@@ -8,28 +8,26 @@
           :key="field.name"
           :label="(field.name !== '' && ui[field.name]) || undefined"
         >
-          <template #control>
-            <AppInput
-              v-if="field.type === 'short'"
-              v-model="currentTerm[field.name]"
-              :autofocus="field.name === 'term'"
-            />
-            <textarea
-              v-else-if="field.type === 'long'"
-              v-model="currentTerm[field.name]"
-              class="textarea"
-              rows="8"
-            />
-            <AppSelect
-              v-else-if="
-                field.type === 'select' && field.options instanceof Array
-              "
-              v-model="currentTerm[field.name]"
-              :default-option-name="ui.selectTermType"
-              :options="reduce(field.options)"
-              fullwidth
-            />
-          </template>
+          <AppInput
+            v-if="field.type === 'short'"
+            v-model="currentTerm[field.name]"
+            :autofocus="field.name === 'term'"
+          />
+          <textarea
+            v-else-if="field.type === 'long'"
+            v-model="currentTerm[field.name]"
+            class="textarea"
+            rows="8"
+          />
+          <AppSelect
+            v-else-if="
+              field.type === 'select' && field.options instanceof Array
+            "
+            v-model="currentTerm[field.name]"
+            :default-option-name="ui.selectTermType"
+            :options="reduce(field.options)"
+            fullwidth
+          />
         </AppInputField>
       </template>
       <template #modal-footer>
