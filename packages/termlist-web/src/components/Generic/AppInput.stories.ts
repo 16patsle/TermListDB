@@ -43,19 +43,19 @@ Basic.args = {
 export const Primary = Template.bind({})
 Primary.args = {
   primary: true,
-  placeholder: 'Danger input',
+  placeholder: 'Primary input',
 }
 
 export const Success = Template.bind({})
 Success.args = {
   success: true,
-  placeholder: 'Danger input',
+  placeholder: 'Success input',
 }
 
 export const Warning = Template.bind({})
 Warning.args = {
   warning: true,
-  placeholder: 'Danger input',
+  placeholder: 'Warning input',
 }
 
 export const Danger = Template.bind({})
