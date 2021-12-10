@@ -1,5 +1,5 @@
 <template>
-  <div class="field">
+  <div class="field" :class="{ 'is-grouped': grouped }">
     <label v-if="label" class="label">{{ label }}</label>
     <div
       class="control"
@@ -10,6 +10,7 @@
     >
       <slot />
     </div>
+    <slot name="controls" />
     <div v-if="$slots.help" class="help" :class="{ 'is-danger': helpDanger }">
       <slot name="help" />
     </div>
@@ -22,11 +23,13 @@ withDefaults(
     label?: string
     hasIcons?: 'left' | 'right' | 'both' | 'none'
     helpDanger?: boolean
+    grouped?: boolean
   }>(),
   {
     label: '',
     hasIcons: 'none',
     helpDanger: false,
+    grouped: false,
   }
 )
 </script>

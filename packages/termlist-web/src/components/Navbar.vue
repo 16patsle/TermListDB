@@ -9,18 +9,20 @@
     </template>
     <template #start>
       <AppNavbarItem v-if="authenticated">
-        <div class="field is-grouped">
-          <div class="control">
-            <AppButton primary @click="globalService.send('EDIT')">
-              {{ ui.add }}
-            </AppButton>
-          </div>
-          <div class="control">
-            <AppButton @click="globalService.send('VIEW_TOOLS')">
-              {{ ui.tools }}
-            </AppButton>
-          </div>
-        </div>
+        <AppInputField grouped>
+          <template #controls>
+            <div class="control">
+              <AppButton primary @click="globalService.send('EDIT')">
+                {{ ui.add }}
+              </AppButton>
+            </div>
+            <div class="control">
+              <AppButton @click="globalService.send('VIEW_TOOLS')">
+                {{ ui.tools }}
+              </AppButton>
+            </div>
+          </template>
+        </AppInputField>
       </AppNavbarItem>
     </template>
     <template #end>
@@ -43,6 +45,7 @@ import { useAuthStore } from '../stores/auth'
 import AppButton from './Generic/AppButton.vue'
 import AppNavbar from './Generic/AppNavbar.vue'
 import AppNavbarItem from './Generic/AppNavbarItem.vue'
+import AppInputField from './Generic/AppInputField.vue'
 import ui from '../assets/ui'
 import { currentState, globalService } from '../machines/globalService'
 import { auth } from '../utils/getAuth'
@@ -55,11 +58,3 @@ const logOut = async () => {
   globalService.send('LOG_OUT')
 }
 </script>
-
-<style lang="scss">
-@import 'bulma/sass/utilities/controls';
-@import 'bulma/sass/utilities/extends';
-@import 'bulma/sass/elements/title';
-@import 'bulma/sass/form/shared';
-@import 'bulma/sass/form/tools';
-</style>
