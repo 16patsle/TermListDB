@@ -64,3 +64,26 @@ WithDangerHelpText.args = {
   label: 'This one has help text',
   helpDanger: true,
 }
+
+export const WithMultitpleGroupedControls: Story = args => ({
+  components: { AppInputField, AppInput },
+  setup() {
+    return { args }
+  },
+  template: `
+    <AppInputField v-bind="args">
+      <template #controls>
+        <div class="control">
+          <AppInput placeholder="Search" />
+        </div>
+        <div class="control">
+          <AppInput placeholder="Also search" />
+        </div>
+      </template>
+    </AppInputField>
+  `,
+})
+WithMultitpleGroupedControls.args = {
+  label: 'Label and two grouped inputs',
+  grouped: true,
+}
