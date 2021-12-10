@@ -49,3 +49,24 @@ WithIconLeft.args = {
   label: 'With icon left',
   hasIcons: 'left',
 }
+
+export const WithDangerHelpText: Story = args => ({
+  components: { AppInputField, AppInput },
+  setup() {
+    return { args }
+  },
+  template: `
+    <AppInputField v-bind="args">
+      <template #control>
+        <AppInput placeholder="Search" />
+      </template>
+      <template #help>
+        And it is {{args.helpDanger ? '' : 'not'}} dangerous
+      </template>
+    </AppInputField>
+  `,
+})
+WithDangerHelpText.args = {
+  label: 'This one has help text',
+  helpDanger: true,
+}
