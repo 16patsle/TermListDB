@@ -1,5 +1,5 @@
 <template>
-  <AppModal :is-active="true" :title="ui.logIn" :close-allowed="false">
+  <AppModal is-active :title="ui.logIn" :close-allowed="false">
     <template #modal-body>
       <AppInputField :label="ui.email" help-danger>
         <template #control>

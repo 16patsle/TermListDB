@@ -1,5 +1,5 @@
 <template>
-  <AppModal :is-active="true" :title="ui.duplicates" @close="close">
+  <AppModal is-active :title="ui.duplicates" @close="close">
     <template #modal-body>
       <p v-if="!complete" class="subtitle">
         {{ ui.processingDedupe }}

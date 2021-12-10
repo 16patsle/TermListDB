@@ -1,5 +1,5 @@
 <template>
-  <AppModal :is-active="true" :title="ui.importTerms" @close="close">
+  <AppModal is-active :title="ui.importTerms" @close="close">
     <template #modal-body>
       <p class="subtitle">
         {{ ui.processingImport }}

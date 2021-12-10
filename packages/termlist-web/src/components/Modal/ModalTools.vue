@@ -1,5 +1,5 @@
 <template>
-  <AppModal :is-active="true" :title="ui.tools" @close="close">
+  <AppModal is-active :title="ui.tools" @close="close">
     <template #modal-body>
       <div class="control">
         <AppButton @click="globalService.send('IMPORT')">

@@ -1,5 +1,5 @@
 <template>
-  <AppModal :is-active="true" :title="ui.removeterm" @close="close">
+  <AppModal is-active :title="ui.removeterm" @close="close">
     <template #modal-body>
       <p class="subtitle">
         {{ ui.wanttoremove }}

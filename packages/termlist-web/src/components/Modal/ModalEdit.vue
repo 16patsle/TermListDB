@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent>
-    <AppModal :is-active="true" :title="ui.editterm" @close="close">
+    <AppModal is-active :title="ui.editterm" @close="close">
       <template #modal-body>
         Dirty: {{ dirty }}
         <AppInputField
