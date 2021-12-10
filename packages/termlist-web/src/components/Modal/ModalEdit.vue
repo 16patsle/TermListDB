@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent>
-    <AppModal ref="modal" :is-active="true" :title="ui.editterm" @close="close">
+    <AppModal :is-active="true" :title="ui.editterm" @close="close">
       <template #modal-body>
         Dirty: {{ dirty }}
         <AppInputField
@@ -11,8 +11,8 @@
           <template #control>
             <AppInput
               v-if="field.type === 'short'"
-              :ref="field.name === 'term' ? 'firstInput' : undefined"
               v-model="currentTerm[field.name]"
+              :autofocus="field.name === 'term'"
             />
             <textarea
               v-else-if="field.type === 'long'"
@@ -61,7 +61,7 @@
   </form>
 </template>
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import compare from 'just-compare'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
@@ -109,17 +109,9 @@ const dirty = computed(
 )
 const loading = ref(false)
 
-const modal = ref<InstanceType<typeof AppModal>>()
-
 const mutableFields = computed((): FieldType[] =>
   fields.filter(field => !field.immutable)
 )
-
-const firstInput = ref<HTMLInputElement>()
-
-onMounted(() => {
-  firstInput.value?.focus()
-})
 
 const saveTerm = async () => {
   let termObject: TermDefType

@@ -1,5 +1,6 @@
 <template>
   <input
+    ref="input"
     v-model="value"
     class="input"
     :class="{
@@ -16,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -41,6 +42,7 @@ const props = withDefaults(
     danger?: boolean
     loading?: boolean
     disabled?: boolean
+    autofocus?: boolean
     modelValue?: string
   }>(),
   {
@@ -52,6 +54,7 @@ const props = withDefaults(
     danger: false,
     loading: false,
     disabled: false,
+    autofocus: false,
     modelValue: '',
   }
 )
@@ -63,6 +66,14 @@ const emit = defineEmits<{
 const value = computed({
   get: () => props.modelValue,
   set: val => emit('update:modelValue', val),
+})
+
+const input = ref<HTMLInputElement>()
+
+onMounted(() => {
+  if (props.autofocus && input.value) {
+    input.value.focus()
+  }
 })
 </script>
 
