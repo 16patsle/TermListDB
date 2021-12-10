@@ -60,6 +60,10 @@ document.addEventListener('keyup', shortcutUp, false)
 </script>
 
 <style lang="scss">
+@import 'bulma/sass/utilities/controls';
+@import 'bulma/sass/utilities/extends';
+@import 'bulma/sass/base/_all';
+@import 'bulma/sass/components/navbar';
 @import 'bulma/sass/elements/container';
 
 #app-container {
@@ -67,5 +71,23 @@ document.addEventListener('keyup', shortcutUp, false)
   height: 100vh;
   padding-left: 0.75rem;
   padding-right: 0.75rem;
+}
+
+.app-content-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+$navbar-height-and-padding: $navbar-height + 0.25rem;
+
+div {
+  &.has-navbar-fixed-top {
+    padding-top: $navbar-height-and-padding;
+  }
+
+  &.has-navbar-fixed-bottom {
+    padding-bottom: $navbar-height;
+  }
 }
 </style>
