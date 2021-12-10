@@ -6,12 +6,10 @@
         <div v-for="field in mutableFields" :key="field.name" class="field">
           <label class="label">{{ field.name !== '' && ui[field.name] }}</label>
           <div class="control">
-            <input
+            <AppInput
               v-if="field.type === 'short'"
               :ref="field.name === 'term' ? 'firstInput' : undefined"
               v-model="currentTerm[field.name]"
-              class="input"
-              type="text"
             />
             <textarea
               v-else-if="field.type === 'long'"
@@ -64,6 +62,7 @@ import { computed, onMounted, ref } from 'vue'
 import compare from 'just-compare'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
+import AppInput from '../Generic/AppInput.vue'
 import AppSelect from '../Generic/AppSelect.vue'
 import { useTermsStore } from '../../stores/terms'
 import { globalService } from '../../machines/globalService'

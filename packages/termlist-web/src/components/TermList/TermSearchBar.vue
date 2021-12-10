@@ -6,12 +6,11 @@
         'has-icons-right': modelValue.length,
       }"
     >
-      <input
-        :value="modelValue"
-        class="input searchfield"
+      <AppInput
+        v-model="value"
+        class="searchfield"
         :placeholder="ui.search"
-        type="text"
-        @input="onInput"
+        type="search"
       />
       <span class="icon is-small is-left">
         <fa-icon :icon="['fas', 'search']" />
@@ -30,18 +29,20 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { computed } from 'vue'
+import AppInput from '../Generic/AppInput.vue'
 import ui from '../../assets/ui'
 
-defineProps<{ modelValue: string }>()
+const props = defineProps<{ modelValue: string }>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', search: string): void
 }>()
 
-const onInput = (e: Event) => {
-  const target = e.target as HTMLInputElement
-  emit('update:modelValue', target.value)
-}
+const value = computed({
+  get: () => props.modelValue,
+  set: val => emit('update:modelValue', val),
+})
 
 const onClear = () => {
   emit('update:modelValue', '')
