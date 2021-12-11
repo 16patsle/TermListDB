@@ -16,8 +16,12 @@ const emit = defineEmits<{
 const click = (e: MouseEvent) => emit('click', e)
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import 'bulma/sass/utilities/controls';
 @import 'bulma/sass/utilities/extends';
 @import 'bulma/sass/elements/icon';
+
+.icon {
+  margin: 0 1px;
+}
 </style>
