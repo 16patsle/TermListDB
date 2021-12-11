@@ -83,7 +83,7 @@ $navbar-height-and-padding: $navbar-height + 0.25rem;
 
 div {
   &.has-navbar-fixed-top {
-    padding-top: $navbar-height-and-padding;
+    padding-top: calc(#{$navbar-height-and-padding} + 2px);
   }
 
   &.has-navbar-fixed-bottom {
