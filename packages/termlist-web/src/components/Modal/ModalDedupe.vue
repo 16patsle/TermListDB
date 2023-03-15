@@ -44,12 +44,12 @@
 import { computed } from 'vue'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { globalService } from '../../machines/globalService'
-import { useDedupeStore } from '../../stores/dedupe'
-import { useTermsStore } from '../../stores/terms'
-import type { TermType } from '../../types/TermType'
+import { globalService } from '@/machines/globalService'
+import { useDedupeStore } from '@/stores/dedupe'
+import { useTermsStore } from '@/stores/terms'
+import type { TermType } from '@/types/TermType'
 
-import ui from '../../assets/ui'
+import ui from '@/assets/ui'
 import AppInputField from '../Generic/AppInputField.vue'
 
 const dedupeStore = useDedupeStore()

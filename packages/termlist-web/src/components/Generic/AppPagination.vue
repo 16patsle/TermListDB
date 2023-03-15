@@ -60,7 +60,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import ui from '../../assets/ui'
+import ui from '@/assets/ui'
 
 const props = withDefaults(
   defineProps<{

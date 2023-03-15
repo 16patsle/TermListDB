@@ -28,9 +28,9 @@
 <script lang="ts" setup>
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { globalService } from '../../machines/globalService'
+import { globalService } from '@/machines/globalService'
 
-import ui from '../../assets/ui'
+import ui from '@/assets/ui'
 
 const close = () => globalService.send('CANCEL')
 </script>

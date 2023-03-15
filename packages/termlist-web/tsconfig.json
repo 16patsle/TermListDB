@@ -15,7 +15,12 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "lib": ["ESNext", "DOM"],
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    // Aliases
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"]
+  }
   },
   "include": [
     "./src/**/*"
@@ -28,6 +33,6 @@
     "compilerOptions": {
       "module": "CommonJS",
       "esModuleInterop": true
-    },
+    }
   }
 }

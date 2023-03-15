@@ -12,7 +12,7 @@
 </template>
 <script lang="ts" setup>
 import { computed } from 'vue'
-import type { SelectOptionType } from '../../types/SelectOptionType'
+import type { SelectOptionType } from '@/types/SelectOptionType'
 
 const props = withDefaults(
   defineProps<{

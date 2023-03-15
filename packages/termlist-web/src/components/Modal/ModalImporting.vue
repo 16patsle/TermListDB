@@ -41,10 +41,10 @@
 import AppModal from '../Generic/AppModal.vue'
 import AppInputField from '../Generic/AppInputField.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { globalService } from '../../machines/globalService'
+import { globalService } from '@/machines/globalService'
 
-import ui from '../../assets/ui'
-import { useImportStore } from '../../stores/import'
+import ui from '@/assets/ui'
+import { useImportStore } from '@/stores/import'
 
 const importStore = useImportStore()
 

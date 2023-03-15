@@ -27,11 +27,11 @@ import { ref } from 'vue'
 import AppModal from '../Generic/AppModal.vue'
 import AppInputField from '../Generic/AppInputField.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { useImportStore } from '../../stores/import'
-import { globalService } from '../../machines/globalService'
-import type { TermType } from '../../types/TermType'
+import { useImportStore } from '@/stores/import'
+import { globalService } from '@/machines/globalService'
+import type { TermType } from '@/types/TermType'
 
-import ui from '../../assets/ui'
+import ui from '@/assets/ui'
 import AppFileInput from '../Generic/AppFileInput.vue'
 
 import(/* webpackPreload: true */ './ModalImporting.vue')

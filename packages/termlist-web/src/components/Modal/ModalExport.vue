@@ -23,10 +23,10 @@
 import { computed, onMounted, ref } from 'vue'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { useImportStore } from '../../stores/import'
-import { globalService } from '../../machines/globalService'
+import { useImportStore } from '@/stores/import'
+import { globalService } from '@/machines/globalService'
 
-import ui from '../../assets/ui'
+import ui from '@/assets/ui'
 
 const importStore = useImportStore()
 

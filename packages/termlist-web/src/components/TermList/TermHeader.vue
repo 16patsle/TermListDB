@@ -9,8 +9,8 @@
   <th class="row-buttons" />
 </template>
 <script lang="ts" setup>
-import ui from '../../assets/ui'
-import fields from '../../assets/fields'
+import ui from '@/assets/ui'
+import fields from '@/assets/fields'
 </script>
 
 <style scoped>

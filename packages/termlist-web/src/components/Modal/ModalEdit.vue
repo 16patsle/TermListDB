@@ -66,14 +66,14 @@ import AppButton from '../Generic/AppButton.vue'
 import AppInput from '../Generic/AppInput.vue'
 import AppInputField from '../Generic/AppInputField.vue'
 import AppSelect from '../Generic/AppSelect.vue'
-import { useTermsStore } from '../../stores/terms'
-import { globalService } from '../../machines/globalService'
-import { FieldType } from '../../types/FieldType'
-import type { TermDefType, TermType } from '../../types/TermType'
-import type { SelectOptionType } from '../../types/SelectOptionType'
+import { useTermsStore } from '@/stores/terms'
+import { globalService } from '@/machines/globalService'
+import { FieldType } from '@/types/FieldType'
+import type { TermDefType, TermType } from '@/types/TermType'
+import type { SelectOptionType } from '@/types/SelectOptionType'
 
-import ui from '../../assets/ui'
-import fields from '../../assets/fields'
+import ui from '@/assets/ui'
+import fields from '@/assets/fields'
 
 const props = defineProps<{ term?: TermDefType }>()
 

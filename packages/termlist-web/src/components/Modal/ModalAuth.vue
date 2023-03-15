@@ -33,9 +33,9 @@ import AppModal from '../Generic/AppModal.vue'
 import AppInputField from '../Generic/AppInputField.vue'
 import AppInput from '../Generic/AppInput.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { auth } from '../../utils/getAuth'
+import { auth } from '@/utils/getAuth'
 
-import ui from '../../assets/ui'
+import ui from '@/assets/ui'
 
 const email = ref('')
 const password = ref('')

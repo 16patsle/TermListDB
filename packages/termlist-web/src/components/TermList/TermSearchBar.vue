@@ -25,7 +25,7 @@
 import { computed } from 'vue'
 import AppInputField from '../Generic/AppInputField.vue'
 import AppInput from '../Generic/AppInput.vue'
-import ui from '../../assets/ui'
+import ui from '@/assets/ui'
 
 const props = defineProps<{ modelValue: string }>()
 

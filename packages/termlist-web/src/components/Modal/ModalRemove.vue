@@ -18,11 +18,11 @@
 <script lang="ts" setup>
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
-import { useTermsStore } from '../../stores/terms'
-import { globalService } from '../../machines/globalService'
-import type { TermType } from '../../types/TermType'
+import { useTermsStore } from '@/stores/terms'
+import { globalService } from '@/machines/globalService'
+import type { TermType } from '@/types/TermType'
 
-import ui from '../../assets/ui'
+import ui from '@/assets/ui'
 
 const props = defineProps<{ term?: TermType }>()
 

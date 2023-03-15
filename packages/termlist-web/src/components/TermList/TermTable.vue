@@ -20,7 +20,7 @@ import AppTable from '../Generic/AppTable.vue'
 import TermHeader from './TermHeader.vue'
 import TermRow from './TermRow.vue'
 
-import type { TermType } from '../../types/TermType'
+import type { TermType } from '@/types/TermType'
 
 defineProps<{ terms: TermType[] }>()
 

@@ -13,11 +13,11 @@ import { computed, ref } from 'vue'
 import AppInputField from '../Generic/AppInputField.vue'
 import AppSelect from '../Generic/AppSelect.vue'
 
-import type { SelectOptionType } from '../../types/SelectOptionType'
-import type { FieldNameType } from '../../types/FieldNameType'
+import type { SelectOptionType } from '@/types/SelectOptionType'
+import type { FieldNameType } from '@/types/FieldNameType'
 
-import ui from '../../assets/ui'
-import fields from '../../assets/fields'
+import ui from '@/assets/ui'
+import fields from '@/assets/fields'
 
 const emit =
   defineEmits<{

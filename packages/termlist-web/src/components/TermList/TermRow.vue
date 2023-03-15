@@ -21,12 +21,12 @@
 <script lang="ts" setup>
 import TermRowButton from './TermRowButton.vue'
 
-import type { FieldType } from '../../types/FieldType'
-import type { TermType } from '../../types/TermType'
+import type { FieldType } from '@/types/FieldType'
+import type { TermType } from '@/types/TermType'
 
-import ui from '../../assets/ui'
-import fields from '../../assets/fields'
-import md from '../../utils/markdown'
+import ui from '@/assets/ui'
+import fields from '@/assets/fields'
+import md from '@/utils/markdown'
 
 const props = defineProps<{ term: TermType }>()
 

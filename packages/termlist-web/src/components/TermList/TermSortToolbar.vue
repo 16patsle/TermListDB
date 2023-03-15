@@ -13,7 +13,7 @@
 <script lang="ts" setup>
 import { watch } from 'vue'
 import debounce from 'just-debounce-it'
-import { useTermsStore } from '../../stores/terms'
+import { useTermsStore } from '@/stores/terms'
 import TermSearchBar from './TermSearchBar.vue'
 import TermSortSelect from './TermSortSelect.vue'
 

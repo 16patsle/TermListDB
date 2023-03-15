@@ -22,9 +22,9 @@
 <script lang="ts" setup>
 import AppLoading from './AppLoading.vue'
 import AppButton from './AppButton.vue'
-import { globalService } from '../../machines/globalService'
+import { globalService } from '@/machines/globalService'
 
-import ui from '../../assets/ui'
+import ui from '@/assets/ui'
 
 const close = () => globalService.send('CANCEL')
 </script>

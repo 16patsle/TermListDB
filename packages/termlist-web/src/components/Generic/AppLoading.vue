@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import ui from '../../assets/ui'
+import ui from '@/assets/ui'
 
 withDefaults(defineProps<{ text?: string }>(), { text: ui.loading })
 </script>
