@@ -64,8 +64,7 @@ const getFieldValue = (field: FieldType): string | undefined => {
 </script>
 
 <style lang="scss">
-@import 'bulma/sass/utilities/controls';
-@import 'bulma/sass/utilities/extends';
+@import '@/assets/includes';
 @import 'bulma/sass/elements/content';
 </style>
 

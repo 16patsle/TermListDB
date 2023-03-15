@@ -173,8 +173,7 @@ const reduce = (options: string[]): SelectOptionType[] =>
 </script>
 
 <style lang="scss">
-@import 'bulma/sass/utilities/controls';
-@import 'bulma/sass/utilities/extends';
+@import '@/assets/includes';
 @import 'bulma/sass/form/shared';
 @import 'bulma/sass/form/tools';
 @import 'bulma/sass/form/input-textarea';

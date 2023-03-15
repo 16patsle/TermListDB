@@ -18,8 +18,7 @@ const click = (e: MouseEvent) => emit('click', e)
 </script>
 
 <style scoped lang="scss">
-@import 'bulma/sass/utilities/controls';
-@import 'bulma/sass/utilities/extends';
+@import '@/assets/includes';
 @import 'bulma/sass/elements/icon';
 
 .icon {

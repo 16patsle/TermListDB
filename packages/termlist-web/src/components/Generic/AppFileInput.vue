@@ -69,8 +69,7 @@ const handleFiles = (e: Event) => {
 </script>
 
 <style lang="scss">
-@import 'bulma/sass/utilities/controls';
-@import 'bulma/sass/utilities/extends';
+@import '@/assets/includes';
 @import 'bulma/sass/form/shared';
 @import 'bulma/sass/form/file';
 @import 'bulma/sass/form/tools';

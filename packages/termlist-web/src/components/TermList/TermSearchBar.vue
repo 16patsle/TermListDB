@@ -45,8 +45,7 @@ const onClear = () => {
 </script>
 
 <style lang="scss">
-@import 'bulma/sass/utilities/controls';
-@import 'bulma/sass/utilities/extends';
+@import '@/assets/includes';
 @import 'bulma/sass/elements/button';
 @import 'bulma/sass/elements/icon';
 @import 'bulma/sass/form/shared';
