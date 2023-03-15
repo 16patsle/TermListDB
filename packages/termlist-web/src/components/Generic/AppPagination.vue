@@ -73,10 +73,11 @@ const props = withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'goto', event: MouseEvent): void
-  (e: 'gotopage', pageNumber: number): void
-}>()
+const emit =
+  defineEmits<{
+    (e: 'goto', event: MouseEvent): void
+    (e: 'gotopage', pageNumber: number): void
+  }>()
 
 const lastpageNumber = computed((): string => {
   if (isNaN(props.lastpage)) {

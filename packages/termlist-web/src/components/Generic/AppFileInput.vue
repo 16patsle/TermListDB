@@ -52,9 +52,10 @@ withDefaults(
   }
 )
 
-const emit = defineEmits<{
-  (e: 'change', value?: File): void
-}>()
+const emit =
+  defineEmits<{
+    (e: 'change', value?: File): void
+  }>()
 
 const selectedFile = ref<File | undefined>()
 const importFile = ref<InstanceType<typeof HTMLInputElement>>()

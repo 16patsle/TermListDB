@@ -19,9 +19,10 @@ import type { FieldNameType } from '../../types/FieldNameType'
 import ui from '../../assets/ui'
 import fields from '../../assets/fields'
 
-const emit = defineEmits<{
-  (e: 'sort', value?: FieldNameType): void
-}>()
+const emit =
+  defineEmits<{
+    (e: 'sort', value?: FieldNameType): void
+  }>()
 
 const _sortValue = ref(fields[0].name)
 const sortValue = computed({

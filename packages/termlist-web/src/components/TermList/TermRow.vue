@@ -30,10 +30,11 @@ import md from '../../utils/markdown'
 
 const props = defineProps<{ term: TermType }>()
 
-const emit = defineEmits<{
-  (e: 'edit', term: TermType): void
-  (e: 'remove', term: TermType): void
-}>()
+const emit =
+  defineEmits<{
+    (e: 'edit', term: TermType): void
+    (e: 'remove', term: TermType): void
+  }>()
 
 const edit = () => emit('edit', props.term)
 const remove = () => emit('remove', props.term)

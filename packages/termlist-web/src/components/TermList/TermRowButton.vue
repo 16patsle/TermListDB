@@ -9,9 +9,10 @@
 <script lang="ts" setup>
 defineProps<{ icon: [string, string] }>()
 
-const emit = defineEmits<{
-  (e: 'click', event: MouseEvent): void
-}>()
+const emit =
+  defineEmits<{
+    (e: 'click', event: MouseEvent): void
+  }>()
 
 const click = (e: MouseEvent) => emit('click', e)
 </script>
