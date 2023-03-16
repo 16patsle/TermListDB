@@ -57,11 +57,10 @@ withDefaults(
   }
 )
 
-const emit =
-  defineEmits<{
-    (e: 'okClick', event: MouseEvent): void
-    (e: 'close', event: MouseEvent): void
-  }>()
+const emit = defineEmits<{
+  (e: 'okClick', event: MouseEvent): void
+  (e: 'close', event: MouseEvent): void
+}>()
 
 const close = (e: MouseEvent): void => emit('close', e)
 </script>

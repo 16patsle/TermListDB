@@ -29,10 +29,9 @@ import ui from '@/assets/ui'
 
 const props = defineProps<{ modelValue: string }>()
 
-const emit =
-  defineEmits<{
-    (e: 'update:modelValue', search: string): void
-  }>()
+const emit = defineEmits<{
+  (e: 'update:modelValue', search: string): void
+}>()
 
 const value = computed({
   get: () => props.modelValue,

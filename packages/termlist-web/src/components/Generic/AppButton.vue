@@ -23,10 +23,9 @@ withDefaults(
   { primary: false, danger: false, loading: false }
 )
 
-const emit =
-  defineEmits<{
-    (e: 'click', event: MouseEvent): void
-  }>()
+const emit = defineEmits<{
+  (e: 'click', event: MouseEvent): void
+}>()
 
 const click = (e: MouseEvent) => {
   emit('click', e)
