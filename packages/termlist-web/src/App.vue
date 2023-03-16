@@ -1,7 +1,7 @@
 <template>
   <div id="app-container" class="has-navbar-fixed-top">
-    <Navbar />
-    <Modals />
+    <AppNavbar />
+    <AppModals />
     <div class="container app-content-container">
       <TermSortToolbar />
       <TermList v-if="authenticated" />
@@ -12,8 +12,8 @@
 <script lang="ts" setup>
 import { computed, defineAsyncComponent } from 'vue'
 import { useTermsStore } from './stores/terms'
-import Modals from './components/Modals.vue'
-import Navbar from './components/Navbar.vue'
+import AppModals from './components/AppModals.vue'
+import AppNavbar from './components/AppNavbar.vue'
 import TermSortToolbar from './components/TermList/TermSortToolbar.vue'
 import { currentState, globalService } from './machines/globalService'
 
@@ -61,6 +61,7 @@ document.addEventListener('keyup', shortcutUp, false)
 
 <style lang="scss">
 @import '@/assets/includes';
+/* stylelint-disable-next-line scss/at-import-no-partial-leading-underscore */
 @import 'bulma/sass/base/_all';
 @import 'bulma/sass/components/navbar';
 @import 'bulma/sass/elements/container';
