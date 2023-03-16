@@ -23,8 +23,13 @@ export type GlobalContext = {
   dedupe?: boolean
 }
 
-export const globalMachine = createMachine<GlobalContext, GlobalEvent>(
+export const globalMachine = createMachine(
   {
+    tsTypes: {} as import('./globalMachine.typegen').Typegen0,
+    schema: {
+      context: {} as GlobalContext,
+      events: {} as GlobalEvent,
+    },
     id: 'global',
     initial: 'boot',
     context: {

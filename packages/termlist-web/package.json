@@ -16,7 +16,7 @@
     "preview": "vite preview",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "postinstall": "rm -rf node_modules/@types/react"
+    "postinstall": "rm -rf node_modules/@types/react && xstate typegen \"./src/**/*.ts?(x)\""
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
@@ -51,6 +51,7 @@
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.55.0",
     "@vitejs/plugin-vue": "^4.0.0",
+    "@xstate/cli": "^0.4.2",
     "browserslist-to-esbuild": "^1.2.0",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.7.0",
