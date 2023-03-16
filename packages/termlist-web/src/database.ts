@@ -11,6 +11,7 @@ import {
   limitToLast,
   orderBy,
   query,
+  type QueryConstraint,
   setDoc,
   startAfter,
   updateDoc,
@@ -106,7 +107,7 @@ class TermDatabase {
       return []
     }
 
-    const queryConstraints = [orderBy(data.field || '_id')]
+    const queryConstraints: QueryConstraint[] = [orderBy(data.field || '_id')]
 
     if (data.limit || data.limit === undefined) {
       if (data.endBefore) {
