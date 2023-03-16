@@ -15,16 +15,16 @@
         <p class="has-text-centered">{{ percent }}%</p>
         <p class="has-text-centered">
           {{ ui.numberOfDuplicates }}:
-          {{ dedupeStore.$state.duplicatedTerms.length }}
+          {{ Object.entries(dedupeStore.$state.duplicatedTerms).length }}
         </p>
       </AppInputField>
       <div v-if="complete">
         <ul>
           <li
-            v-for="term in dedupeStore.$state.duplicatedTerms"
-            :key="term._id"
+            v-for="[term, count] in Object.entries(dedupeStore.$state.duplicatedTerms ?? {})"
+            :key="term"
           >
-            {{ term.term }}
+            {{ term }} ({{ count }})
             <AppButton @click="search(term)">
               {{ ui.search }}
             </AppButton>
@@ -47,7 +47,6 @@ import AppButton from '../Generic/AppButton.vue'
 import { globalService } from '@/machines/globalService'
 import { useDedupeStore } from '@/stores/dedupe'
 import { useTermsStore } from '@/stores/terms'
-import type { TermType } from '@/types/TermType'
 
 import ui from '@/assets/ui'
 import AppInputField from '../Generic/AppInputField.vue'
@@ -65,10 +64,10 @@ const complete = computed(() => dedupeStore.$state.complete)
 void dedupeStore.checkForDuplicates()
 
 const close = () => globalService.send('CANCEL')
-const search = (term: TermType) => {
-  if (term.term) {
+const search = (term: string) => {
+  if (term) {
     globalService.send('SEARCH')
-    termsStore.setSearch(term.term)
+    termsStore.setSearch(term)
   }
 }
 </script>
