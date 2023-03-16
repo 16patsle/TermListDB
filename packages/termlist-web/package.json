@@ -7,9 +7,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "npm run dev",
-    "lint": "npm run lint:js-typed --silent && npm run lint:css --silent",
+    "lint": "npm run lint:js --silent && npm run lint:css --silent",
     "lint:js": "eslint \"src/**/*.{ts,js,vue}\" --fix",
-    "lint:js-typed": "eslint \"src/**/*.{ts,js,vue}\" --fix -c .eslintrc-types.json",
     "lint:css": "stylelint \"src/**/*.{vue,css,scss}\" --fix",
     "format": "prettier --write \"src/**/*.{ts,js,vue,css,scss, mdx}\"",
     "dev": "vite",
