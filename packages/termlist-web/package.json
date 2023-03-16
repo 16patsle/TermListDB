@@ -36,7 +36,8 @@
     "remark-rehype": "^10.1.0",
     "unified": "^10.1.2",
     "vue": "^3.2.47",
-    "xstate": "^4.37.0"
+    "xstate": "^4.37.0",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@relative-ci/agent": "^3.0.0",

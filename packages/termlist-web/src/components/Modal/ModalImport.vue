@@ -24,12 +24,13 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { z } from 'zod'
 import AppModal from '../Generic/AppModal.vue'
 import AppInputField from '../Generic/AppInputField.vue'
 import AppButton from '../Generic/AppButton.vue'
 import { useImportStore } from '@/stores/import'
 import { globalService } from '@/machines/globalService'
-import type { TermType } from '@/types/TermType'
+import { Term, TermType } from '@/types/TermType'
 
 import ui from '@/assets/ui'
 import AppFileInput from '../Generic/AppFileInput.vue'
@@ -51,7 +52,7 @@ const importTerm = () => {
     fileReader = new FileReader()
     fileReader.onload = () => {
       if (fileReader && fileReader.result) {
-        let file: TermType[] = JSON.parse(fileReader.result.toString())
+        let file: TermType[] = z.array(Term).parse(JSON.parse(fileReader.result.toString()))
 
         globalService.send('IMPORT')
         return importStore.import([...file])
