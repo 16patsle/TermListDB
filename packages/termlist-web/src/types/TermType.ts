@@ -13,6 +13,7 @@ export const TermDef = z.object({
     'preposition',
     'conjunction',
     'pronounciation',
+    '',
   ]).optional(),
 })
 

@@ -26,8 +26,9 @@ import type {
   Firestore,
 } from 'firebase/firestore'
 import type { User } from 'firebase/auth'
+import { z } from 'zod'
 import type { TermQueryType } from './types/TermQueryType'
-import type { TermType } from './types/TermType'
+import { Term, type TermType } from './types/TermType'
 
 class TermDatabase {
   db: Firestore
@@ -125,7 +126,7 @@ class TermDatabase {
 
     if (!data.search) {
       const termQuery = query(this.termsDB, ...queryConstraints)
-      return (await getDocs(termQuery)).docs.map(val => val.data() as TermType)
+      return (await getDocs(termQuery)).docs.map(val => Term.parse(val.data()))
     } else {
       let slice = data.search.substr(0, 3)
       if (data.search.length < 3) {
@@ -134,14 +135,14 @@ class TermDatabase {
       queryConstraints.push(where('_charSlices', 'array-contains', slice))
 
       const termQuery = query(this.termsDB, ...queryConstraints)
-      return (await getDocs(termQuery)).docs.reduce((returnArray, val) => {
-        const termData = val.data() as TermType
+      return (await getDocs(termQuery)).docs.reduce<TermType[]>((returnArray, val) => {
+        const termData = Term.parse(val.data())
         const { term } = termData
         if (term && data.search && term.includes(data.search)) {
           returnArray.push(termData)
         }
         return returnArray
-      }, [] as TermType[])
+      }, [])
     }
   }
 
@@ -151,7 +152,7 @@ class TermDatabase {
       return 0
     }
     const data = (await getDoc(this.userInfoReference)).data()
-    return data ? (data.termlists_total as number) : 0
+    return data ? z.number().parse(data.termlists_total) : 0
   }
 }
 
