@@ -13,8 +13,7 @@ export const TermDef = z.object({
     'preposition',
     'conjunction',
     'pronounciation',
-    '',
-  ]).optional(),
+  ]).optional().catch(undefined),
 })
 
 export type TermDefType = z.infer<typeof TermDef>
