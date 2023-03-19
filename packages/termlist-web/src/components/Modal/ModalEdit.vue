@@ -28,13 +28,14 @@
             :options="reduce(field.options)"
             fullwidth
           />
+          <p v-for="error in field.name !== '' && errors?.formErrors.fieldErrors[field.name]" :key="error.toString()">{{ error }}</p>
         </AppInputField>
       </template>
       <template #modal-footer>
         <AppButton
           primary
           :loading="loading"
-          :disabled="currentTerm.term === ''"
+          :disabled="!valid"
           type="submit"
           accesskey="s"
           @click="saveTerm"
@@ -59,8 +60,10 @@
   </form>
 </template>
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import compare from 'just-compare'
+import debounce from 'just-debounce-it'
+import type { ZodError } from 'zod'
 import AppModal from '../Generic/AppModal.vue'
 import AppButton from '../Generic/AppButton.vue'
 import AppInput from '../Generic/AppInput.vue'
@@ -69,7 +72,7 @@ import AppSelect from '../Generic/AppSelect.vue'
 import { useTermsStore } from '@/stores/terms'
 import { globalService } from '@/machines/globalService'
 import { FieldType } from '@/types/FieldType'
-import { Term, type TermDefType, type TermType } from '@/types/TermType'
+import { Term, TermDef, type TermDefType, type TermType } from '@/types/TermType'
 import type { SelectOptionType } from '@/types/SelectOptionType'
 
 import ui from '@/assets/ui'
@@ -106,6 +109,17 @@ const dirty = computed(
   (): boolean => !compare(currentTerm.value, originalTerm.value)
 )
 const loading = ref(false)
+const valid = ref(false)
+const errors = ref<ZodError<TermDefType>>()
+
+watch(
+  currentTerm.value,
+  debounce(() => {
+    const result = TermDef.safeParse(currentTerm.value)
+    errors.value = result.success ? undefined : result.error
+    valid.value = result.success
+  }, 400)
+)
 
 const mutableFields = computed((): FieldType[] =>
   fields.filter(field => !field.immutable)
