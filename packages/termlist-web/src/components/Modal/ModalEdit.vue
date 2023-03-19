@@ -120,11 +120,13 @@ const saveTerm = async () => {
     termObject = {
       _id: props.term._id,
       date: props.term._id,
+      term: props.term.term,
     }
   } else {
     termObject = {
       date: currentTerm.value.date,
       _id: currentTerm.value.date,
+      term: '',
     }
   }
 
