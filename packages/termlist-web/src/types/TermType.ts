@@ -4,7 +4,7 @@ export const TermDef = z.object({
   _id: z.string().optional(),
   date: z.string(),
   desc: z.string().optional(),
-  term: z.string().optional(),
+  term: z.string().nonempty().optional(),
   type: z.enum([
     'verb',
     'noun',

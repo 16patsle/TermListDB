@@ -69,7 +69,7 @@ import AppSelect from '../Generic/AppSelect.vue'
 import { useTermsStore } from '@/stores/terms'
 import { globalService } from '@/machines/globalService'
 import { FieldType } from '@/types/FieldType'
-import type { TermDefType, TermType } from '@/types/TermType'
+import { Term, type TermDefType, type TermType } from '@/types/TermType'
 import type { SelectOptionType } from '@/types/SelectOptionType'
 
 import ui from '@/assets/ui'
@@ -143,10 +143,10 @@ const saveTerm = async () => {
 
   if (props.term) {
     // Update existing term
-    await termsStore.save(termObject as TermType)
+    await termsStore.save(Term.parse(termObject))
   } else {
     // Add new term
-    await termsStore.add(termObject as TermType)
+    await termsStore.add(Term.parse(termObject))
   }
 
   loading.value = false
