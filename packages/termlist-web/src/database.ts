@@ -152,9 +152,13 @@ async function getTotalTerms(): Promise<number> {
   return data ? z.number().parse(data.termlists_total) : 0
 }
 
-export const database = {
-  userId,
-  userInfoReference,
+export const database = Object.freeze({
+  get userId() {
+    return userId
+  },
+  get userInfoReference() {
+    return userInfoReference
+  },
   start,
   connect,
   get,
@@ -163,4 +167,4 @@ export const database = {
   save,
   getTerms,
   getTotalTerms,
-}
+})
