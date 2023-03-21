@@ -1,4 +1,4 @@
-import { database } from '../utils/firebase'
+import { database } from '../database'
 import { log } from '../utils/log'
 
 import { defineStore } from 'pinia'

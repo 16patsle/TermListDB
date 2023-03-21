@@ -2,7 +2,6 @@ import {
   collection,
   deleteDoc,
   doc,
-  DocumentSnapshot,
   enableIndexedDbPersistence,
   endBefore,
   getDoc,
@@ -11,152 +10,157 @@ import {
   limitToLast,
   orderBy,
   query,
-  type QueryConstraint,
   setDoc,
   startAfter,
   updateDoc,
   where,
+  getFirestore,
 } from 'firebase/firestore'
+import { z } from 'zod'
 import { log } from './utils/log'
 
 import type {
   CollectionReference,
   DocumentData,
   DocumentReference,
-  Firestore,
+  DocumentSnapshot,
+  QueryConstraint,
 } from 'firebase/firestore'
 import type { User } from 'firebase/auth'
-import { z } from 'zod'
 import type { TermQueryType } from './types/TermQueryType'
 import { Term, type TermType } from './types/TermType'
+import { firebaseApp } from './utils/initializeFirebase'
 
-class TermDatabase {
-  db: Firestore
-  userId?: string
-  userInfoReference?: DocumentReference<DocumentData>
-  termsDB?: CollectionReference<DocumentData>
+const db = getFirestore(firebaseApp)
+let userId: string | undefined
+let userInfoReference: DocumentReference<DocumentData> | undefined
+let termsDB: CollectionReference<DocumentData> | undefined
 
-  constructor(firestore: Firestore) {
-    this.db = firestore
+async function start(): Promise<void> {
+  await enableIndexedDbPersistence(db).catch((err: { code: string }) => {
+    if (err.code == 'failed-precondition') {
+      // Multiple tabs open, only works in one.
+      // Silently fail
+      console.warn('DB persistence not enabled because multiple tabs are open.')
+    } else if (err.code == 'unimplemented') {
+      // The current browser does not support persistence.
+      // Silently fail
+      console.warn('DB persistence not supported in this browser.')
+    }
+  })
+}
+
+function connect(user: User): void {
+  userInfoReference = doc(collection(db, 'users'), user.uid)
+
+  void updateDoc(userInfoReference, { name: user.displayName })
+  termsDB = collection(db, 'users', user.uid, 'termlists')
+
+  userId = user.uid
+  log(`Connected to ${user.uid} as ${user.displayName || ''}`)
+}
+
+function get(id: string): Promise<DocumentSnapshot<DocumentData>> | undefined {
+  if (!termsDB) {
+    console.warn('Not connected to db')
+    return
+  }
+  return getDoc(doc(termsDB, id))
+}
+
+function remove(id: string): Promise<void> {
+  if (!termsDB) {
+    console.warn('Not connected to db')
+    return Promise.reject('Not connected to db')
+  }
+  return deleteDoc(doc(termsDB, id))
+}
+
+function add(termObject: TermType): Promise<void> {
+  if (!termsDB) {
+    console.warn('Not connected to db')
+    return Promise.reject('Not connected to db')
+  }
+  if (typeof termObject._id !== 'string') {
+    log('Invalid id', termObject)
+    throw new Error('Not a string!')
+  }
+  return setDoc(doc(termsDB, termObject._id), termObject)
+}
+
+function save(termObject: TermType): Promise<void> {
+  if (!termsDB) {
+    console.warn('Not connected to db')
+    return Promise.reject('Not connected to db')
+  }
+  return setDoc(doc(termsDB, termObject._id), termObject)
+}
+
+async function getTerms(data: TermQueryType = {}): Promise<TermType[]> {
+  if (!termsDB) {
+    console.warn('Not connected to db')
+    return []
   }
 
-  async start(): Promise<void> {
-    await enableIndexedDbPersistence(this.db).catch((err: { code: string }) => {
-      if (err.code == 'failed-precondition') {
-        // Multiple tabs open, only works in one.
-        // Silently fail
-        console.warn(
-          'DB persistence not enabled because multiple tabs are open.'
-        )
-      } else if (err.code == 'unimplemented') {
-        // The current browser does not support persistence.
-        // Silently fail
-        console.warn('DB persistence not supported in this browser.')
-      }
-    })
-  }
+  const queryConstraints: QueryConstraint[] = [orderBy(data.field || '_id')]
 
-  connect(user: User): void {
-    this.userInfoReference = doc(collection(this.db, 'users'), user.uid)
-
-    void updateDoc(this.userInfoReference, { name: user.displayName })
-    this.termsDB = collection(this.db, 'users', user.uid, 'termlists')
-
-    this.userId = user.uid
-    log(`Connected to ${user.uid} as ${user.displayName || ''}`)
-  }
-
-  get(id: string): Promise<DocumentSnapshot<DocumentData>> | undefined {
-    if (!this.termsDB) {
-      console.warn('Not connected to db')
-      return
-    }
-    return getDoc(doc(this.termsDB, id))
-  }
-
-  remove(id: string): Promise<void> {
-    if (!this.termsDB) {
-      console.warn('Not connected to db')
-      return Promise.reject('Not connected to db')
-    }
-    return deleteDoc(doc(this.termsDB, id))
-  }
-
-  add(termObject: TermType): Promise<void> {
-    if (!this.termsDB) {
-      console.warn('Not connected to db')
-      return Promise.reject('Not connected to db')
-    }
-    if (typeof termObject._id !== 'string') {
-      log('Invalid id', termObject)
-      throw new Error('Not a string!')
-    }
-    return setDoc(doc(this.termsDB, termObject._id), termObject)
-  }
-
-  save(termObject: TermType): Promise<void> {
-    if (!this.termsDB) {
-      console.warn('Not connected to db')
-      return Promise.reject('Not connected to db')
-    }
-    return setDoc(doc(this.termsDB, termObject._id), termObject)
-  }
-
-  async getTerms(data: TermQueryType = {}): Promise<TermType[]> {
-    if (!this.termsDB) {
-      console.warn('Not connected to db')
-      return []
-    }
-
-    const queryConstraints: QueryConstraint[] = [orderBy(data.field || '_id')]
-
-    if (data.limit || data.limit === undefined) {
-      if (data.endBefore) {
-        queryConstraints.push(limitToLast(data.limit || 20))
-      } else {
-        queryConstraints.push(limit(data.limit || 20))
-      }
-    }
-    if (data.startAfter) {
-      queryConstraints.push(startAfter(data.startAfter))
-    }
+  if (data.limit || data.limit === undefined) {
     if (data.endBefore) {
-      queryConstraints.push(endBefore(data.endBefore))
-    }
-
-    if (!data.search) {
-      const termQuery = query(this.termsDB, ...queryConstraints)
-      return (await getDocs(termQuery)).docs.map(val => Term.parse(val.data()))
+      queryConstraints.push(limitToLast(data.limit || 20))
     } else {
-      let slice = data.search.substr(0, 3)
-      if (data.search.length < 3) {
-        slice = data.search.substr(0, 1)
-      }
-      queryConstraints.push(where('_charSlices', 'array-contains', slice))
-
-      const termQuery = query(this.termsDB, ...queryConstraints)
-      return (await getDocs(termQuery)).docs.reduce<TermType[]>(
-        (returnArray, val) => {
-          const termData = Term.parse(val.data())
-          const { term } = termData
-          if (term && data.search && term.includes(data.search)) {
-            returnArray.push(termData)
-          }
-          return returnArray
-        },
-        []
-      )
+      queryConstraints.push(limit(data.limit || 20))
     }
   }
+  if (data.startAfter) {
+    queryConstraints.push(startAfter(data.startAfter))
+  }
+  if (data.endBefore) {
+    queryConstraints.push(endBefore(data.endBefore))
+  }
 
-  async getTotalTerms(): Promise<number> {
-    if (!this.userInfoReference) {
-      console.warn('Not connected to db')
-      return 0
+  if (!data.search) {
+    const termQuery = query(termsDB, ...queryConstraints)
+    return (await getDocs(termQuery)).docs.map(val => Term.parse(val.data()))
+  } else {
+    let slice = data.search.substr(0, 3)
+    if (data.search.length < 3) {
+      slice = data.search.substr(0, 1)
     }
-    const data = (await getDoc(this.userInfoReference)).data()
-    return data ? z.number().parse(data.termlists_total) : 0
+    queryConstraints.push(where('_charSlices', 'array-contains', slice))
+
+    const termQuery = query(termsDB, ...queryConstraints)
+    return (await getDocs(termQuery)).docs.reduce<TermType[]>(
+      (returnArray, val) => {
+        const termData = Term.parse(val.data())
+        const { term } = termData
+        if (term && data.search && term.includes(data.search)) {
+          returnArray.push(termData)
+        }
+        return returnArray
+      },
+      []
+    )
   }
 }
 
-export default TermDatabase
+async function getTotalTerms(): Promise<number> {
+  if (!userInfoReference) {
+    console.warn('Not connected to db')
+    return 0
+  }
+  const data = (await getDoc(userInfoReference)).data()
+  return data ? z.number().parse(data.termlists_total) : 0
+}
+
+export const database = {
+  userId,
+  userInfoReference,
+  start,
+  connect,
+  get,
+  remove,
+  add,
+  save,
+  getTerms,
+  getTotalTerms,
+}
