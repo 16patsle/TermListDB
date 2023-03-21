@@ -7,6 +7,7 @@
           v-for="field in mutableFields"
           :key="field.name"
           :label="(field.name !== '' && ui[field.name]) || undefined"
+          help-danger
         >
           <AppInput
             v-if="field.type === 'short'"
@@ -28,8 +29,10 @@
             :options="reduce(field.options)"
             fullwidth
           />
-          <p v-for="error in field.name !== '' && errors?.formErrors.fieldErrors[field.name]" :key="error.toString()">{{ error }}</p>
-        </AppInputField>
+          <template #help>
+            <AppZodError v-if="errors && field.name !== ''" :errors="errors" :field-name="field.name" />
+          </template>
+        </AppInputField >
       </template>
       <template #modal-footer>
         <AppButton
@@ -69,6 +72,7 @@ import AppButton from '../Generic/AppButton.vue'
 import AppInput from '../Generic/AppInput.vue'
 import AppInputField from '../Generic/AppInputField.vue'
 import AppSelect from '../Generic/AppSelect.vue'
+import AppZodError from '../Generic/AppZodError.vue'
 import { useTermsStore } from '@/stores/terms'
 import { globalService } from '@/machines/globalService'
 import { FieldType } from '@/types/FieldType'
