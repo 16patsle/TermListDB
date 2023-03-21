@@ -135,14 +135,17 @@ class TermDatabase {
       queryConstraints.push(where('_charSlices', 'array-contains', slice))
 
       const termQuery = query(this.termsDB, ...queryConstraints)
-      return (await getDocs(termQuery)).docs.reduce<TermType[]>((returnArray, val) => {
-        const termData = Term.parse(val.data())
-        const { term } = termData
-        if (term && data.search && term.includes(data.search)) {
-          returnArray.push(termData)
-        }
-        return returnArray
-      }, [])
+      return (await getDocs(termQuery)).docs.reduce<TermType[]>(
+        (returnArray, val) => {
+          const termData = Term.parse(val.data())
+          const { term } = termData
+          if (term && data.search && term.includes(data.search)) {
+            returnArray.push(termData)
+          }
+          return returnArray
+        },
+        []
+      )
     }
   }
 

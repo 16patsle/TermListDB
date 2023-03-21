@@ -52,7 +52,9 @@ const importTerm = () => {
     fileReader = new FileReader()
     fileReader.onload = () => {
       if (fileReader && fileReader.result) {
-        let file: TermType[] = z.array(Term).parse(JSON.parse(fileReader.result.toString()))
+        let file: TermType[] = z
+          .array(Term)
+          .parse(JSON.parse(fileReader.result.toString()))
 
         globalService.send('IMPORT')
         return importStore.import([...file])

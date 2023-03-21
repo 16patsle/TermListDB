@@ -30,9 +30,13 @@
             fullwidth
           />
           <template #help>
-            <AppZodError v-if="errors && field.name !== ''" :errors="errors" :field-name="field.name" />
+            <AppZodError
+              v-if="errors && field.name !== ''"
+              :errors="errors"
+              :field-name="field.name"
+            />
           </template>
-        </AppInputField >
+        </AppInputField>
       </template>
       <template #modal-footer>
         <AppButton
@@ -76,7 +80,12 @@ import AppZodError from '../Generic/AppZodError.vue'
 import { useTermsStore } from '@/stores/terms'
 import { globalService } from '@/machines/globalService'
 import { FieldType } from '@/types/FieldType'
-import { Term, TermDef, type TermDefType, type TermType } from '@/types/TermType'
+import {
+  Term,
+  TermDef,
+  type TermDefType,
+  type TermType,
+} from '@/types/TermType'
 import type { SelectOptionType } from '@/types/SelectOptionType'
 
 import ui from '@/assets/ui'

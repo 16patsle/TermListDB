@@ -21,7 +21,9 @@
       <div v-if="complete">
         <ul>
           <li
-            v-for="[term, count] in Object.entries(dedupeStore.$state.duplicatedTerms ?? {})"
+            v-for="[term, count] in Object.entries(
+              dedupeStore.$state.duplicatedTerms ?? {}
+            )"
             :key="term"
           >
             {{ term }} ({{ count }})
