@@ -34,6 +34,14 @@ const emit = defineEmits<{
 const edit = () => emit('edit', props.term)
 const remove = () => emit('remove', props.term)
 
+const dateFormatter = new Intl.DateTimeFormat(undefined, {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+})
+
 const getFieldValue = (field: FieldType): string | undefined => {
   const { term } = props
 
@@ -45,13 +53,7 @@ const getFieldValue = (field: FieldType): string | undefined => {
     return term.type ? ui.wordClasses[term.type] : ''
   } else if (field.name === 'date') {
     let date = new Date(term.date)
-    return new Intl.DateTimeFormat(undefined, {
-      year: 'numeric',
-      month: 'numeric',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(date)
+    return dateFormatter.format(date)
   } else {
     return term[field.name]
   }
