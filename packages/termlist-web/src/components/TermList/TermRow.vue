@@ -1,17 +1,12 @@
 <template>
   <tr class="term-row">
-    <td
+    <TermField
       v-for="field in fields"
       :key="field.name"
       :class="field.name || field.type"
+      :html="field.name === 'desc' ? getFieldValue(field) : undefined"
+      >{{ getFieldValue(field) }}</TermField
     >
-      <div
-        v-if="field.name === 'desc'"
-        class="content"
-        v-html="getFieldValue(field)"
-      />
-      <div v-else>{{ getFieldValue(field) }}</div>
-    </td>
     <td class="row-buttons">
       <TermRowButton :icon="['fas', 'pencil-alt']" @click="edit" />
       <TermRowButton :icon="['fas', 'trash-alt']" @click="remove" />
@@ -19,6 +14,7 @@
   </tr>
 </template>
 <script lang="ts" setup>
+import TermField from './TermField.vue'
 import TermRowButton from './TermRowButton.vue'
 
 import type { FieldType } from '@/types/FieldType'
