@@ -1,9 +1,17 @@
 <template>
   <td :class="props.class">
-    <div v-if="html" class="content" v-html="html" />
-    <div v-else><slot /></div>
+    <div v-if="isHtml" class="content" v-html="value" />
+    <div v-else>{{ value }}</div>
   </td>
 </template>
 <script lang="ts" setup>
-const props = defineProps<{ class: string; html?: string }>()
+import { useAsyncState } from '@vueuse/core'
+
+const props = defineProps<{
+  class: string
+  isHtml?: boolean
+  value: Promise<string | undefined>
+}>()
+
+const { state: value } = useAsyncState(props.value, '')
 </script>

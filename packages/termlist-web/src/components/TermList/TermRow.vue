@@ -4,9 +4,9 @@
       v-for="field in fields"
       :key="field.name"
       :class="field.name || field.type"
-      :html="field.name === 'desc' ? getFieldValue(field) : undefined"
-      >{{ getFieldValue(field) }}</TermField
-    >
+      :is-html="field.name === 'desc'"
+      :value="getFieldValue(field)"
+    />
     <td class="row-buttons">
       <TermRowButton :icon="['fas', 'pencil-alt']" @click="edit" />
       <TermRowButton :icon="['fas', 'trash-alt']" @click="remove" />
@@ -22,7 +22,6 @@ import type { TermType } from '@/types/TermType'
 
 import ui from '@/assets/ui'
 import fields from '@/assets/fields'
-import md from '@/utils/markdown'
 
 const props = defineProps<{ term: TermType }>()
 
@@ -42,12 +41,13 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
   minute: '2-digit',
 })
 
-const getFieldValue = (field: FieldType): string | undefined => {
+const getFieldValue = async (field: FieldType): Promise<string | undefined> => {
   const { term } = props
 
   if (field.type === 'filler' || !term[field.name]) {
     return ''
   } else if (field.name === 'desc') {
+    const md = (await import('@/utils/markdown')).default
     return md(String(term[field.name]))
   } else if (field.name === 'type') {
     return term.type ? ui.wordClasses[term.type] : ''
