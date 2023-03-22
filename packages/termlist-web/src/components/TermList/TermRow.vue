@@ -4,7 +4,6 @@
       v-for="field in fields"
       :key="field.name"
       :class="field.name || field.type"
-      :is-html="field.name === 'desc'"
       :value="getFieldValue(field)"
     />
     <td class="row-buttons">
@@ -17,6 +16,7 @@
 import TermField from './TermField.vue'
 import TermRowButton from './TermRowButton.vue'
 
+import type { VNode } from 'vue'
 import type { FieldType } from '@/types/FieldType'
 import type { TermType } from '@/types/TermType'
 
@@ -41,7 +41,9 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
   minute: '2-digit',
 })
 
-const getFieldValue = async (field: FieldType): Promise<string | undefined> => {
+const getFieldValue = async (
+  field: FieldType
+): Promise<string | VNode | undefined> => {
   const { term } = props
 
   if (field.type === 'filler' || !term[field.name]) {

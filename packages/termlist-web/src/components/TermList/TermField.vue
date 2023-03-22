@@ -1,17 +1,17 @@
 <template>
   <td :class="props.class">
-    <div v-if="isHtml" class="content" v-html="value" />
-    <div v-else>{{ value }}</div>
+    <component :is="val" v-if="typeof val === 'object'" />
+    <template v-else>{{ val }}</template>
   </td>
 </template>
 <script lang="ts" setup>
 import { useAsyncState } from '@vueuse/core'
+import type { VNode } from 'vue'
 
 const props = defineProps<{
   class: string
-  isHtml?: boolean
-  value: Promise<string | undefined>
+  value: Promise<string | VNode | undefined>
 }>()
 
-const { state: value } = useAsyncState(props.value, '')
+const { state: val } = useAsyncState(props.value, '')
 </script>

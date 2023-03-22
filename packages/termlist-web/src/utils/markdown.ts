@@ -3,8 +3,10 @@ import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
 import remarkRehype from 'remark-rehype'
 import rehypeSanitize from 'rehype-sanitize'
-import rehypeStringify from 'rehype-stringify'
 import type { defaultSchema } from 'rehype-sanitize'
+import { type VNode } from 'vue'
+import { Fragment, jsx, jsxs } from 'vue-jsx-runtime'
+import { toJsxRuntime, type Jsx } from 'hast-util-to-jsx-runtime'
 
 const schema: typeof defaultSchema = {
   strip: [
@@ -61,15 +63,22 @@ const schema: typeof defaultSchema = {
 }
 
 function md(input: string) {
-  const file = unified()
+  const processor = unified()
     .use(remarkParse)
     .use(remarkGfm, { singleTilde: false })
     .use(remarkRehype)
     .use(rehypeSanitize, schema)
-    .use(rehypeStringify)
-    .processSync(input)
 
-  return String(file)
+  const hast = processor.runSync(processor.parse(input))
+
+  const result = toJsxRuntime(hast, {
+    Fragment,
+    jsx: jsx as Jsx,
+    jsxs: jsxs as Jsx,
+    elementAttributeNameCase: 'html',
+  }) as VNode
+
+  return { ...result, type: Fragment } as VNode
 }
 
 export default md

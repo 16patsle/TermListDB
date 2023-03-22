@@ -27,6 +27,7 @@
     "core-js": "^3.29.1",
     "deepmerge": "^4.3.0",
     "firebase": "^9.17.2",
+    "hast-util-to-jsx-runtime": "^1.2.0",
     "just-compare": "^2.3.0",
     "just-debounce-it": "^3.2.0",
     "pinia": "^2.0.33",
@@ -37,6 +38,7 @@
     "remark-rehype": "^10.1.0",
     "unified": "^10.1.2",
     "vue": "^3.2.47",
+    "vue-jsx-runtime": "^0.1.0",
     "xstate": "^4.37.0",
     "zod": "^3.21.4"
   },
