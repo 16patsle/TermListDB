@@ -59,6 +59,7 @@
     "eslint-plugin-storybook": "^0.5.3",
     "eslint-plugin-vue": "^9.9.0",
     "prettier": "2.8.4",
+    "rollup-plugin-webpack-stats": "^0.2.0",
     "sass": "^1.59.3",
     "stylelint": "^14.1.0",
     "stylelint-config-prettier": "^9.0.5",
