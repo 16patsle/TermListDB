@@ -25,6 +25,7 @@ export type GlobalContext = {
 
 export const globalMachine = createMachine(
   {
+    predictableActionArguments: true,
     tsTypes: {} as import('./globalMachine.typegen').Typegen0,
     schema: {
       context: {} as GlobalContext,
