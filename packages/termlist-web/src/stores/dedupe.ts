@@ -7,6 +7,7 @@ import type { TermType } from '../types/TermType'
 export type State = {
   duplicatedTerms: Record<string, number>
   processed: number
+  duplicatesFound: number
   complete: boolean
 }
 
@@ -22,6 +23,7 @@ export const useDedupeStore = defineStore('dedupe', {
   state: (): State => ({
     duplicatedTerms: {},
     processed: 0,
+    duplicatesFound: 0,
     complete: false,
   }),
   actions: {
@@ -44,6 +46,7 @@ export const useDedupeStore = defineStore('dedupe', {
         const toFilter = last ? [last, ...terms] : terms
         // Filter out duplicates
         termsArray.push(...toFilter.filter(onlyDuplicatedTerms))
+        this.duplicatesFound = termsArray.length
         last = terms.at(-1)
         this.processed += terms.length
       } while (terms.length >= batchSize && currentContext.value.dedupe)

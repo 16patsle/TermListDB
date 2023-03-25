@@ -1,11 +1,11 @@
 <template>
   <AppModal is-active :title="ui.duplicates" @close="close">
     <template #modal-body>
-      <p v-if="!complete" class="subtitle">
-        {{ ui.processingDedupe }}
+      <p class="subtitle">
+        {{ !complete ? ui.processingDedupe : ui.checkingDone }}
       </p>
-      <AppInputField v-if="!complete">
-        <progress :value="processed" :max="total" class="progress is-primary">
+      <AppInputField>
+        <progress :value="processed" :max="total" class="progress is-primary is-large my-4">
           {{ percent }}%
         </progress>
         <p class="has-text-centered">
@@ -15,29 +15,15 @@
         <p class="has-text-centered">{{ percent }}%</p>
         <p class="has-text-centered">
           {{ ui.numberOfDuplicates }}:
-          {{ Object.entries(dedupeStore.$state.duplicatedTerms).length }}
+          {{ dedupeStore.$state.duplicatesFound }}
         </p>
       </AppInputField>
-      <div v-if="complete">
-        <ul>
-          <li
-            v-for="[term, count] in Object.entries(
-              dedupeStore.$state.duplicatedTerms ?? {}
-            )"
-            :key="term"
-          >
-            {{ term }} ({{ count }})
-            <AppButton @click="search(term)">
-              {{ ui.search }}
-            </AppButton>
-          </li>
-        </ul>
-      </div>
     </template>
     <template #modal-footer>
       <AppButton @click="close">
         {{ ui.cancel }}
       </AppButton>
+      <AppButton primary :disabled="!complete" @click="showDuplicates">Show duplicates</AppButton>
     </template>
   </AppModal>
 </template>
@@ -66,11 +52,8 @@ const complete = computed(() => dedupeStore.$state.complete)
 void dedupeStore.checkForDuplicates()
 
 const close = () => globalService.send('CANCEL')
-const search = (term: string) => {
-  if (term) {
-    globalService.send('SEARCH')
-    termsStore.setSearch(term)
-  }
+const showDuplicates = () => {
+  globalService.send('SHOW_DUPLICATES')
 }
 </script>
 
@@ -79,4 +62,5 @@ const search = (term: string) => {
 @import 'bulma/sass/elements/progress';
 @import 'bulma/sass/form/shared';
 @import 'bulma/sass/form/tools';
+@import 'bulma/sass/helpers/spacing'
 </style>

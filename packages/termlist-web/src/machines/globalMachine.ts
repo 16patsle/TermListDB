@@ -16,6 +16,7 @@ export type GlobalEvent =
   | { type: 'LOG_IN' }
   | { type: 'VIEW_TOOLS' }
   | { type: 'DEDUPE' }
+  | { type: 'SHOW_DUPLICATES' }
   | { type: 'SEARCH' }
 
 export type GlobalContext = {
@@ -102,7 +103,13 @@ export const globalMachine = createMachine(
       deduping: {
         on: {
           CANCEL: { target: 'viewTools', actions: 'setDedupe' },
-          SEARCH: { target: 'idle', actions: 'setDedupe' },
+          SHOW_DUPLICATES: { target: 'showDuplicates', actions: 'setDedupe' },
+        },
+      },
+      showDuplicates: {
+        on: {
+          CANCEL: { target: 'viewTools' },
+          SEARCH: { target: 'idle' },
         },
       },
     },
@@ -119,7 +126,7 @@ export const globalMachine = createMachine(
       setDedupe(context, event) {
         if (event.type === 'DEDUPE') {
           context.dedupe = true
-        } else if (event.type === 'CANCEL' || event.type === 'SEARCH') {
+        } else if (event.type === 'CANCEL' || event.type === 'SHOW_DUPLICATES') {
           context.dedupe = false
         }
       },
