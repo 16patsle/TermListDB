@@ -5,7 +5,11 @@
         {{ !complete ? ui.processingDedupe : ui.checkingDone }}
       </p>
       <AppInputField>
-        <progress :value="processed" :max="total" class="progress is-primary is-large my-4">
+        <progress
+          :value="processed"
+          :max="total"
+          class="progress is-primary is-large my-4"
+        >
           {{ percent }}%
         </progress>
         <p class="has-text-centered">
@@ -23,7 +27,9 @@
       <AppButton @click="close">
         {{ ui.cancel }}
       </AppButton>
-      <AppButton primary :disabled="!complete" @click="showDuplicates">Show duplicates</AppButton>
+      <AppButton primary :disabled="!complete" @click="showDuplicates"
+        >Show duplicates</AppButton
+      >
     </template>
   </AppModal>
 </template>
@@ -62,5 +68,5 @@ const showDuplicates = () => {
 @import 'bulma/sass/elements/progress';
 @import 'bulma/sass/form/shared';
 @import 'bulma/sass/form/tools';
-@import 'bulma/sass/helpers/spacing'
+@import 'bulma/sass/helpers/spacing';
 </style>

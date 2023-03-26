@@ -126,7 +126,10 @@ export const globalMachine = createMachine(
       setDedupe(context, event) {
         if (event.type === 'DEDUPE') {
           context.dedupe = true
-        } else if (event.type === 'CANCEL' || event.type === 'SHOW_DUPLICATES') {
+        } else if (
+          event.type === 'CANCEL' ||
+          event.type === 'SHOW_DUPLICATES'
+        ) {
           context.dedupe = false
         }
       },
