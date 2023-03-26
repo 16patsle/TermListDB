@@ -6,12 +6,15 @@ import type { TermQueryType } from '../types/TermQueryType'
 import type { TermType } from '../types/TermType'
 import type { FieldNameType } from '../types/FieldNameType'
 
+export type FilterType = 'missingDescription' | 'missingType' | undefined
+
 export type State = {
   terms: Map<string, TermType>
   totalRows: number
   sortedBy: FieldNameType
   currentPage: number
   search: string
+  filter: FilterType
 }
 
 export const useTermsStore = defineStore('terms', {
@@ -21,6 +24,7 @@ export const useTermsStore = defineStore('terms', {
     sortedBy: 'term',
     currentPage: 1,
     search: '',
+    filter: undefined,
   }),
   getters: {
     loading(): boolean {
@@ -196,6 +200,16 @@ export const useTermsStore = defineStore('terms', {
     },
     setSearch(search: string) {
       this.$state.search = search
+    },
+    setFilter(filter: FilterType) {
+      this.$state.filter = filter
+    },
+    async filter(filter: FilterType) {
+      globalService.send('LOAD_START')
+      await this.getTerms({ filter })
+      globalService.send('LOAD_COMPLETE')
+      this.setFilter(filter)
+      this.setCurrentPage(1)
     },
   },
 })

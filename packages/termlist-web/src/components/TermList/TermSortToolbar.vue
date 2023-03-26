@@ -6,6 +6,7 @@
         class="term-sort-select"
         @sort="termsStore.sort($event)"
       />
+      <TermFilterSelect @change="termsStore.filter($event)" />
     </div>
   </div>
 </template>
@@ -16,6 +17,7 @@ import debounce from 'just-debounce-it'
 import { useTermsStore } from '@/stores/terms'
 import TermSearchBar from './TermSearchBar.vue'
 import TermSortSelect from './TermSortSelect.vue'
+import TermFilterSelect from './TermFilterSelect.vue'
 
 const termsStore = useTermsStore()
 

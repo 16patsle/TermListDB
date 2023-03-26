@@ -118,6 +118,17 @@ async function getTerms(data: TermQueryType = {}): Promise<TermType[]> {
     queryConstraints.push(endBefore(data.endBefore))
   }
 
+  if (data.filter) {
+    switch (data.filter) {
+      case 'missingDescription':
+        queryConstraints.push(where('desc', '==', ''))
+        break
+      case 'missingType':
+        queryConstraints.push(where('type', '==', ''))
+        break
+    }
+  }
+
   if (!data.search) {
     const termQuery = query(termsDB, ...queryConstraints)
     return (await getDocs(termQuery)).docs.map(val => Term.parse(val.data()))

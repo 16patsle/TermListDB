@@ -1,3 +1,4 @@
+import type { FilterType } from '@/stores/terms'
 import type { FieldNameType } from './FieldNameType'
 
 export type TermQueryType = {
@@ -25,4 +26,8 @@ export type TermQueryType = {
    * String to search for, if we're searching
    */
   search?: string
+  /**
+   * The chosen special filter to use.
+   */
+  filter?: FilterType
 }

@@ -66,4 +66,8 @@ export default {
   numberOfDuplicates: 'Duplikater funnet',
   clearSearch: 'Tøm søkefelt',
   errorDescriptions,
+  showAll: 'Vis alle',
+  showOnly: 'Vis bare ',
+  missingDescription: 'manglende beskrivelser',
+  missingType: 'manglende ordklasse',
 }
