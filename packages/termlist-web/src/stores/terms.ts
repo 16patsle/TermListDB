@@ -166,12 +166,14 @@ export const useTermsStore = defineStore('terms', {
       globalService.send('LOAD_COMPLETE')
       this.setCurrentPage(pageNumber)
     },
-    async search() {
+    async search(searchValue: string) {
       globalService.send('LOAD_START')
+
+      this.setSearch(searchValue)
 
       await this.getTerms({
         field: this.sortedBy,
-        search: this.$state.search,
+        search: searchValue,
       })
 
       globalService.send('LOAD_COMPLETE')
